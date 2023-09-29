@@ -18,7 +18,7 @@
                 <input type="email" name="email" id="email" required><br><br><br>
                 <label for="email">Password</label><br>
                 <input type="password" name="pass" id="pass" required><br><br>
-                <div class="align-right">Forgot Password?</div><br><br>
+                <div class="align-right"><a href="#">Forgot Password?</a></div><br>
                 <input type="submit" value="Login">
             </form>
         </div>
