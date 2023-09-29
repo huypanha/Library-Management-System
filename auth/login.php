@@ -20,7 +20,6 @@
                 <input type="password" name="pass" id="pass" required><br><br>
                 <div class="align-right">Forgot Password?</div><br><br>
                 <input type="submit" value="Login">
-                asld fhasdflkashdlfj klakjsdfkjas
             </form>
         </div>
     </div>
