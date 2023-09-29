@@ -18,8 +18,14 @@
                 <input type="email" name="email" id="email" required><br><br><br>
                 <label for="email">Password</label><br>
                 <input type="password" name="pass" id="pass" required><br><br>
-                <div class="align-right"><a href="#">Forgot Password?</a></div><br>
-                <input type="submit" value="Login">
+                <div class="align-right">
+                    <a href="#">Forgot Password?</a>
+                </div><br>
+                <input type="submit" value="Login" onclick="location.href='../index.php'"><br>
+                <!-- <div class="center size-15">
+                    Don't have account yet?<br>
+                    <a href="#">CREATE ACCOUNT</a>
+                </div> -->
             </form>
         </div>
     </div>
