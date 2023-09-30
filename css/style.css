@@ -92,10 +92,6 @@ a {
     text-align: center;
 }
 
-.size-15 {
-    font-size: 15px;
-}
-
 .left-nav {
     width: 100px;
     height: 100vh;
@@ -146,4 +142,14 @@ a {
 
 .top-nav h2 {
 
+}
+
+/* ///////////////////  Size  ///////////////////// */
+
+.size-15 {
+    font-size: 15px;
+}
+
+.size-25 {
+    font-size: 25px;
 }
