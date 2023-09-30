@@ -46,6 +46,11 @@
     border-radius: 20px;
 }
 
+.right-side form p {
+    text-align: center;
+    color: grey;
+}
+
 .right-side form h1 {
     text-align: center;
     color: var(--primary-color);
@@ -94,9 +99,8 @@ a {
 .left-nav {
     width: 100px;
     height: 100vh;
-    /* background-color: #1479ff; */
     text-align: center;
-    padding: 20px;
+    padding: 5px 20px 20px 20px;
     display: block;
 }
 
@@ -124,9 +128,22 @@ a {
 }
 
 .left-nav .nav-menu .menu-item img {
-    width: 100%;
+    width: 60%;
 }
 
 .nav-menu-active {
     background-color: var(--primary-color);
+}
+
+.top-nav {
+    display: flex;
+    height: 60px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.top-nav h2 {
+
 }

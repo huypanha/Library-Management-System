@@ -13,7 +13,8 @@
         </div>
         <div class="right-side">
             <form action="" method="post">
-                <h1>Welcome Back</h1><br><br>
+                <h1>Welcome Back</h1><br>
+                <p>Provide your information</p><br>
                 <label for="email">Email</label><br>
                 <input type="email" name="email" id="email" required><br><br><br>
                 <label for="email">Password</label><br>
