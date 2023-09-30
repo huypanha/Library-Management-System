@@ -24,28 +24,34 @@
             <img src="media/logo.jpeg" alt="Logo">
             <ul class="nav-menu">
                 <li class="menu-item nav-menu-active"><img src="media/dashboard_filled.png" alt="menu icon"></li>
-                <li class="menu-item"><i class="far fa-box-full"></i></li>
-                <li class="menu-item"><i class="fad fa-sandwich"></i></li>
-                <li class="menu-item"><img src="media/user_outline.png" alt="menu icon"></li>
-                <li class="menu-item"><img src="media/user_outline.png" alt="menu icon"></li>
-                <li class="menu-item"><img src="media/user_outline.png" alt="menu icon"></li>
+                <li class="menu-item"><i class="far fa-users size-25"></i></li>
+                <li class="menu-item"><i class='far fa-books size-25'></i></li>
+                <li class="menu-item"><i class="far fa-book-reader size-25"></i></li>
+                <li class="menu-item"><i class="far fa-cog size-25"></i></li>
+                <li class="menu-item"><i class="far fa-comment-alt-edit size-25"></i></li>
             </ul>
         </div>
-        <div class="top-nav">
-            <h2>Dashboard</h2>
-            <div class="search-input">
-                <input type="search" name="search" id="search">
-            </div>
-            <div class="row">
-                <a href="#"><i class="fa-solid fa-bell"></i></a>
-                <div class="col">
-                    <h4>Huy Panha</h4>
-                    <h5>Admin</h5>
+        <div class="col">
+            <div class="top-nav">
+                <h2>Dashboard</h2>
+                <div class="search-input">
+                    <input type="text" name="search" id="search" placeholder="Search...">
                 </div>
-                <div class="profile">
-                    <img src="media/generarainbow-ceiling-bookshelves.jpg" alt="Profile" width="100px">
+                <div class="row">
+                    <a href="#">
+                        <i class="fas fa-bell size-25"></i>
+                        <div class="badge">1</div>
+                    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="col right">
+                        <h4>Huy Panha</h4>
+                        <p>Admin</p>
+                    </div>&nbsp;&nbsp;&nbsp;
+                    <div class="profile">
+                        <img src="media/generarainbow-ceiling-bookshelves.jpg" alt="Profile">
+                    </div>
                 </div>
             </div>
+            <div id="dash-body"></div>
         </div>
     </div>
 </body>
