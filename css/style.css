@@ -278,7 +278,7 @@ a {
 .dash-summary-box .row .dash-summary-title {
     font-size: 20px;
     font-weight: bold;
-    color: rgb(170, 170, 170);
+    /* color: rgb(170, 170, 170); */
 }
 
 .dash-summary-box .row a {
@@ -303,6 +303,23 @@ a {
 .dash-summary-box .row .viewall {
     color: rgb(172, 172, 172);
     background-color: transparent;
+}
+
+.top-choices {
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-grey);
+}
+
+.top-choices .row img {
+    width: 150px;
+    border-radius: 10px;
+    box-shadow: var(--shadow-grey);
+}
+
+.scroll {
+    overflow: scroll;
 }
 
 /* /////////////////////////////////  Size  ///////////////////////////////// */

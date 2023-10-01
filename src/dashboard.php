@@ -188,7 +188,23 @@
                 </div>
             </div>
         </div><br>
-        <h2>Top Choices</h2>
+        <div class="top-choices">
+            <h2>Top Choices</h2><br>
+            <div class="row scroll gap25">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img src="../media/book-cover.jpg" alt="Book Cover">
+            </div>
+        </div>
     </div>
 </body>
 </html>
