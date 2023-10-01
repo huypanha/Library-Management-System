@@ -129,12 +129,26 @@ a {
     border-radius: 5px;
 }
 
-/* .left-nav .nav-menu .menu-item:hover {
-    background-color: hsl(214, 100%, 97%);
-} */
+.left-nav .nav-menu .menu-item i, .left-nav .nav-menu .menu-item img {
+    transition: 300ms;
+}
+
+.left-nav .nav-menu .menu-item:hover i {
+    color: var(--primary-color);
+    scale: 1.2;
+}
+
+.left-nav .nav-menu .nav-menu-active:hover i {
+    scale: 1.2;
+    color: white;
+}
 
 .left-nav .nav-menu .menu-item img {
     width: 60%;
+}
+
+.left-nav .nav-menu .menu-item:hover img {
+    scale: 1.2;
 }
 
 .nav-menu-active {
@@ -257,10 +271,19 @@ a {
     box-shadow: var(--shadow-blue);
     border-radius: 20px;
     padding: 20px;
+    transition: 300ms;
 }
 
 .dash-box:hover {
     background-color: #569fff;
+}
+
+.dash-box .row i {
+    transition: 300ms;
+}
+
+.dash-box:hover .row i {
+    scale: 1.2;
 }
 
 .dash-box .row .col .dash-box-num {
@@ -345,6 +368,7 @@ a {
     border-radius: 10px;
     background-color: white;
     box-shadow: var(--shadow-grey);
+    cursor: pointer;
 }
 
 .tabbar .tabbar-item {
@@ -356,6 +380,85 @@ a {
 .tabbar .tabbar-item-active {
     background-color: var(--primary-color);
     color: white;
+}
+
+.wrapper .row .add-new-btn {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 10px;
+}
+
+.wrapper .row .add-new-btn:hover {
+    background-color: rgb(70, 153, 255);
+}
+
+.wrapper .wrapper .row .stu-list-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.wrapper .wrapper .row .list-options a {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 10px;
+}
+
+.wrapper .wrapper .row .list-options a:hover {
+    background-color: rgb(70, 153, 255);
+}
+
+.wrapper .wrapper .row .list-options a i {
+    color: white;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table tr th{
+    color: gray;
+    border-bottom: 1px solid rgb(223, 223, 223);
+}
+
+table tbody tr td {
+    color: gray;
+}
+
+table tr th, table tbody tr td {
+    padding: 10px 15px;
+    overflow-x: scroll;
+    white-space: nowrap;
+    text-align: left;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: rgb(238, 238, 238);
+}
+
+table tbody tr:hover {
+    background-color: rgb(217, 234, 255);
+}
+
+table tbody tr td a {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    padding: 10px 15px;
+}
+
+table tbody tr td a:hover {
+    background-color: #c7e1ff;
+}
+
+table tbody tr td a .fa-pencil-alt {
+    color: var(--primary-color);
+}
+
+table tbody tr td a .fa-trash-alt {
+    color: red;
 }
 
 /* /////////////////////////////////  Align  ///////////////////////////////// */
@@ -374,6 +477,14 @@ a {
 
 /* /////////////////////////////////  Color  ///////////////////////////////// */
 
+.back-white {
+    background-color: white;
+}
+
+.gray {
+    color: gray;
+}
+
 .primary-color {
     color: var(--primary-color);
 }
@@ -382,17 +493,25 @@ a {
     color: white;
 }
 
-.gray {
-    color: gray;
-}
-
 /* /////////////////////////////////  Decoration  ///////////////////////////////// */
 
 .overline-1-gray {
     border-top: 1px solid rgb(223, 223, 223);
 }
 
+.radius-all10 {
+    border-radius: 10px;
+}
+
+.radius-all20 {
+    border-radius: 20px;
+}
+
 /* /////////////////////////////////  Display  ///////////////////////////////// */
+
+.inline-block {
+    display: inline-block;
+}
 
 .flex {
     display: flex;
@@ -415,6 +534,10 @@ a {
 
 .ml20 {
     margin-left: 20px;
+}
+
+.mt10 {
+    margin-top: 10px;
 }
 
 /* /////////////////////////////////  Opacity  ///////////////////////////////// */
@@ -447,6 +570,20 @@ a {
 
 .pad-left10{
     padding-left: 10px;
+}
+
+.gap10 {
+    gap: 10px;
+}
+
+.gap25 {
+    gap: 25px;
+}
+
+/* /////////////////////////////////  Shadow  ///////////////////////////////// */
+
+.shadow-gray {
+    box-shadow: var(--shadow-grey);
 }
 
 /* /////////////////////////////////  Scroll  ///////////////////////////////// */
@@ -490,6 +627,18 @@ a {
     width: 100%;
 }
 
+.w80 {
+    width: 80px;
+}
+
+.w110 {
+    width: 110px;
+}
+
+.w100 {
+    width: 100px;
+}
+
 .w200 {
     width: 200px;
 }
@@ -498,12 +647,4 @@ a {
 
 .wrap {
     flex-wrap: wrap;
-}
-
-.gap10 {
-    gap: 10px;
-}
-
-.gap25 {
-    gap: 25px;
 }

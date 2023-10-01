@@ -17,15 +17,6 @@
                     <span id="current-username" class="primary-color">Huy Panha!</span>
                 </h2>
             </div>
-            <!-- <div class="filter-box w200 ml20">
-                <select name="filter" id="filter">
-                    <option value="today">Today</option>
-                    <option value="week">This Week</option>
-                    <option value="month">This Month</option>
-                    <option value="year">This Year</option>
-                </select>
-                <i class="fas fa-caret-down"></i>
-            </div> -->
         </div><br>
         <div class="row flex-wrap-300 gap25">
             <a class="dash-box" href="#">
@@ -77,7 +68,7 @@
                     <div class="row w20per gray">Borrow Date</div>
                     <div class="row w20per gray">Due Date</div>
                 </div>
-                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 hover-gray pad-left10">
+                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 hover-gray pad-left10 radius-all10">
                     <div class="row w10per gray">1</div>
                     <div class="row w50per gap10">
                         <img src="../media/book-cover.jpg" alt="Book Cover">
@@ -86,7 +77,7 @@
                     <div class="row w20per gray">01/10/2023</div>
                     <div class="row w20per gray">02/10/2023</div>
                 </a>
-                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 hover-gray pad-left10">
+                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 hover-gray pad-left10 radius-all10">
                     <div class="row w10per gray">1</div>
                     <div class="row w50per gap10">
                         <img src="../media/book-cover.jpg" alt="Book Cover">
@@ -95,7 +86,7 @@
                     <div class="row w20per gray">01/10/2023</div>
                     <div class="row w20per gray">02/10/2023</div>
                 </a>
-                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 hover-gray pad-left10">
+                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 hover-gray pad-left10 radius-all10">
                     <div class="row w10per gray">1</div>
                     <div class="row w50per gap10">
                         <img src="../media/book-cover.jpg" alt="Book Cover">
@@ -104,7 +95,7 @@
                     <div class="row w20per gray">01/10/2023</div>
                     <div class="row w20per gray">02/10/2023</div>
                 </a>
-                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 hover-gray pad-left10">
+                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 hover-gray pad-left10 radius-all10">
                     <div class="row w10per gray">1</div>
                     <div class="row w50per gap10">
                         <img src="../media/book-cover.jpg" alt="Book Cover">
@@ -113,7 +104,7 @@
                     <div class="row w20per gray">01/10/2023</div>
                     <div class="row w20per gray">02/10/2023</div>
                 </a>
-                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 hover-gray pad-left10">
+                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 hover-gray pad-left10 radius-all10">
                     <div class="row w10per gray">1</div>
                     <div class="row w50per gap10">
                         <img src="../media/book-cover.jpg" alt="Book Cover">
@@ -137,7 +128,7 @@
                     <div class="row w20per gray">Author</div>
                     <div class="row w20per gray">Import Date</div>
                 </div>
-                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 pad-left10 hover-gray">
+                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 pad-left10 hover-gray radius-all10">
                     <div class="row w10per gray">1</div>
                     <div class="row w50per gap10">
                         <img src="../media/book-cover.jpg" alt="Book Cover">
@@ -146,7 +137,7 @@
                     <div class="row w20per gray">Huy Panha</div>
                     <div class="row w20per gray">02/10/2023</div>
                 </a>
-                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 pad-left10 hover-gray">
+                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 pad-left10 hover-gray radius-all10">
                     <div class="row w10per gray">1</div>
                     <div class="row w50per gap10">
                         <img src="../media/book-cover.jpg" alt="Book Cover">
@@ -155,7 +146,7 @@
                     <div class="row w20per gray">Huy Panha</div>
                     <div class="row w20per gray">02/10/2023</div>
                 </a>
-                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 pad-left10 hover-gray">
+                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 pad-left10 hover-gray radius-all10">
                     <div class="row w10per gray">1</div>
                     <div class="row w50per gap10">
                         <img src="../media/book-cover.jpg" alt="Book Cover">
@@ -164,7 +155,7 @@
                     <div class="row w20per gray">Huy Panha</div>
                     <div class="row w20per gray">02/10/2023</div>
                 </a>
-                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 pad-left10 hover-gray">
+                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 pad-left10 hover-gray radius-all10">
                     <div class="row w10per gray">1</div>
                     <div class="row w50per gap10">
                         <img src="../media/book-cover.jpg" alt="Book Cover">
@@ -173,7 +164,7 @@
                     <div class="row w20per gray">Huy Panha</div>
                     <div class="row w20per gray">02/10/2023</div>
                 </a>
-                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 pad-left10 hover-gray">
+                <a href="#" class="row overline-1-gray size-15 gap10 pad-v10 pad-left10 hover-gray radius-all10">
                     <div class="row w10per gray">1</div>
                     <div class="row w50per gap10">
                         <img src="../media/book-cover.jpg" alt="Book Cover">

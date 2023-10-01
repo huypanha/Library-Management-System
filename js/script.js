@@ -9,6 +9,24 @@ $(document).ready(function(){
             $(".menu-item").eq(i).removeClass("nav-menu-active");
         }
 
+        // get image for old active menu
+        if(oldSelectedMenuIndex == 0){
+            newChild = "<img src='media/dashboard_outline.png' alt='menu icon'>";
+        } else if(oldSelectedMenuIndex == 1){
+            newChild = "<i class='far fa-users size-25 gray'></i>";
+        } else if(oldSelectedMenuIndex == 2){
+            newChild = "<i class='far fa-books size-25 gray'></i>";
+        } else if(oldSelectedMenuIndex == 3){
+            newChild = "<i class='far fa-book-reader size-25 gray'></i>";
+        } else if(oldSelectedMenuIndex == 4){
+            newChild = "<i class='far fa-cog size-25 gray'></i>";
+        } else if(oldSelectedMenuIndex == 5){
+            newChild = "<i class='far fa-comment-alt-edit size-25 gray'></i>";
+        }
+
+        // change old active menu image
+        $(".menu-item").eq(oldSelectedMenuIndex).html(newChild);
+
         // get image to change for new active menu
         if($(this).index() == 0){
             newChild = "<img src='media/dashboard_filled.png' alt='menu icon'>";
@@ -39,24 +57,6 @@ $(document).ready(function(){
 
         // chagne new active menu
         $(".menu-item").eq($(this).index()).addClass("nav-menu-active");
-
-        // get image for old active menu
-        if(oldSelectedMenuIndex == 0){
-            newChild = "<img src='media/dashboard_outline.png' alt='menu icon'>";
-        } else if(oldSelectedMenuIndex == 1){
-            newChild = "<i class='far fa-users size-25 gray'></i>";
-        } else if(oldSelectedMenuIndex == 2){
-            newChild = "<i class='far fa-books size-25 gray'></i>";
-        } else if(oldSelectedMenuIndex == 3){
-            newChild = "<i class='far fa-book-reader size-25 gray'></i>";
-        } else if(oldSelectedMenuIndex == 4){
-            newChild = "<i class='far fa-cog size-25 gray'></i>";
-        } else if(oldSelectedMenuIndex == 5){
-            newChild = "<i class='far fa-comment-alt-edit size-25 gray'></i>";
-        }
-
-        // change old active menu image
-        $(".menu-item").eq(oldSelectedMenuIndex).html(newChild);
     });
 
     $(".tabbar-item").click(function(){
