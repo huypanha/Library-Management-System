@@ -9,7 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library Management System</title>
     <link rel="stylesheet" href="css/style.css">
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="js/script.js" type="text/javascript"></script>
     <meta property="og:title" content="Library Management System">
@@ -19,7 +18,7 @@
     <link rel="stylesheet" href="js/fontawesomepro.js">
 </head>
 <body>
-    <div class="wrapper">
+    <div class="wrapper flex">
         <div class="left-nav">
             <img src="media/logo.jpeg" alt="Logo">
             <ul class="nav-menu">
@@ -33,7 +32,7 @@
         </div>
         <div class="col">
             <div class="top-nav">
-                <h2>Dashboard</h2>
+                <h2 id="page-title">Dashboard</h2>
                 <div class="search-input">
                     <input type="text" name="search" id="search" placeholder="Search...">
                 </div>
@@ -43,15 +42,17 @@
                         <div class="badge">1</div>
                     </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <div class="col right">
-                        <h4>Huy Panha</h4>
-                        <p>Admin</p>
+                        <h4 id="current-username">Huy Panha</h4>
+                        <p id="current-role-title">Admin</p>
                     </div>&nbsp;&nbsp;&nbsp;
-                    <div class="profile">
+                    <div class="profile" id="current-user-profile">
                         <img src="media/generarainbow-ceiling-bookshelves.jpg" alt="Profile">
                     </div>
                 </div>
             </div>
-            <div id="dash-body"></div>
+            <div id="current-page-content">
+                <iframe src="src/dashboard.php" frameborder="0"></iframe>
+            </div>
         </div>
     </div>
 </body>

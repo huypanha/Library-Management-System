@@ -2,6 +2,8 @@
 
 :root {
     --primary-color: #1479ff;
+    --shadow-blue: #d6e6ff 0px 8px 24px;
+    --shadow-grey: #d9d9d9 0px 8px 24px;
 }
 
 * {
@@ -14,7 +16,10 @@
 
 .wrapper {
     width: 100%;
-    display: flex;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 .left-side {
@@ -41,7 +46,7 @@
     left: 50%;
     top: 50%;
     width: 60%;
-    box-shadow: #d6e6ff 0px 8px 24px;
+    box-shadow: --shadow-blue;
     padding: 30px;
     border-radius: 20px;
 }
@@ -197,12 +202,48 @@ a {
     border-radius: 50%;
 }
 
-#dash-body {
+#current-page-content {
     width: 100%;
-    height: 100%;
+    height: 90vh;
     background-color: whitesmoke;
     border-top-left-radius: 30px;
 }
+
+#current-page-content iframe {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.greeting {
+    display: block;
+    text-wrap: nowrap;
+}
+
+.filter-box {
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.filter-box select {
+    width: 100%;
+    padding: 8px 10px;
+    background-color: transparent;
+    border-radius: 10px;
+    appearance: none;
+    border: none;
+}
+
+.filter-box .fa-caret-down {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
+
 
 /* ///////////////////  Size  ///////////////////// */
 
@@ -214,7 +255,19 @@ a {
     font-size: 25px;
 }
 
+.w100per {
+    width: 100%;
+}
+
+.w200 {
+    width: 200px;
+}
+
 /* ///////////////////  Color  ///////////////////// */
+
+.primary-color {
+    color: var(--primary-color);
+}
 
 .white {
     color: white;
@@ -224,4 +277,22 @@ a {
 
 .right {
     text-align: right;
+}
+
+/* ///////////////////  Padding  ///////////////////// */
+
+.padding-20 {
+    padding: 20px;
+}
+
+/* ///////////////////  Margin  ///////////////////// */
+
+.ml20 {
+    margin-left: 20px;
+}
+
+/* ///////////////////  Display  ///////////////////// */
+
+.flex {
+    display: flex;
 }
