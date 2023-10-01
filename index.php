@@ -22,12 +22,12 @@
         <div class="left-nav">
             <img src="media/logo.jpeg" alt="Logo">
             <ul class="nav-menu">
-                <li class="menu-item nav-menu-active"><img src="media/dashboard_filled.png" alt="menu icon"></li>
-                <li class="menu-item"><i class="far fa-users size-25"></i></li>
-                <li class="menu-item"><i class='far fa-books size-25'></i></li>
-                <li class="menu-item"><i class="far fa-book-reader size-25"></i></li>
-                <li class="menu-item"><i class="far fa-cog size-25"></i></li>
-                <li class="menu-item"><i class="far fa-comment-alt-edit size-25"></i></li>
+                <li class="menu-item nav-menu-active" title="Dashboard"><img src="media/dashboard_filled.png" alt="menu icon"></li>
+                <li class="menu-item" title="Students"><i class="far fa-users size-25 gray"></i></li>
+                <li class="menu-item" title="Books"><i class='far fa-books size-25 gray'></i></li>
+                <li class="menu-item" title="Borrow"><i class="far fa-book-reader size-25 gray"></i></li>
+                <li class="menu-item" title="Settings"><i class="far fa-cog size-25 gray"></i></li>
+                <li class="menu-item" title="Feedback"><i class="far fa-comment-alt-edit size-25 gray"></i></li>
             </ul>
         </div>
         <div class="col">
