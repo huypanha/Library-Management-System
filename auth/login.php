@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <div class="wrapper">
+    <div class="wrapper flex">
         <div class="left-side">
             <img src="../media/angel-bookstore.jpg" alt="">
         </div>

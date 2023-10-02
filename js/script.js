@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    // on click dashboard menu
     $(".menu-item").click(function(){
         const oldSelectedMenuIndex = $(".nav-menu-active").index();
         const navMenuCount = $(".nav-menu").children().length;
@@ -38,6 +39,8 @@ $(document).ready(function(){
             newPageTitle = "Students & Users";
         } else if($(this).index() == 2){
             newChild = "<i class='fad fa-books size-25 white'></i>";
+            newPage = "<iframe src='src/books.php' frameborder='0'></iframe>";
+            newPageTitle = "Books";
         } else if($(this).index() == 3){
             newChild = "<i class='fad fa-book-reader size-25 white'></i>";
         } else if($(this).index() == 4){
@@ -59,6 +62,7 @@ $(document).ready(function(){
         $(".menu-item").eq($(this).index()).addClass("nav-menu-active");
     });
 
+    // on click tabbar
     $(".tabbar-item").click(function(){
         for(var i = 0; i < $(".tabbar").children.length; i++){
             $(".tabbar-item").eq(i).removeClass("tabbar-item-active");

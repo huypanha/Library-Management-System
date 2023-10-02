@@ -47,7 +47,7 @@
     left: 50%;
     top: 50%;
     width: 60%;
-    box-shadow: --shadow-blue;
+    box-shadow: var(--shadow-blue);
     padding: 30px;
     border-radius: 20px;
 }
@@ -332,7 +332,8 @@ a {
 .dash-summary-box .row .row .dash-summary-book-title {
     max-height: 50px;
     width: calc(100%);
-    overflow: scroll;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .dash-summary-box .row .viewall {
@@ -385,7 +386,7 @@ a {
 .wrapper .row .add-new-btn {
     background-color: var(--primary-color);
     color: white;
-    padding: 5px 15px;
+    padding: 7px 15px;
     border-radius: 10px;
 }
 
@@ -401,7 +402,7 @@ a {
 .wrapper .wrapper .row .list-options a {
     background-color: var(--primary-color);
     color: white;
-    padding: 5px 15px;
+    padding: 7px 15px;
     border-radius: 10px;
 }
 
@@ -461,7 +462,83 @@ table tbody tr td a .fa-trash-alt {
     color: red;
 }
 
+.load-more {
+    position: relative;
+}
+
+.load-more i {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-65px);
+    animation: top-to-bottom 2s ease-in-out infinite;
+}
+
+@keyframes top-to-bottom {
+    0% {
+        top: 0;
+    }
+    50% {
+        top: 50%;
+    }
+    100% {
+        top: 0;
+    }
+}
+
+.book-box {
+    flex: 20%;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: var(--shadow-grey);
+    min-width: 150px;
+    max-width: 230px;
+    overflow-x: ellipsis;
+    transition: 300ms;
+}
+
+.book-box:hover {
+    scale: 1.05;
+}
+
+.book-box .book-cover img {
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+}
+
+.book-box .book-title {
+    width: 100%;
+    /* max-width: 200px; */
+    white-space: nowrap;
+    padding: 5px 10px;
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
+
+.overlay-bottom-right {
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+    padding: 10px 15px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    box-shadow: var(--shadow-blue);
+    transition: 300ms;
+}
+
+.overlay-bottom-right:hover {
+    scale: 1.2;
+}
+
 /* /////////////////////////////////  Align  ///////////////////////////////// */
+
+.center {
+    text-align: center;
+}
+
+.content-center {
+    justify-content: center;
+}
 
 .right {
     text-align: right;
@@ -473,6 +550,10 @@ table tbody tr td a .fa-trash-alt {
 
 .content-right {
     justify-content: right;
+}
+
+.content-top {
+    align-items: start;
 }
 
 /* /////////////////////////////////  Color  ///////////////////////////////// */

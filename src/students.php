@@ -16,7 +16,7 @@
                 <li class="tabbar-item tabbar-item-active">Students</li>
                 <li class="tabbar-item">Users</li>
             </ul>
-            <a class="add-new-btn" href="#">Add New</a>
+            <a class="add-new-btn" href="#"><i class="fad fa-user-plus white"></i>&nbsp;&nbsp;Add New</a>
         </div><br>
         <div class="wrapper padding-20 back-white radius-all20 shadow-gray">
             <div class="row space-between">
@@ -107,33 +107,10 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <!-- <div class="inline-block scroll-x mt10">
-                <div class="row gap10">
-                    <div class="row w100 gray">ID</div>
-                    <div class="row w200 gray">Full Name</div>
-                    <div class="row w80 gray">Gender</div>
-                    <div class="row w110 gray">Date of Birth</div>
-                    <div class="row w200 gray">Contact</div>
-                    <div class="row w200 gray">Address</div>
-                    <div class="row w80 gray">Black List</div>
-                    <div class="row w110 gray">Join Date</div>
-                    <div class="row gray">Actions</div>
-                </div><br><br>
-                <div class="row">
-                    <div class="row w100 gray">1</div>
-                    <div class="row w200 gray">Huy Panha</div>
-                    <div class="row w80 gray">Male</div>
-                    <div class="row w110 gray">26/06/2002</div>
-                    <div class="row w200 gray">093681313</div>
-                    <div class="row w200 gray">Preaek Lieb, Chroy Chanva, Phnom Penh</div>
-                    <div class="row w80 gray">False</div>
-                    <div class="row w110 gray">01/10/2023</div>
-                    <div class="row">
-                        
-                    </div>
-                </div>
-            </div> -->
+            </div><br>
+            <a href="#" class="row content-center primary-color load-more">
+                <i class="fas fa-chevron-down primary-color"></i>&nbsp;&nbsp;Load More
+            </a>
         </div>
     </div>
 </body>
