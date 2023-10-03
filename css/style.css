@@ -530,6 +530,13 @@ table tbody tr td a .fa-trash-alt {
     scale: 1.2;
 }
 
+#dialog {
+    background-color: white;
+    border-radius: 30px;
+    padding: 20px;
+    box-shadow: var(--shadow-grey);
+}
+
 /* /////////////////////////////////  Align  ///////////////////////////////// */
 
 .center {
@@ -572,6 +579,14 @@ table tbody tr td a .fa-trash-alt {
 
 .white {
     color: white;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
 }
 
 /* /////////////////////////////////  Decoration  ///////////////////////////////// */
@@ -722,6 +737,12 @@ table tbody tr td a .fa-trash-alt {
 
 .w200 {
     width: 200px;
+}
+
+/* /////////////////////////////////  Weight  ///////////////////////////////// */
+
+.bold {
+    font-weight: bold;
 }
 
 /* /////////////////////////////////  Wrap  ///////////////////////////////// */

@@ -12,7 +12,7 @@ $(document).ready(function(){
 
         // get image for old active menu
         if(oldSelectedMenuIndex == 0){
-            newChild = "<img src='media/dashboard_outline.png' alt='menu icon'>";
+            newChild = "<img src='media/dashboard_outline.jpg' alt='menu icon'>";
         } else if(oldSelectedMenuIndex == 1){
             newChild = "<i class='far fa-users size-25 gray'></i>";
         } else if(oldSelectedMenuIndex == 2){
@@ -43,10 +43,16 @@ $(document).ready(function(){
             newPageTitle = "Books";
         } else if($(this).index() == 3){
             newChild = "<i class='fad fa-book-reader size-25 white'></i>";
+            newPage = "<iframe src='src/borrows.php' frameborder='0'></iframe>";
+            newPageTitle = "Borrows";
         } else if($(this).index() == 4){
             newChild = "<i class='fad fa-cog size-25 white' style='--fa-primary-opacity: 0.4; --fa-secondary-opacity: 1;'></i>";
+            newPage = "<iframe src='src/settings.php' frameborder='0'></iframe>";
+            newPageTitle = "Settings";
         } else if($(this).index() == 5){
             newChild = "<i class='fad fa-comment-alt-edit size-25 white' style='--fa-primary-opacity: 0.4; --fa-secondary-opacity: 1;'></i>";
+            newPage = "<iframe src='src/feedback.php' frameborder='0'></iframe>";
+            newPageTitle = "Feedback";
         }
 
         // change new active menu image

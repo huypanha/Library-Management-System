@@ -6,10 +6,35 @@
     <link rel="stylesheet" href="../css/fontawesomepro.css">
     <link rel="stylesheet" href="../js/fontawesomepro.js">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../js/script.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#dialog").dialog({
+                autoOpen: true,
+                button: [
+                    {
+                        text: "Close",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                ]
+            });
+
+            // function closeDialog() {
+            //     $("#dialog").dialog("close");
+            // }
+        });
+    </script>
 </head>
 <body>
+    <div id="dialog" title="Dialog Title">
+        <h1>Title</h1>
+        <button onclick="$('#dialog').dialog('close');">Close</button>
+    </div>
     <div class="wrapper padding-20">
         <div class="row space-between">
             <ul class="tabbar">

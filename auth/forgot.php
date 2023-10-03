@@ -13,20 +13,16 @@
         </div>
         <div class="right-side">
             <form action="" method="post">
-                <h1>Welcome Back</h1><br>
-                <p>Provide your information</p><br>
+                <h1>Forgot Password</h1><br>
+                <p>Enter your email to reset password</p><br>
                 <label for="email">Email</label><br>
                 <input type="email" name="email" id="email" required><br><br><br>
-                <label for="pass">Password</label><br>
-                <input type="password" name="pass" id="pass" required><br><br>
+                <label for="code">Verification Code</label><br>
+                <input type="number" name="code" id="code"><br><br>
                 <div class="align-right">
-                    <a href="forgot.php">Forgot Password?</a>
+                    <a href="#">Forgot Password?</a>
                 </div><br>
                 <input type="submit" value="Login" onclick="location.href='../index.php'"><br>
-                <!-- <div class="center size-15">
-                    Don't have account yet?<br>
-                    <a href="#">CREATE ACCOUNT</a>
-                </div> -->
             </form>
         </div>
     </div>
