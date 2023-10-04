@@ -12,8 +12,11 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script>
         $(document).ready(function(){
-            $("#dialog").dialog({
-                autoOpen: true,
+            $("#create-dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                height: 400,
+                width: 500,
                 button: [
                     {
                         text: "Close",
@@ -21,19 +24,93 @@
                             $( this ).dialog( "close" );
                         }
                     }
-                ]
+                ],
+                classes: {
+                    "ui-dialog": "highlight",
+                }
             });
 
-            // function closeDialog() {
-            //     $("#dialog").dialog("close");
-            // }
+            $("#filter-dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                height: 400,
+                width: 500,
+                button: [
+                    {
+                        text: "Close",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                ],
+                classes: {
+                    "ui-dialog": "highlight",
+                }
+            });
         });
     </script>
 </head>
 <body>
-    <div id="dialog" title="Dialog Title">
-        <h1>Title</h1>
-        <button onclick="$('#dialog').dialog('close');">Close</button>
+    <div id="filter-dialog" title="Filters">
+        <div class="row">
+            <div class="col w100per">
+                <label for="sratDate">Start Date</label><br>
+                <input class="w100per" type="date" name="sratDate" id="sratDate">
+            </div>
+            <div class="col w100per">
+                <label for="endDate">End Date</label><br>
+                <input class="w100per" type="date" name="endDate" id="endDate">
+            </div>
+        </div>
+            <div class="row content-right">
+                <button class="closeBtn" onclick="$('#filter-dialog').dialog('close');">Close</button>&nbsp;&nbsp;&nbsp;
+                <button class="createBtn" onclick="$('#filter-dialog').dialog('close');">Reset</button>&nbsp;&nbsp;&nbsp;
+                <input class="createBtn" type="submit" value="Filter">
+            </div>
+    </div>
+    <div id="create-dialog" title="New Student">
+        <form action="" method="post">
+            <div class="row gap25">
+                <div class="col w100per">
+                    <label for="firstName">First Name</label><br>
+                    <input class="w100per" type="text" name="firstName" id="firstName" placeholder="First Name" required>
+                </div>
+                <div class="col w100per">
+                    <label for="gender">Gender</label><br>
+                    <div class="filter-box w100per">
+                        <select class="w100per" name="gender" id="gender">
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
+                        <i class="fas fa-caret-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row gap25">
+                <div class="col w100per">
+                    <label for="lastName">Last Name</label><br>
+                    <input class="w100per" type="text" name="lastName" id="lastName" placeholder="Last Name" required>
+                </div>
+                <div class="col w100per">
+                    <label for="dob">Date of Birth</label><br>
+                    <input class="w100per" type="date" name="dob" id="dob">
+                </div>
+            </div>
+            <div class="row gap25">
+                <div class="col w100per">
+                    <label for="contact">Contact</label><br>
+                    <input class="w100per" type="text" name="contact" id="contact" placeholder="Contact" required>
+                </div>
+                <div class="col w100per">
+                    <label for="addr">Address</label><br>
+                    <input class="w100per" type="a" name="addr" id="addr" placeholder="Address" required>
+                </div>
+            </div><br>
+            <div class="row content-right">
+                <button class="closeBtn" onclick="$('#create-dialog').dialog('close');">Close</button>&nbsp;&nbsp;&nbsp;
+                <input class="createBtn" type="submit" value="Register">
+            </div>
+        </form>
     </div>
     <div class="wrapper padding-20">
         <div class="row space-between">
@@ -41,23 +118,14 @@
                 <li class="tabbar-item tabbar-item-active">Students</li>
                 <li class="tabbar-item">Users</li>
             </ul>
-            <a class="add-new-btn" href="#"><i class="fad fa-user-plus white"></i>&nbsp;&nbsp;Add New</a>
+            <a class="add-new-btn" onclick="$('#create-dialog').dialog('open');"><i class="fad fa-user-plus white"></i>&nbsp;&nbsp;Add New</a>
         </div><br>
         <div class="wrapper padding-20 back-white radius-all20 shadow-gray">
             <div class="row space-between">
                 <div class="stu-list-title">Students</div>
                 <div class="list-options row gap10">
                     <a href="#"><i class="fas fa-file-export"></i>&nbsp;&nbsp;Export</a>
-                    <a href="#"><i class="fas fa-filter"></i>&nbsp;&nbsp;Filter</a>
-                    <!-- <div class="filter-box w200 ml20">
-                        <select name="filter" id="filter">
-                            <option value="today">Today</option>
-                            <option value="week">This Week</option>
-                            <option value="month">This Month</option>
-                            <option value="year">This Year</option>
-                        </select>
-                        <i class="fas fa-caret-down"></i>
-                    </div> -->
+                    <a onclick="$('#filter-dialog').dialog('open');"><i class="fas fa-filter"></i>&nbsp;&nbsp;Filter</a>
                 </div>
             </div>
             <div class="row scroll-x mt10">

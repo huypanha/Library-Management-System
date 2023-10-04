@@ -388,6 +388,7 @@ a {
     color: white;
     padding: 7px 15px;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .wrapper .row .add-new-btn:hover {
@@ -530,11 +531,60 @@ table tbody tr td a .fa-trash-alt {
     scale: 1.2;
 }
 
-#dialog {
+.ui-dialog, .ui-dialog-resizing {
     background-color: white;
     border-radius: 30px;
-    padding: 20px;
+    padding: 20px 0px 20px 20px;
     box-shadow: var(--shadow-grey);
+}
+
+.ui-dialog .ui-dialog-titlebar {
+    background-color: transparent;
+    border: none;
+}
+
+.ui-dialog .ui-dialog-titlebar .ui-dialog-title {
+    font-size: 30px;
+    color: var(--primary-color);
+}
+
+.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+    display: none;
+}
+
+.ui-dialog-content {
+    color: var(--primary-color);
+    padding: 0;
+}
+
+#create-dialog input, #create-dialog button, #filter-dialog input {
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px 15px;
+    margin-bottom: 10px;
+}
+
+#create-dialog label {
+    color: gray;
+    margin-bottom: 5px;
+}
+
+#create-dialog .createBtn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#create-dialog .createBtn:hover {
+    background-color: rgb(72, 148, 255);
+}
+
+#create-dialog .closeBtn, .filter-dialog .closeBtn {
+    color: gray;
+}
+
+#create-dialog .closeBtn:hover {
+    background-color: rgb(241, 247, 255);
 }
 
 /* /////////////////////////////////  Align  ///////////////////////////////// */
