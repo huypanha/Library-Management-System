@@ -1,4 +1,11 @@
 <?php
+    // start session to use session
+    session_start();
+
+    // check logged in or not
+    if(!$_SESSION['login']){
+        header("location: auth/login.php");
+    }
 ?>
 
 <!DOCTYPE html>
