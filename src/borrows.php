@@ -145,6 +145,9 @@
                 <i class="fas fa-chevron-down primary-color"></i>&nbsp;&nbsp;Load More
             </a>
         </div>
+        <a href="books.php" class="overlay-bottom-right">
+            <i class="fas fa-plus white"></i>
+        </a>
     </div>
 </body>
 </html>

@@ -33,7 +33,7 @@
             $("#filter-dialog").dialog({
                 autoOpen: false,
                 modal: true,
-                height: 400,
+                height: 350,
                 width: 500,
                 button: [
                     {
@@ -51,67 +51,6 @@
     </script>
 </head>
 <body>
-    <div id="filter-dialog" title="Filters">
-        <div class="row">
-            <div class="col w100per">
-                <label for="sratDate">Start Date</label><br>
-                <input class="w100per" type="date" name="sratDate" id="sratDate">
-            </div>
-            <div class="col w100per">
-                <label for="endDate">End Date</label><br>
-                <input class="w100per" type="date" name="endDate" id="endDate">
-            </div>
-        </div>
-            <div class="row content-right">
-                <button class="closeBtn" onclick="$('#filter-dialog').dialog('close');">Close</button>&nbsp;&nbsp;&nbsp;
-                <button class="createBtn" onclick="$('#filter-dialog').dialog('close');">Reset</button>&nbsp;&nbsp;&nbsp;
-                <input class="createBtn" type="submit" value="Filter">
-            </div>
-    </div>
-    <div id="create-dialog" title="New Student">
-        <form action="" method="post">
-            <div class="row gap25">
-                <div class="col w100per">
-                    <label for="firstName">First Name</label><br>
-                    <input class="w100per" type="text" name="firstName" id="firstName" placeholder="First Name" required>
-                </div>
-                <div class="col w100per">
-                    <label for="gender">Gender</label><br>
-                    <div class="filter-box w100per">
-                        <select class="w100per" name="gender" id="gender">
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
-                        </select>
-                        <i class="fas fa-caret-down"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="row gap25">
-                <div class="col w100per">
-                    <label for="lastName">Last Name</label><br>
-                    <input class="w100per" type="text" name="lastName" id="lastName" placeholder="Last Name" required>
-                </div>
-                <div class="col w100per">
-                    <label for="dob">Date of Birth</label><br>
-                    <input class="w100per" type="date" name="dob" id="dob">
-                </div>
-            </div>
-            <div class="row gap25">
-                <div class="col w100per">
-                    <label for="contact">Contact</label><br>
-                    <input class="w100per" type="text" name="contact" id="contact" placeholder="Contact" required>
-                </div>
-                <div class="col w100per">
-                    <label for="addr">Address</label><br>
-                    <input class="w100per" type="a" name="addr" id="addr" placeholder="Address" required>
-                </div>
-            </div><br>
-            <div class="row content-right">
-                <button class="closeBtn" onclick="$('#create-dialog').dialog('close');">Close</button>&nbsp;&nbsp;&nbsp;
-                <input class="createBtn" type="submit" value="Register">
-            </div>
-        </form>
-    </div>
     <div class="wrapper padding-20">
         <div class="row space-between">
             <ul class="tabbar">
@@ -205,6 +144,74 @@
                 <i class="fas fa-chevron-down primary-color"></i>&nbsp;&nbsp;Load More
             </a>
         </div>
+    </div>
+    <div id="filter-dialog" title="Filters">
+        <div class="row gap25">
+            <div class="col w100per">
+                <label for="sratDate">Start Date</label><br>
+                <input class="w100per" type="date" name="sratDate" id="sratDate">
+            </div>
+            <div class="col w100per">
+                <label for="endDate">End Date</label><br>
+                <input class="w100per" type="date" name="endDate" id="endDate">
+            </div>
+        </div>
+        <label for="black-list">Black List : </label><br><br>
+        <input type="radio" name="blacklist-opt" id="opt1" checked>&nbsp;&nbsp;
+        <label for="blacklist-all">All</label>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="blacklist-opt" id="opt2">&nbsp;&nbsp;
+        <label for="blacklist-only">Black List</label>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="blacklist-opt" id="opt3">&nbsp;&nbsp;
+        <label for="not-blacklist">Not Black List</label><br><br>
+        <div class="row content-right">
+            <button class="btn" onclick="$('#filter-dialog').dialog('close');">Close</button>&nbsp;&nbsp;&nbsp;
+            <button class="btn" onclick="$('#filter-dialog').dialog('close');">Reset</button>&nbsp;&nbsp;&nbsp;
+            <input class="primary-btn" type="submit" value="Filter">
+        </div>
+    </div>
+    <div id="create-dialog" title="New Student">
+        <form action="" method="post">
+            <div class="row gap25">
+                <div class="col w100per">
+                    <label for="firstName">First Name</label><br>
+                    <input class="w100per" type="text" name="firstName" id="firstName" placeholder="First Name" required>
+                </div>
+                <div class="col w100per">
+                    <label for="gender">Gender</label><br>
+                    <div class="filter-box w100per">
+                        <select class="w100per" name="gender" id="gender">
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
+                        <i class="fas fa-caret-down"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row gap25">
+                <div class="col w100per">
+                    <label for="lastName">Last Name</label><br>
+                    <input class="w100per" type="text" name="lastName" id="lastName" placeholder="Last Name" required>
+                </div>
+                <div class="col w100per">
+                    <label for="dob">Date of Birth</label><br>
+                    <input class="w100per" type="date" name="dob" id="dob">
+                </div>
+            </div>
+            <div class="row gap25">
+                <div class="col w100per">
+                    <label for="contact">Contact</label><br>
+                    <input class="w100per" type="text" name="contact" id="contact" placeholder="Contact" required>
+                </div>
+                <div class="col w100per">
+                    <label for="addr">Address</label><br>
+                    <input class="w100per" type="a" name="addr" id="addr" placeholder="Address" required>
+                </div>
+            </div><br>
+            <div class="row content-right">
+                <button class="closeBtn" onclick="$('#create-dialog').dialog('close');">Close</button>&nbsp;&nbsp;&nbsp;
+                <input class="createBtn" type="submit" value="Register">
+            </div>
+        </form>
     </div>
 </body>
 </html>

@@ -405,6 +405,7 @@ a {
     color: white;
     padding: 7px 15px;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .wrapper .wrapper .row .list-options a:hover {
@@ -587,6 +588,55 @@ table tbody tr td a .fa-trash-alt {
     background-color: rgb(241, 247, 255);
 }
 
+.btn {
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+#book-details .row #book-cover img, #create-dialog .row #book-cover img {
+    width: 200px;
+    border-radius: 10px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.choose-file-btn {
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+label span {
+    color: white;
+}
+
+#create-dialog .row .btn {
+    color: gray;
+}
+
+#create-dialog .row .primary-btn {
+    color: white;
+}
+
 /* /////////////////////////////////  Align  ///////////////////////////////// */
 
 .center {
@@ -615,8 +665,16 @@ table tbody tr td a .fa-trash-alt {
 
 /* /////////////////////////////////  Color  ///////////////////////////////// */
 
+.back-primary {
+    background-color: var(--primary-color);
+}
+
 .back-white {
     background-color: white;
+}
+
+.back-gray {
+    background-color: rgb(233, 233, 233);
 }
 
 .gray {
