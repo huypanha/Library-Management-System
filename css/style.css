@@ -129,7 +129,17 @@ a {
     border-radius: 5px;
 }
 
-.left-nav .nav-menu .menu-item i, .left-nav .nav-menu .menu-item img {
+.left-nav .nav-menu .logout {
+    display: block;
+    margin-top: 10px;
+    padding: 10px 10px 5px 10px;
+}
+
+.left-nav .nav-menu .logout:hover {
+    scale: 1.2;
+}
+
+.left-nav .nav-menu .menu-item i, .left-nav .nav-menu .menu-item img, .left-nav .nav-menu .logout {
     transition: 300ms;
 }
 
@@ -221,6 +231,7 @@ a {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    object-fit:cover;
 }
 
 #current-page-content {

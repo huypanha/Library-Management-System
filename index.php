@@ -3,9 +3,12 @@
     session_start();
 
     // check logged in or not
-    if(!$_SESSION['login']){
+    if(!$_SESSION['loggedIn']){
         header("location: auth/login.php");
     }
+
+    $user = json_decode($_SESSION['user']);
+    $role = json_decode($_SESSION['role']);
 ?>
 
 <!DOCTYPE html>
@@ -35,6 +38,7 @@
                 <li class="menu-item" title="Borrow"><i class="far fa-book-reader size-25 gray"></i></li>
                 <li class="menu-item" title="Settings"><i class="far fa-cog size-25 gray"></i></li>
                 <li class="menu-item" title="Feedback"><i class="far fa-comment-alt-edit size-25 gray"></i></li>
+                <a class="logout" title="Logout" href="auth/logout.php" onclick="return confirm('Are you sure want to logout?');"><i class="far fa-sign-out-alt size-25 red"></i></a>
             </ul>
         </div>
         <div class="col">
@@ -49,11 +53,11 @@
                         <div class="badge">1</div>
                     </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <div class="col right">
-                        <h4 id="current-username">Huy Panha</h4>
-                        <p id="current-role-title">Admin</p>
+                        <h4 id="current-username"><?php echo $user->username; ?></h4>
+                        <p id="current-role-title"><?php echo $role->title; ?></p>
                     </div>&nbsp;&nbsp;&nbsp;
                     <div class="profile" id="current-user-profile">
-                        <img src="media/generarainbow-ceiling-bookshelves.jpg" alt="Profile">
+                        <img src="upload/user/<?php echo $user->profile_img; ?>" alt="Profile">
                     </div>
                 </div>
             </div>

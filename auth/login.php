@@ -1,5 +1,5 @@
 <?php
-    require 'db.php';
+    require '../config/db.php';
     // start session to use session
     session_start();
     // check logged in or not
@@ -9,27 +9,45 @@
         
         try {
             $db = DB::Connect();
-            $sql = "SELECT pass FROM user WHERE email='". strtolower($email)."'";
+            $sql = "SELECT * FROM user WHERE email='". strtolower($email)."' LIMIT 1";
             $stmt = $db->prepare($sql);
             $stmt->execute();
 
             if($stmt->rowCount() > 0){
-                if($re = $stmt->fetchObject()){
-                    echo $pass;
-                    echo $re;
-                    // if(password_verify($pass, $re.pass)){
-                    //     echo "Success";
-                    // } else {
-                    //     echo "Failed";
-                    // }
+                $re = $stmt->fetch();
+                if(password_verify($pass, $re['pass'])){
+                    $getRoleSql = "SELECT * FROM role WHERE role_id=".$re['role_id']." LIMIT 1";
+                    $roleStmt = $db->prepare($getRoleSql);
+                    $roleStmt->execute();
+                    $userRole = $roleStmt->fetch();
+
+                    $role = array(
+                        'role_id'=>$userRole['role_id'],
+                        'title'=>$userRole['title'],
+                        'status'=>$userRole['status'],
+                    );
+
+                    $user = array(
+                        'user_id'=>$re['user_id'],
+                        'username'=>$re['username'],
+                        'email'=>$re['email'],
+                        'contact'=>$re['contact'],
+                        'address'=>$re['address'],
+                        'profile_img'=>$re['profile_img'],
+                    );
+
+                    $_SESSION['user'] = json_encode($user);
+                    $_SESSION['role'] = json_encode($role);
+                    $_SESSION['loggedIn'] = true;
+                    header("location: ../index.php");
+                } else {
+                    $error = "Incorrect Password";
                 }
             } else {
                 $error = "User not found!";
             }
         } catch (PDOException $e) {
             echo $e->getMessage();
-        } catch(Exception $ex){
-            echo $ex->getMessage();
         }
     }
 ?>
@@ -52,9 +70,9 @@
                 <h1>Welcome Back</h1><br>
                 <p>Provide your information</p><br>
                 <label for="email">Email</label><br>
-                <input type="text" name="email" id="email"><br><br><br>
+                <input type="text" name="email" id="email" value="panhahuy70@gmail.com"><br><br><br>
                 <label for="pass">Password</label><br>
-                <input type="password" name="pass" id="pass"><br><br>
+                <input type="password" name="pass" id="pass" value="0000"><br><br>
                 <div class="align-right">
                     <a href="forgot.php">Forgot Password?</a>
                 </div><br>
@@ -67,8 +85,9 @@
         </div>
     </div>
     <?php
-        if(ISSET($error)){
-            echo "<div class='resultBoxError'>$error<a href='#'>x</a></div>";
+        if(isset($error)){
+            echo "<div class='resultBoxError'>$error
+            <a href='login.php'>x</a></div>";
         }
     ?>
 </body>
