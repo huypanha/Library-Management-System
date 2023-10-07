@@ -1,0 +1,12 @@
+{
+    "name": "panha/wbd_sa_final_y3s1",
+    "require": {
+        "phpmailer/phpmailer": "^6.8"
+    },
+    "authors": [
+        {
+            "name": "Huy Panha",
+            "email": "huypanha558@gmail.com"
+        }
+    ]
+}

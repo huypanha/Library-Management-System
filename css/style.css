@@ -681,6 +681,14 @@ label span {
     color: blue;
 }
 
+.loading-animation {
+    height: 25px; 
+    width: 50px;
+    background-image: url('../media/h_loading.gif');
+    background-size: cover;
+    background-position: center;
+}
+
 /* /////////////////////////////////  Align  ///////////////////////////////// */
 
 .center {
