@@ -689,6 +689,14 @@ label span {
     background-position: center;
 }
 
+.error-box {
+    padding: 10px;
+    border: 2px solid rgb(255, 66, 66);
+    background-color: rgb(255, 186, 186);
+    border-radius: 10px;
+    color: red;
+}
+
 /* /////////////////////////////////  Align  ///////////////////////////////// */
 
 .center {

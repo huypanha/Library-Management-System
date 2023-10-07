@@ -18,7 +18,7 @@
             $checkStmt->execute();
             if($checkStmt->rowCount() > 0){
                 // update verification code
-                $sql = "UPDATE user SET ver_code=".$code." WHERE email='".strtolower($_POST['email'])."'";
+                $sql = "UPDATE user SET ver_code='".$code."' WHERE email='".strtolower($_POST['email'])."'";
                 $stmt = $db->prepare($sql);
                 $stmt->execute();
 
