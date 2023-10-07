@@ -16,7 +16,7 @@
             if($stmt->rowCount() > 0){
                 if($re = $stmt->fetchObject()){
                     echo $pass;
-                    echo $re.pass;
+                    echo $re;
                     // if(password_verify($pass, $re.pass)){
                     //     echo "Success";
                     // } else {
