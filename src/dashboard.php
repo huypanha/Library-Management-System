@@ -3,7 +3,7 @@
     session_start();
 
     // check logged in or not
-    if(!$_SESSION['login']){
+    if(!$_SESSION['loggedIn']){
         header("location: ../auth/login.php");
     }
 ?>

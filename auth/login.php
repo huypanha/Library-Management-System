@@ -70,9 +70,9 @@
                 <h1>Welcome Back</h1><br>
                 <p>Provide your information</p><br>
                 <label for="email">Email</label><br>
-                <input type="text" name="email" id="email" value="panhahuy70@gmail.com"><br><br><br>
+                <input type="email" name="email" id="email" value="panhahuy70@gmail.com" required><br><br><br>
                 <label for="pass">Password</label><br>
-                <input type="password" name="pass" id="pass" value="0000"><br><br>
+                <input type="password" name="pass" id="pass" value="0000" required><br><br>
                 <div class="align-right">
                     <a href="forgot.php">Forgot Password?</a>
                 </div><br>
