@@ -33,9 +33,10 @@
             <img src="media/logo.jpeg" alt="Logo">
             <ul class="nav-menu">
                 <li class="menu-item nav-menu-active" title="Dashboard"><img src="media/dashboard_filled.png" alt="menu icon"></li>
-                <li class="menu-item" title="Students"><i class="far fa-users size-25 gray"></i></li>
+                <li class="menu-item" title="Students"><i class="far fa-user-graduate size-25 gray"></i></li>
                 <li class="menu-item" title="Books"><i class='far fa-books size-25 gray'></i></li>
-                <li class="menu-item" title="Borrow"><i class="far fa-book-reader size-25 gray"></i></li>
+                <li class="menu-item" title="Borrows"><i class="far fa-book-reader size-25 gray"></i></li>
+                <li class="menu-item" title="Users"><i class="far fa-users size-25 gray"></i></li>
                 <li class="menu-item" title="Settings"><i class="far fa-cog size-25 gray"></i></li>
                 <li class="menu-item" title="Feedback"><i class="far fa-comment-alt-edit size-25 gray"></i></li>
                 <a class="logout" title="Logout" href="auth/logout.php" onclick="return confirm('Are you sure want to logout?');"><i class="far fa-sign-out-alt size-25 red"></i></a>
@@ -53,11 +54,11 @@
                         <div class="badge">1</div>
                     </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <div class="col right">
-                        <h4 id="current-username"><?php echo $user->username; ?></h4>
+                        <h4 id="current-username"><?php echo $user->userName; ?></h4>
                         <p id="current-role-title"><?php echo $role->title; ?></p>
                     </div>&nbsp;&nbsp;&nbsp;
                     <div class="profile" id="current-user-profile">
-                        <img src="upload/user/<?php echo $user->profile_img; ?>" alt="Profile">
+                        <img src="upload/user/<?php echo $user->profileImg; ?>" alt="Profile">
                     </div>
                 </div>
             </div>

@@ -15,6 +15,10 @@
     color: var(--text-color);
 }
 
+body {
+    overflow: hidden;
+}
+
 .wrapper {
     width: 100%;
 }
@@ -697,6 +701,51 @@ label span {
     color: red;
 }
 
+.filter-date {
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding: 7px 10px;
+    width: 100%;
+    color: black;
+}
+
+.message-bottom-right {
+    position: absolute;
+    right: -50%;
+    bottom: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    opacity: 0;
+}
+
+.success-message {
+    color: green;
+    background-color: #86FFA1;
+    border: 1px solid green;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.error-message {
+    color: red;
+    background-color: #FAA0A0;
+    border: 1px solid red;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.warning-message {
+    color: #ff5500;
+    background-color: #ffbb54;
+    border: 1px solid #ff5500;
+    box-shadow: rgba(255, 85, 0, 0.2) 0px 7px 29px 0px;
+}
+
+.input-error-status {
+    color: red;
+    font-size: 13px;
+}
+
 /* /////////////////////////////////  Align  ///////////////////////////////// */
 
 .center {
@@ -707,20 +756,20 @@ label span {
     justify-content: center;
 }
 
-.right {
-    text-align: right;
-}
-
-.space-between {
-    justify-content: space-between;
-}
-
 .content-right {
     justify-content: right;
 }
 
 .content-top {
     align-items: start;
+}
+
+.right {
+    text-align: right;
+}
+
+.space-between {
+    justify-content: space-between;
 }
 
 /* /////////////////////////////////  Color  ///////////////////////////////// */
@@ -903,8 +952,16 @@ label span {
     width: 100px;
 }
 
+.w130 {
+    width: 130px;
+}
+
 .w200 {
     width: 200px;
+}
+
+.w250 {
+    width: 250px;
 }
 
 /* /////////////////////////////////  Weight  ///////////////////////////////// */

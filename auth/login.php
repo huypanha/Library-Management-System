@@ -22,18 +22,18 @@
                     $userRole = $roleStmt->fetch();
 
                     $role = array(
-                        'role_id'=>$userRole['role_id'],
+                        'roleId'=>$userRole['role_id'],
                         'title'=>$userRole['title'],
                         'status'=>$userRole['status'],
                     );
 
                     $user = array(
-                        'user_id'=>$re['user_id'],
-                        'username'=>$re['username'],
+                        'userId'=>$re['user_id'],
+                        'userName'=>$re['username'],
                         'email'=>$re['email'],
                         'contact'=>$re['contact'],
                         'address'=>$re['address'],
-                        'profile_img'=>$re['profile_img'],
+                        'profileImg'=>$re['profile_img'],
                     );
 
                     $_SESSION['user'] = json_encode($user);
