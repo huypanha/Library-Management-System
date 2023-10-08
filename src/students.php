@@ -11,42 +11,74 @@
     <script src="../js/script.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script>
-        var offset = 0, limit = 10;
-        $(document).ready(function(){
-            // get student list
-            $.ajax({
-                method: "GET",
-                url: "actions/get_students.php",
-                dataType: "JSON",
-                data: {
+        var offset = 0, limit = 20;
+
+        $(document).ready(async function(){
+            $(".startDate").hide();
+            $(".endDate").hide();
+
+            // get student list function
+            function getStudentsList(){
+                const startDate = new Date($("#startDate").val());
+                const endDate = new Date($("#endDate").val());
+                const isBlackList = $("#filter-balck-list").find(":selected").val();
+
+                var data = {
                     offset: offset,
                     limit: limit,
-                },
-                success: function(re){
-                    alert(re.data[0].stuId);
-                },
-                error: function(_, status, msg){
-                    alert(status+': '+msg);
+                };
+                
+                if(startDate != "Invalid Date"){
+                    data.startDate = startDate.getFullYear()+'/'+(startDate.getMonth()+1)+'/'+startDate.getDate();
+                    data.endDate = endDate.getFullYear()+'/'+(endDate.getMonth()+1)+'/'+endDate.getDate();
                 }
-            });
 
-            var row = `<tr>
-                            <td>1</td>
-                            <td>Huy Panha</td>
-                            <td>Male</td>
-                            <td>26/05/2002</td>
-                            <td>093681313</td>
-                            <td>Preaek Lieb, Chroy Chanva, Phnom Penh</td>
-                            <td>False</td>
-                            <td>01/10/2023</td>
-                            <td>
-                                <a href='#'><i class='fas fa-pencil-alt'></i></a>
-                                <a href='#'><i class='fas fa-trash-alt'></i></a>
-                            </td>
-                        </tr>`;
+                if(isBlackList == "bl"){
+                    data.isBlackList = true;
+                } else if(isBlackList == "nbl"){
+                    data.isBlackList = false;
+                }
+                
+                alert(JSON.stringify(data));
 
-                $("#stu-list").append(row);
-                $("#stu-list").append(row);
+                $.ajax({
+                    method: "GET",
+                    url: "actions/get_students.php",
+                    dataType: "JSON",
+                    data: data,
+                    success: function(re){
+                        $.each(re.data, function(i, v){
+                            const dob = new Date(v.dob);
+                            var row = `<tr>
+                                <td>`+ v.stuId +`</td>
+                                <td>`+ v.firstName + ' ' + v.lastName +`</td>
+                                <td>`+ (v.gender == 0 ? 'Male' : 'Female') +`</td>
+                                <td>`+ dob.getDate() + '/' + (dob.getMonth()+1) + '/' + dob.getFullYear() +`</td>
+                                <td>`+ v.contact +`</td>
+                                <td>`+ v.addr +`</td>
+                                <td>`+ (v.isBlackList == 0 ? "False" : "True") +`</td>
+                                <td>`+ v.createdDate +`</td>
+                                <td>
+                                    <a href='#'><i class='fas fa-pencil-alt'></i></a>
+                                    <a href='#'><i class='fas fa-trash-alt'></i></a>
+                                </td>
+                            </tr>`;
+                            $("#stu-list").append(row);
+                        });
+
+                        // hide load more button when no more data
+                        if(!re.hasMore){
+                            $("#load-more").hide();
+                        }
+                    },
+                    error: function(_, status, msg){
+                        showBottomRightMessage(status+': '+msg);
+                    }
+                });
+            }
+
+            // first init
+            getStudentsList();
 
             // create create student dialog
             $("#create-dialog").dialog({
@@ -104,7 +136,7 @@
                             c: contact,
                             addr: addr,
                             g: gender,
-                            dob: dob.getFullYear()+'-'+(dob.getMonth()+1)+'-'+dob.getDate(),
+                            dob: dob.getFullYear()+'/'+(dob.getMonth()+1)+'/'+dob.getDate(),
                         },
                         dataType: "json",
                         success: function(data) {
@@ -114,6 +146,24 @@
 
                                 // close create student dialog
                                 $("#create-dialog").dialog("close");
+
+                                const now = new Date();
+                                // add new student to the list
+                                var row = `<tr>
+                                    <td>`+ data.data +`</td>
+                                    <td>`+ firstName + ' ' + lastName +`</td>
+                                    <td>`+ (gender == 0 ? 'Male' : 'Female') +`</td>
+                                    <td>`+ dob.getDate() + '/' + (dob.getMonth()+1) + '/' + dob.getFullYear() +`</td>
+                                    <td>`+ contact +`</td>
+                                    <td>`+ addr +`</td>
+                                    <td>False</td>
+                                    <td>`+ now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear() +`</td>
+                                    <td>
+                                        <a href='#'><i class='fas fa-pencil-alt'></i></a>
+                                        <a href='#'><i class='fas fa-trash-alt'></i></a>
+                                    </td>
+                                </tr>`;
+                                $("#stu-list").prepend(row);
                             } else {
                                 showBottomRightMessage(data.data, 0);
                             }
@@ -122,6 +172,41 @@
                             showBottomRightMessage(status+': '+msg, 2);
                         }
                     });
+                }
+            });
+
+            // when user click load more
+            $("#load-more").click(function() {
+                offset += limit;
+                
+                // get more student
+                getStudentsList();
+            });
+
+            // when user change filter date options
+            $("#filter-date-opt").change(function(){
+                if($(this).val() == "custom"){
+                    $(".startDate").show();
+                    $(".endDate").show();
+                } else {
+                    $(".startDate").hide();
+                    $(".endDate").hide();
+                }
+            });
+
+            // when user change filter start date
+            $("#startDate").change(function(){
+                if($(this).val() < $("#endDate").val()){
+                    $("#stu-list").html("");
+                    getStudentsList();
+                }
+            });
+
+            // when user change filter end date
+            $("#endDate").change(function(){
+                if($(this).val() > $("#startDate").val()){
+                    $("#stu-list").html("");
+                    getStudentsList();
                 }
             });
         });
@@ -146,11 +231,11 @@
                         <i class="fas fa-caret-down"></i>
                     </div>
                 </div>
-                <div class="col w100">
-                    <label for="sratDate">Start Date</label><br>
-                    <input class="filter-date" type="date" name="sratDate" id="sratDate">
+                <div class="col w100 startDate">
+                    <label for="startDate">Start Date</label><br>
+                    <input class="filter-date" type="date" name="startDate" id="startDate">
                 </div>
-                <div class="col w100">
+                <div class="col w100 endDate">
                     <label for="endDate">End Date</label><br>
                     <input class="filter-date" type="date" name="endDate" id="endDate">
                 </div>
@@ -195,7 +280,7 @@
                     <tbody id="stu-list"></tbody>
                 </table>
             </div><br>
-            <a href="#" class="row content-center primary-color load-more">
+            <a id="load-more" class="row content-center primary-color load-more cursor-pointer">
                 <i class="fas fa-chevron-down primary-color"></i>&nbsp;&nbsp;Load More
             </a>
         </div>
