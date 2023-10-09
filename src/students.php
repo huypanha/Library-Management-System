@@ -26,20 +26,23 @@
                 var data = {
                     offset: offset,
                     limit: limit,
+                    startDate: '',
+                    endDate: '',
+                    isBlackList: '',
                 };
                 
-                if(startDate != "Invalid Date"){
-                    data.startDate = startDate.getFullYear()+'/'+(startDate.getMonth()+1)+'/'+startDate.getDate();
-                    data.endDate = endDate.getFullYear()+'/'+(endDate.getMonth()+1)+'/'+endDate.getDate();
+                if($("#filter-date-opt").find(":selected").val() == "custom"){
+                    if(startDate != "Invalid Date"){
+                        data.startDate = startDate.getFullYear()+'/'+(startDate.getMonth()+1)+'/'+startDate.getDate();
+                        data.endDate = endDate.getFullYear()+'/'+(endDate.getMonth()+1)+'/'+endDate.getDate();
+                    }
                 }
 
                 if(isBlackList == "bl"){
-                    data.isBlackList = true;
+                    data.isBlackList = 1;
                 } else if(isBlackList == "nbl"){
-                    data.isBlackList = false;
+                    data.isBlackList = 0;
                 }
-                
-                alert(JSON.stringify(data));
 
                 $.ajax({
                     method: "GET",
@@ -59,8 +62,8 @@
                                 <td>`+ (v.isBlackList == 0 ? "False" : "True") +`</td>
                                 <td>`+ v.createdDate +`</td>
                                 <td>
-                                    <a href='#'><i class='fas fa-pencil-alt'></i></a>
-                                    <a href='#'><i class='fas fa-trash-alt'></i></a>
+                                    <a class='cursor-pointer' onclick="openUpdateDialog();"><i class='fas fa-pencil-alt'></i></a>
+                                    <a class='cursor-pointer'><i class='fas fa-trash-alt'></i></a>
                                 </td>
                             </tr>`;
                             $("#stu-list").append(row);
@@ -82,6 +85,23 @@
 
             // create create student dialog
             $("#create-dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                height: 400,
+                width: 500,
+                button: [{
+                    text: "Close",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }],
+                classes: {
+                    "ui-dialog": "highlight",
+                }
+            });
+
+            // create create student dialog
+            $("#update-dialog").dialog({
                 autoOpen: false,
                 modal: true,
                 height: 400,
@@ -159,8 +179,8 @@
                                     <td>False</td>
                                     <td>`+ now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear() +`</td>
                                     <td>
-                                        <a href='#'><i class='fas fa-pencil-alt'></i></a>
-                                        <a href='#'><i class='fas fa-trash-alt'></i></a>
+                                        <a class='cursor-pointer' onclick="openUpdateDialog();"><i class='fas fa-pencil-alt'></i></a>
+                                        <a class='cursor-pointer'><i class='fas fa-trash-alt'></i></a>
                                     </td>
                                 </tr>`;
                                 $("#stu-list").prepend(row);
@@ -192,6 +212,8 @@
                     $(".startDate").hide();
                     $(".endDate").hide();
                 }
+                $("#stu-list").html("");
+                getStudentsList();
             });
 
             // when user change filter start date
@@ -209,7 +231,17 @@
                     getStudentsList();
                 }
             });
+
+            // when user change filter black list
+            $("#filter-balck-list").change(function(){
+                $("#stu-list").html("");
+                getStudentsList();
+            });
         });
+
+        function openUpdateDialog(){
+            $("#update-dialog").dialog('open');
+        }
     </script>
 </head>
 <body>
@@ -252,7 +284,7 @@
                 </div>
             </div>
             <div class="row gap10">
-                <a class="add-new-btn" href="#"><div class="row white"><i class="fas fa-file-export white"></i>&nbsp;&nbsp;Export</div></a>
+                <!-- <a class="add-new-btn" href="#"><div class="row white"><i class="fas fa-file-export white"></i>&nbsp;&nbsp;Export to Excel</div></a> -->
                 <a class="add-new-btn" onclick="$('#create-dialog').dialog('open');"><i class="fad fa-user-plus white"></i>&nbsp;&nbsp;Add New</a>
             </div>
         </div><br>
@@ -347,12 +379,59 @@
             </div>
             <div class="col w100per">
                 <label for="addr">Address</label><br>
-                <input class="w100per" type="a" name="addr" id="addr" placeholder="Address">
+                <input class="w100per" type="address" name="addr" id="addr" placeholder="Address">
                 <div id="addrStatus" class="input-error-status"></div>
             </div>
         </div><br>
         <div class="row content-right">
             <button class="closeBtn" onclick="$('#create-dialog').dialog('close');">Close</button>&nbsp;&nbsp;&nbsp;
+            <input class="createBtn" type="submit" value="Register">
+        </div>
+    </div>
+    <div id="update-dialog" title="Update Student">
+        <div class="row gap25">
+            <div class="col w100per">
+                <label for="ufirstName">First Name</label><br>
+                <input class="w100per" type="text" name="ufirstName" id="ufirstName" placeholder="First Name">
+                <div id="firstNameStatus" class="input-error-status"></div>
+            </div>
+            <div class="col w100per">
+                <label for="ugender">Gender</label><br>
+                <div class="filter-box w100per">
+                    <select class="w100per" name="ugender" id="ugender">
+                        <option value="0">Male</option>
+                        <option value="1">Female</option>
+                    </select>
+                    <i class="fas fa-caret-down"></i>
+                </div>
+            </div>
+        </div>
+        <div class="row gap25">
+            <div class="col w100per">
+                <label for="ulastName">Last Name</label><br>
+                <input class="w100per" type="text" name="ulastName" id="ulastName" placeholder="Last Name">
+                <div id="lastNameStatus" class="input-error-status"></div>
+            </div>
+            <div class="col w100per">
+                <label for="udob">Date of Birth</label><br>
+                <input class="w100per" type="udate" name="udob" id="udob">
+                <div id="dobStatus" class="input-error-status"></div>
+            </div>
+        </div>
+        <div class="row gap25">
+            <div class="col w100per">
+                <label for="ucontact">Contact</label><br>
+                <input class="w100per" type="text" name="ucontact" id="ucontact" placeholder="Contact">
+                <div id="contactStatus" class="input-error-status"></div>
+            </div>
+            <div class="col w100per">
+                <label for="uaddr">Address</label><br>
+                <input class="w100per" type="address" name="uaddr" id="uaddr" placeholder="Address">
+                <div id="addrStatus" class="input-error-status"></div>
+            </div>
+        </div><br>
+        <div class="row content-right">
+            <button class="closeBtn" onclick="$('#update-dialog').dialog('close');">Close</button>&nbsp;&nbsp;&nbsp;
             <input class="createBtn" type="submit" value="Register">
         </div>
     </div>

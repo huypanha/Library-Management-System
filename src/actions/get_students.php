@@ -9,9 +9,24 @@
         // get offset and limit
         $offset = $_GET['offset'];
         $limit = $_GET['limit'];
+        $startDate = $_GET['startDate'];
+        $endDate = $_GET['endDate'];
+        $isBlackList = $_GET['isBlackList'];
 
-        // get student
-        $sql = "SELECT * FROM student WHERE status=1 ORDER BY stu_id DESC LIMIT $offset,$limit";
+        // create query to get student
+        $sql = "SELECT * FROM student WHERE status=1 ";
+
+        // if user filter date
+        if($startDate != '' && $endDate != ''){
+            $sql .= "AND created_date>='".$startDate."' AND created_date<='".$endDate."' ";
+        }
+
+        // if user filter black list
+        if($isBlackList != ''){
+            $sql .= "AND is_black_list=".$isBlackList." ";
+        }
+
+        $sql .= "ORDER BY stu_id DESC LIMIT $offset,$limit";
         $stmt = $db->prepare($sql);
         $stmt->execute();
 
