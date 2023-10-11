@@ -714,6 +714,7 @@ label span {
     padding: 10px;
     border-radius: 10px;
     opacity: 0;
+    z-index: 100;
 }
 
 .success-message {

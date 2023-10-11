@@ -1,6 +1,6 @@
 <?php
     // if have data
-    if(isset($_POST['fn'])){
+    if(isset($_POST['stuId'])){
         // import db
         require '../../config/db.php';
 

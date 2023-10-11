@@ -329,6 +329,10 @@
             // show update dialog
             $("#update-dialog").dialog('open');
         }
+
+        function deleteStudent(stuId){
+            
+        }
     </script>
 </head>
 <body>
