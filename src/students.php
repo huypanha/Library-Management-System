@@ -54,7 +54,7 @@
                             const dob = new Date(v.dob);
                             var row = `<tr>
                                 <td>`+ v.stuId +`</td>
-                                <td>`+ v.firstName + ' ' + v.lastName +`</td>
+                                <td>`+ v.firstName + ` ` + v.lastName +`</td>
                                 <td>`+ (v.gender == 0 ? 'Male' : 'Female') +`</td>
                                 <td>`+ dob.getDate() + '/' + (dob.getMonth()+1) + '/' + dob.getFullYear() +`</td>
                                 <td>`+ v.contact +`</td>
@@ -62,7 +62,9 @@
                                 <td>`+ (v.isBlackList == 0 ? "False" : "True") +`</td>
                                 <td>`+ v.createdDate +`</td>
                                 <td>
-                                    <a class='cursor-pointer' onclick="openUpdateDialog();"><i class='fas fa-pencil-alt'></i></a>
+                                    <a class='cursor-pointer' onclick="openUpdateDialog('`+ v.stuId +`','`+ 
+                                    v.firstName + `','` + v.lastName +`','`+ v.gender +`','`+ dob +`','`+ v.contact +`','`+ 
+                                    v.addr +`','`+ v.isBlackList +`');"><i class='fas fa-pencil-alt'></i></a>
                                     <a class='cursor-pointer'><i class='fas fa-trash-alt'></i></a>
                                 </td>
                             </tr>`;
@@ -104,7 +106,7 @@
             $("#update-dialog").dialog({
                 autoOpen: false,
                 modal: true,
-                height: 400,
+                height: 450,
                 width: 500,
                 button: [{
                     text: "Close",
@@ -179,7 +181,9 @@
                                     <td>False</td>
                                     <td>`+ now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear() +`</td>
                                     <td>
-                                        <a class='cursor-pointer' onclick="openUpdateDialog();"><i class='fas fa-pencil-alt'></i></a>
+                                        <a class='cursor-pointer' onclick="openUpdateDialog('`+ data.data +`','`+ 
+                                    firstName + `','` + lastName +`','`+ gender +`','`+ dob +`','`+ contact +`','`+ 
+                                    addr +`', '0');"><i class='fas fa-pencil-alt'></i></a>
                                         <a class='cursor-pointer'><i class='fas fa-trash-alt'></i></a>
                                     </td>
                                 </tr>`;
@@ -237,9 +241,92 @@
                 $("#stu-list").html("");
                 getStudentsList();
             });
+
+            // when user click update button on update student dialog
+            $(".updateBtn").click(function(){
+                // get data from input
+                const stuId = $("#uStuId").val();
+                const firstName = $("#ufirstName").val();
+                const lastName = $("#ulastName").val();
+                const contact = $("#ucontact").val();
+                const addr = $("#uaddr").val();
+                const gender = $("#ugender").find(":selected").val();
+                const dob = new Date($("#udob").val());
+                const isBlackList = $("#uBlackList").is(":checked") ? 1 : 0;
+
+                // clear status
+                $("#ufirstNameStatus").text("");
+                $("#ulastNameStatus").text("");
+                $("#ucontactStatus").text("");
+                $("#uaddrStatus").text("");
+                $("#udobStatus").text("");
+
+                // validate data
+                if(firstName == ""){
+                    $("#ufirstNameStatus").text("Please enter student first name");
+                } else if(lastName == ""){
+                    $("#ulastNameStatus").text("Please enter student last name");
+                } else if(dob == "Invalid Date"){
+                    $("#udobStatus").text("Please enter student date of birth");
+                } else if(contact == ""){
+                    $("#ucontactStatus").text("Please enter student contact");
+                } else if(addr == ""){
+                    $("#uaddrStatus").text("Please enter student address");
+                } else {
+                    // sending data to db
+                    $.ajax({
+                        method: "POST",
+                        url: "actions/update_student.php",
+                        data: {
+                            stuId: stuId,
+                            fn: firstName,
+                            ln: lastName,
+                            c: contact,
+                            addr: addr,
+                            g: gender,
+                            dob: dob.getFullYear()+'/'+(dob.getMonth()+1)+'/'+dob.getDate(),
+                            isBlackList: isBlackList,
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            // get message text by status
+                            if(data.status == 1){
+                                showBottomRightMessage(data.data, 1);
+
+                                // close create student dialog
+                                $("#update-dialog").dialog("close");
+
+                                $("#stu-list").html("");
+                                getStudentsList();
+                            } else {
+                                showBottomRightMessage(data.data, 0);
+                            }
+                        },
+                        error: function(_, status, msg){
+                            showBottomRightMessage(status+': '+msg, 2);
+                        }
+                    });
+                }
+            });
         });
 
-        function openUpdateDialog(){
+        function openUpdateDialog(stuId, firstName, lastName, gender, dob, contact, addr, isBlackList){
+            // convert date
+            var d = new Date(dob);
+            var day = ("0" + d.getDate()).slice(-2);
+            var month = ("0" + (d.getMonth() + 1)).slice(-2);
+
+            // send existing value to input
+            $("#uStuId").val(stuId);
+            $("#ufirstName").val(firstName);
+            $("#ulastName").val(lastName);
+            $("#udob").val(d.getFullYear()+"-"+month+"-"+day);
+            $("#ucontact").val(contact);
+            $("#uaddr").val(addr);
+            $("#ugender").val(gender);
+            $("#uBlackList").prop('checked', isBlackList == '0' ? false : true);
+
+            // show update dialog
             $("#update-dialog").dialog('open');
         }
     </script>
@@ -317,31 +404,8 @@
             </a>
         </div>
     </div>
-    <!-- <div id="filter-dialog" title="Filters">
-        <div class="row gap25">
-            <div class="col w100per">
-                <label for="sratDate">Start Date</label><br>
-                <input class="w100per" type="date" name="sratDate" id="sratDate">
-            </div>
-            <div class="col w100per">
-                <label for="endDate">End Date</label><br>
-                <input class="w100per" type="date" name="endDate" id="endDate">
-            </div>
-        </div>
-        <label for="black-list">Black List : </label><br><br>
-        <input type="radio" name="blacklist-opt" id="opt1" checked>&nbsp;&nbsp;
-        <label for="blacklist-all">All</label>&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="radio" name="blacklist-opt" id="opt2">&nbsp;&nbsp;
-        <label for="blacklist-only">Black List</label>&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="radio" name="blacklist-opt" id="opt3">&nbsp;&nbsp;
-        <label for="not-blacklist">Not Black List</label><br><br>
-        <div class="row content-right">
-            <button class="btn" onclick="$('#filter-dialog').dialog('close');">Close</button>&nbsp;&nbsp;&nbsp;
-            <button class="btn" onclick="$('#filter-dialog').dialog('close');">Reset</button>&nbsp;&nbsp;&nbsp;
-            <input class="primary-btn" type="submit" value="Filter">
-        </div>
-    </div> -->
-    <div id="create-dialog" title="New Student">
+    <!-- create dialog -->
+    <div class="dialog" id="create-dialog" title="New Student">
         <div class="row gap25">
             <div class="col w100per">
                 <label for="firstName">First Name</label><br>
@@ -388,12 +452,14 @@
             <input class="createBtn" type="submit" value="Register">
         </div>
     </div>
-    <div id="update-dialog" title="Update Student">
+    <!-- update dialog -->
+    <div class="dialog" id="update-dialog" title="Update Student">
         <div class="row gap25">
+            <input type="hidden" name="stuId" id="uStuId">
             <div class="col w100per">
                 <label for="ufirstName">First Name</label><br>
                 <input class="w100per" type="text" name="ufirstName" id="ufirstName" placeholder="First Name">
-                <div id="firstNameStatus" class="input-error-status"></div>
+                <div id="ufirstNameStatus" class="input-error-status"></div>
             </div>
             <div class="col w100per">
                 <label for="ugender">Gender</label><br>
@@ -410,31 +476,37 @@
             <div class="col w100per">
                 <label for="ulastName">Last Name</label><br>
                 <input class="w100per" type="text" name="ulastName" id="ulastName" placeholder="Last Name">
-                <div id="lastNameStatus" class="input-error-status"></div>
+                <div id="ulastNameStatus" class="input-error-status"></div>
             </div>
             <div class="col w100per">
                 <label for="udob">Date of Birth</label><br>
-                <input class="w100per" type="udate" name="udob" id="udob">
-                <div id="dobStatus" class="input-error-status"></div>
+                <input class="w100per" type="date" name="udob" id="udob">
             </div>
         </div>
         <div class="row gap25">
             <div class="col w100per">
                 <label for="ucontact">Contact</label><br>
                 <input class="w100per" type="text" name="ucontact" id="ucontact" placeholder="Contact">
-                <div id="contactStatus" class="input-error-status"></div>
+                <div id="ucontactStatus" class="input-error-status"></div>
             </div>
             <div class="col w100per">
                 <label for="uaddr">Address</label><br>
                 <input class="w100per" type="address" name="uaddr" id="uaddr" placeholder="Address">
-                <div id="addrStatus" class="input-error-status"></div>
+                <div id="uaddrStatus" class="input-error-status"></div>
             </div>
+        </div><br>
+        <div class="row">
+            <input type="checkbox" name="uBlackList" id="uBlackList">&nbsp;&nbsp;&nbsp;
+            <label for="uBlackList">Black List</label>
         </div><br>
         <div class="row content-right">
             <button class="closeBtn" onclick="$('#update-dialog').dialog('close');">Close</button>&nbsp;&nbsp;&nbsp;
-            <input class="createBtn" type="submit" value="Register">
+            <input class="updateBtn" type="submit" value="Update">
         </div>
     </div>
-    <div class="message-bottom-right">Message</div>
+    <!-- message -->
+    <div class="message-wrapper">
+        <div class="message-bottom-right">Message</div>
+    </div>
 </body>
 </html>
