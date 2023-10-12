@@ -33,31 +33,31 @@ $(document).ready(function(){
         // get image to change for new active menu
         if($(this).index() == 0){
             newChild = "<img src='media/dashboard_filled.png' alt='menu icon'>";
-            newPage = "<iframe src='src/dashboard.php' frameborder='0'></iframe>";
+            newPage = "<iframe id='current-page' src='src/dashboard.php' frameborder='0'></iframe>";
             newPageTitle = "Dashboard";
         } else if($(this).index() == 1){
             newChild = "<i class='fad fa-user-graduate size-25 white'></i>";
-            newPage = "<iframe src='src/students.php' frameborder='0'></iframe>";
+            newPage = "<iframe id='current-page' src='src/students.php' frameborder='0'></iframe>";
             newPageTitle = "Students";
         } else if($(this).index() == 2){
             newChild = "<i class='fad fa-books size-25 white'></i>";
-            newPage = "<iframe src='src/books.php' frameborder='0'></iframe>";
+            newPage = "<iframe id='current-page' src='src/books.php' frameborder='0'></iframe>";
             newPageTitle = "Books";
         } else if($(this).index() == 3){
             newChild = "<i class='fad fa-book-reader size-25 white'></i>";
-            newPage = "<iframe src='src/borrows.php' frameborder='0'></iframe>";
+            newPage = "<iframe id='current-page' src='src/borrows.php' frameborder='0'></iframe>";
             newPageTitle = "Borrows";
         } else if($(this).index() == 4){
             newChild = "<i class='fad fa-users size-25 white'></i>";
-            newPage = "<iframe src='src/students.php' frameborder='0'></iframe>";
+            newPage = "<iframe id='current-page' src='src/students.php' frameborder='0'></iframe>";
             newPageTitle = "Users";
         } else if($(this).index() == 5){
             newChild = "<i class='fad fa-cog size-25 white' style='--fa-primary-opacity: 0.4; --fa-secondary-opacity: 1;'></i>";
-            newPage = "<iframe src='src/settings.php' frameborder='0'></iframe>";
+            newPage = "<iframe id='current-page' src='src/settings.php' frameborder='0'></iframe>";
             newPageTitle = "Settings";
         } else if($(this).index() == 6){
             newChild = "<i class='fad fa-comment-alt-edit size-25 white' style='--fa-primary-opacity: 0.4; --fa-secondary-opacity: 1;'></i>";
-            newPage = "<iframe src='src/feedback.php' frameborder='0'></iframe>";
+            newPage = "<iframe id='current-page' src='src/feedback.php' frameborder='0'></iframe>";
             newPageTitle = "Feedback";
         }
 

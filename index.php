@@ -26,6 +26,21 @@
     <meta property="og:image" content="media/logo.jpeg">
     <link rel="stylesheet" href="css/fontawesomepro.css">
     <link rel="stylesheet" href="js/fontawesomepro.js">
+    <script>
+        $(document).ready(function(){
+            $("#search").keypress(function(e){
+                if(e.which == 13){
+                    if($("#current-page").attr("src").includes("src/students.php")){
+                        if($("#search").val() == ""){
+                            $("#current-page-content").html("<iframe id='current-page' src='src/students.php' frameborder='0'></iframe>");
+                        } else {
+                            $("#current-page-content").html("<iframe id='current-page' src='src/students.php?searchKey="+$("#search").val()+"' frameborder='0'></iframe>");
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="wrapper flex">
@@ -63,7 +78,7 @@
                 </div>
             </div>
             <div id="current-page-content">
-                <iframe src="src/dashboard.php" frameborder="0"></iframe>
+                <iframe id="current-page" src="src/dashboard.php" frameborder="0"></iframe>
             </div>
         </div>
     </div>

@@ -10,80 +10,141 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../js/script.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script>
-        var offset = 0, limit = 20;
+        var offset = 0, limit = 20, searchKey = '';
+
+        // get student list function
+        function getStudentsList(){
+            const startDate = new Date($("#startDate").val());
+            const endDate = new Date($("#endDate").val());
+            const isBlackList = $("#filter-balck-list").find(":selected").val();
+
+            var data = {
+                offset: offset,
+                limit: limit,
+                startDate: '',
+                endDate: '',
+                isBlackList: '',
+            };
+            
+            if($("#filter-date-opt").find(":selected").val() == "custom"){
+                if(startDate != "Invalid Date"){
+                    data.startDate = startDate.getFullYear()+'/'+(startDate.getMonth()+1)+'/'+startDate.getDate();
+                    data.endDate = endDate.getFullYear()+'/'+(endDate.getMonth()+1)+'/'+endDate.getDate();
+                }
+            }
+
+            if(isBlackList == "bl"){
+                data.isBlackList = 1;
+            } else if(isBlackList == "nbl"){
+                data.isBlackList = 0;
+            }
+
+            if(searchKey != ''){
+                data.searchKey = searchKey;
+            }
+
+            $.ajax({
+                method: "GET",
+                url: "actions/get_students.php",
+                dataType: "JSON",
+                data: data,
+                success: function(re){
+                    var reCount = 0;
+                    $.each(re.data, function(i, v){
+                        const dob = new Date(v.dob);
+                        var row = `<tr>
+                            <td>`+ v.stuId +`</td>
+                            <td>`+ v.firstName + ` ` + v.lastName +`</td>
+                            <td>`+ (v.gender == 0 ? 'Male' : 'Female') +`</td>
+                            <td>`+ dob.getDate() + '/' + (dob.getMonth()+1) + '/' + dob.getFullYear() +`</td>
+                            <td>`+ v.contact +`</td>
+                            <td>`+ v.addr +`</td>
+                            <td `+ (v.isBlackList == 0 ? "" : 'class="red"') +`>`+ (v.isBlackList == 0 ? "False" : "True") +`</td>
+                            <td>`+ v.createdDate +`</td>
+                            <td>
+                                <a class='cursor-pointer' onclick="openUpdateDialog('`+ v.stuId +`','`+ 
+                                v.firstName + `','` + v.lastName +`','`+ v.gender +`','`+ dob +`','`+ v.contact +`','`+ 
+                                v.addr +`','`+ v.isBlackList +`');"><i class='fas fa-pencil-alt'></i></a>
+                                <a class='cursor-pointer' onclick="deleteStudent(`+ v.stuId +`)"><i class='fas fa-trash-alt'></i></a>
+                            </td>
+                        </tr>`;
+                        $("#stu-list").append(row);
+                        reCount = reCount + 1;
+                    });
+
+                    if(reCount > 0){
+                        $("#no-result").hide();
+                        $("#data-table").show();
+                        // hide load more button when no more data
+                        if(!re.hasMore){
+                            $("#load-more").hide();
+                        } else {
+                            $("#load-more").show();
+                        }
+                    } else {
+                        $("#data-table").hide();
+                        $("#no-result").show();
+                    }
+                },
+                error: function(_, status, msg){
+                    showBottomRightMessage(status+': '+msg);
+                }
+            });
+        }
+
+        function openUpdateDialog(stuId, firstName, lastName, gender, dob, contact, addr, isBlackList){
+            // convert date
+            var d = new Date(dob);
+            var day = ("0" + d.getDate()).slice(-2);
+            var month = ("0" + (d.getMonth() + 1)).slice(-2);
+
+            // send existing value to input
+            $("#uStuId").val(stuId);
+            $("#ufirstName").val(firstName);
+            $("#ulastName").val(lastName);
+            $("#udob").val(d.getFullYear()+"-"+month+"-"+day);
+            $("#ucontact").val(contact);
+            $("#uaddr").val(addr);
+            $("#ugender").val(gender);
+            $("#uBlackList").prop('checked', isBlackList == '0' ? false : true);
+
+            // show update dialog
+            $("#update-dialog").dialog('open');
+        }
+
+        function deleteStudent(stuId){
+            if(confirm("Are you sure want to delete student #"+stuId+" ?")){
+                $.ajax({
+                    method: "POST",
+                    url: "actions/delete_student.php",
+                    data: {
+                        "stuId": stuId,
+                    },
+                    dataType: "JSON",
+                    success: function(data){
+                        if(data.status == 1){
+                            // show status message
+                            showBottomRightMessage(data.data, 1);
+
+                            // reload list
+                            $("#stu-list").html("");
+                            getStudentsList();
+                        }
+                    },
+                    error: function(_, status, msg){
+                        showBottomRightMessage(status+': '+msg, 2);
+                    }
+                });
+            }
+        }
 
         $(document).ready(async function(){
             $(".startDate").hide();
             $(".endDate").hide();
-
-            // get student list function
-            function getStudentsList(){
-                const startDate = new Date($("#startDate").val());
-                const endDate = new Date($("#endDate").val());
-                const isBlackList = $("#filter-balck-list").find(":selected").val();
-
-                var data = {
-                    offset: offset,
-                    limit: limit,
-                    startDate: '',
-                    endDate: '',
-                    isBlackList: '',
-                };
-                
-                if($("#filter-date-opt").find(":selected").val() == "custom"){
-                    if(startDate != "Invalid Date"){
-                        data.startDate = startDate.getFullYear()+'/'+(startDate.getMonth()+1)+'/'+startDate.getDate();
-                        data.endDate = endDate.getFullYear()+'/'+(endDate.getMonth()+1)+'/'+endDate.getDate();
-                    }
-                }
-
-                if(isBlackList == "bl"){
-                    data.isBlackList = 1;
-                } else if(isBlackList == "nbl"){
-                    data.isBlackList = 0;
-                }
-
-                $.ajax({
-                    method: "GET",
-                    url: "actions/get_students.php",
-                    dataType: "JSON",
-                    data: data,
-                    success: function(re){
-                        $.each(re.data, function(i, v){
-                            const dob = new Date(v.dob);
-                            var row = `<tr>
-                                <td>`+ v.stuId +`</td>
-                                <td>`+ v.firstName + ` ` + v.lastName +`</td>
-                                <td>`+ (v.gender == 0 ? 'Male' : 'Female') +`</td>
-                                <td>`+ dob.getDate() + '/' + (dob.getMonth()+1) + '/' + dob.getFullYear() +`</td>
-                                <td>`+ v.contact +`</td>
-                                <td>`+ v.addr +`</td>
-                                <td>`+ (v.isBlackList == 0 ? "False" : "True") +`</td>
-                                <td>`+ v.createdDate +`</td>
-                                <td>
-                                    <a class='cursor-pointer' onclick="openUpdateDialog('`+ v.stuId +`','`+ 
-                                    v.firstName + `','` + v.lastName +`','`+ v.gender +`','`+ dob +`','`+ v.contact +`','`+ 
-                                    v.addr +`','`+ v.isBlackList +`');"><i class='fas fa-pencil-alt'></i></a>
-                                    <a class='cursor-pointer'><i class='fas fa-trash-alt'></i></a>
-                                </td>
-                            </tr>`;
-                            $("#stu-list").append(row);
-                        });
-
-                        // hide load more button when no more data
-                        if(!re.hasMore){
-                            $("#load-more").hide();
-                        }
-                    },
-                    error: function(_, status, msg){
-                        showBottomRightMessage(status+': '+msg);
-                    }
-                });
-            }
-
-            // first init
-            getStudentsList();
+            $("#ro-result").hide();
+            $("#load-more").hide();
 
             // create create student dialog
             $("#create-dialog").dialog({
@@ -184,7 +245,7 @@
                                         <a class='cursor-pointer' onclick="openUpdateDialog('`+ data.data +`','`+ 
                                     firstName + `','` + lastName +`','`+ gender +`','`+ dob +`','`+ contact +`','`+ 
                                     addr +`', '0');"><i class='fas fa-pencil-alt'></i></a>
-                                        <a class='cursor-pointer'><i class='fas fa-trash-alt'></i></a>
+                                        <a class='cursor-pointer' onclick="deleteStudent(`+ data.data +`)"><i class='fas fa-trash-alt'></i></a>
                                     </td>
                                 </tr>`;
                                 $("#stu-list").prepend(row);
@@ -296,6 +357,7 @@
                                 // close create student dialog
                                 $("#update-dialog").dialog("close");
 
+                                // reload list
                                 $("#stu-list").html("");
                                 getStudentsList();
                             } else {
@@ -309,30 +371,6 @@
                 }
             });
         });
-
-        function openUpdateDialog(stuId, firstName, lastName, gender, dob, contact, addr, isBlackList){
-            // convert date
-            var d = new Date(dob);
-            var day = ("0" + d.getDate()).slice(-2);
-            var month = ("0" + (d.getMonth() + 1)).slice(-2);
-
-            // send existing value to input
-            $("#uStuId").val(stuId);
-            $("#ufirstName").val(firstName);
-            $("#ulastName").val(lastName);
-            $("#udob").val(d.getFullYear()+"-"+month+"-"+day);
-            $("#ucontact").val(contact);
-            $("#uaddr").val(addr);
-            $("#ugender").val(gender);
-            $("#uBlackList").prop('checked', isBlackList == '0' ? false : true);
-
-            // show update dialog
-            $("#update-dialog").dialog('open');
-        }
-
-        function deleteStudent(stuId){
-            
-        }
     </script>
 </head>
 <body>
@@ -387,8 +425,8 @@
                     <a onclick="$('#filter-dialog').dialog('open');"><i class="fas fa-filter"></i>&nbsp;&nbsp;Filter</a>
                 </div>
             </div> -->
-            <div class="row scroll-x mt10">
-                <table>
+            <div class="row scroll-x">
+                <table id="data-table">
                     <tr>
                         <th>ID</th>
                         <th>Full Name</th>
@@ -402,6 +440,10 @@
                     </tr>
                     <tbody id="stu-list"></tbody>
                 </table>
+                <div id="no-result" class="center w100per">
+                    <dotlottie-player src="https://lottie.host/368474bf-84db-4d4a-bbd2-65219928b446/3jKzzZOp3j.json" background="transparent" speed="1" style="width: 300px; height: 300px; margin-left: 40%;" loop autoplay></dotlottie-player>
+                    <p class="gray" >No Result</p>
+                </div>
             </div><br>
             <a id="load-more" class="row content-center primary-color load-more cursor-pointer">
                 <i class="fas fa-chevron-down primary-color"></i>&nbsp;&nbsp;Load More
@@ -514,3 +556,14 @@
     </div>
 </body>
 </html>
+
+<?php
+    if(isset($_GET['searchKey'])){
+        echo "<script>
+            searchKey = '".$_GET['searchKey']."';
+            getStudentsList();
+        </script>";
+    } else {
+        echo "<script>getStudentsList()</script>";
+    }
+?>
