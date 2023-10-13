@@ -30,7 +30,7 @@
         $(document).ready(function(){
             $("#search").keypress(function(e){
                 if(e.which == 13){
-                    if($("#current-page").attr("src").includes("src/students.php")){
+                    if($("#current-page").attr("src").match("^src/students.php")){
                         if($("#search").val() == ""){
                             $("#current-page-content").html("<iframe id='current-page' src='src/students.php' frameborder='0'></iframe>");
                         } else {

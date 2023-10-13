@@ -159,22 +159,25 @@
             <a href="#" onclick="$('#book-details').dialog('close');">Close</a>
         </div>
     </div>
-    <div id="create-dialog" title="Create Book">
-        <div class="row gap25">
+    <div class="dialog" id="create-dialog" title="Create Book">
+        <div class="row gap25 content-top">
             <div class="col w200">
                 <div id="book-cover">
-                    <img src="../media/book-cover.jpg" alt="Book Cover">
+                    <img id="book-cover-img" src="../media/book-cover.jpg" alt="Book Cover">
                 </div><br>
-                <label class="choose-file-btn w100per back-gray" for="cover"><span>Choose Book Cover</span></label>
-                <input type="file" name="cover" id="cover">
+                <label class="choose-file-btn w100per back-gray" for="cover"><span class="gray">Choose Book Cover</span></label>
+                <input type="file" accept="image/*" name="cover" id="cover" onchange="document.getElementById('book-cover-img').src = window.URL.createObjectURL(this.files[0])">
             </div>
             <div class="col w100per">
                 <label for="title">Title</label>
-                <input class="w100per" type="text" name="title" id="title" requeried><br>
-                <label for="type">Type</label>
+                <input class="w100per" type="text" name="title" id="title"><br>
+                <div id="titleStatus" class="input-error-status"></div>
+                <label for="desc">Description</label>
+                <textarea class="w100per" type="text" name="desc" id="desc"></textarea><br>
+                <label for="cate">Category</label>
                 <!-- <input class="w100per" type="text" name="type" id="type" requeried><br> -->
                 <div class="filter-box w100per">
-                    <select name="filter" id="filter">
+                    <select name="cate" id="cate">
                         <option value="Anthologies">Anthologies</option>
                         <option value="Art Books">Art Books</option>
                         <option value="Bussiness">Bussiness</option>
@@ -193,20 +196,22 @@
                         <option value="Travel">Travel</option>
                     </select>
                     <i class="fas fa-caret-down"></i>
-                </div><br>
-                <label for="edition">Edition</label>
-                <input class="w100per" type="text" name="edition" id="edition" requeried><br>
+                </div>
+                <div class="h10"> </div>
                 <label for="author">Author</label>
-                <input class="w100per" type="text" name="author" id="author" requeried><br>
+                <input class="w100per" type="text" name="author" id="author"><br>
+                <div id="lastNameStatus" class="input-error-status"></div>
                 <label for="pub">Publisher</label>
-                <input class="w100per" type="text" name="pub" id="pub" requeried><br>
+                <input class="w100per" type="text" name="pub" id="pub"><br>
+                <div id="lastNameStatus" class="input-error-status"></div>
                 <label for="price">Price</label>
-                <input class="w100per" type="number" name="price" id="price" requeried><br>
+                <input class="w100per" type="number" name="price" id="price"><br>
+                <div id="lastNameStatus" class="input-error-status"></div>
             </div><br>
         </div> <br>
         <div class="row content-right gap10">
-            <a class="btn" href="#" onclick="$('#create-dialog').dialog('close');">Close</a>
-            <a class="primary-btn" href="#" onclick="$('#create-dialog').dialog('close');">Create</a>
+            <a class="btn cursor-pointer" onclick="$('#create-dialog').dialog('close');">Close</a>
+            <a class="primary-btn cursor-pointer" onclick="$('#create-dialog').dialog('close');">Create</a>
         </div>
     </div>
 </body>

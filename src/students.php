@@ -441,7 +441,7 @@
                     <tbody id="stu-list"></tbody>
                 </table>
                 <div id="no-result" class="center w100per">
-                    <dotlottie-player src="https://lottie.host/368474bf-84db-4d4a-bbd2-65219928b446/3jKzzZOp3j.json" background="transparent" speed="1" style="width: 300px; height: 300px; margin-left: 40%;" loop autoplay></dotlottie-player>
+                    <dotlottie-player src="https://lottie.host/368474bf-84db-4d4a-bbd2-65219928b446/3jKzzZOp3j.json" background="transparent" speed="1" style="width: 300px; height: 300px; margin-left: 38%;" loop autoplay></dotlottie-player>
                     <p class="gray" >No Result</p>
                 </div>
             </div><br>

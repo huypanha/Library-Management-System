@@ -569,7 +569,7 @@ table tbody tr td a .fa-trash-alt {
     padding: 0;
 }
 
-.dialog input, .dialog button, #filter-dialog input {
+.dialog input, .dialog button, #filter-dialog input, .dialog textarea {
     background-color: white;
     border-radius: 10px;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -633,11 +633,6 @@ input[type="file"] {
     padding: 10px 15px;
     margin-bottom: 10px;
     cursor: pointer;
-    color: white;
-}
-
-label span {
-    color: white;
 }
 
 .dialog .row .btn {
@@ -920,6 +915,10 @@ label span {
 }
 
 /* /////////////////////////////////  Size  ///////////////////////////////// */
+
+.h10 {
+    height: 10px;
+}
 
 .h100 {
     height: 100px;
