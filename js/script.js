@@ -87,7 +87,7 @@ $(document).ready(function(){
 // autoClose: if true, this message will auto hide after the interval
 // interval: The duration of the message to show on the screen
 // messageType: The type of message to show
-//      0: for error message
+//      0: for error message (default)
 //      1: for success message
 //      2: for warning message
 function showBottomRightMessage(message, messageType = 0, autoClose = true, interval = 10000){

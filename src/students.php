@@ -376,12 +376,7 @@
 <body>
     <div class="wrapper padding-20">
         <div class="row space-between">
-            <!-- <ul class="tabbar">
-                <li class="tabbar-item tabbar-item-active">Students</li>
-                <li class="tabbar-item">Users</li>
-            </ul> -->
             <div class="row gap10 content-top">
-                <!-- <a class="add-new-btn" onclick="$('#filter-dialog').dialog('open');"><i class="fas fa-filter white"></i>&nbsp;&nbsp;Filter</a> -->
                 <div class="col w100">
                     <label for="filter-date-opt">Date</label><br>
                     <div class="filter-box">

@@ -11,6 +11,59 @@
     <script src="../js/script.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script>
+        var offset = 0, limit = 20, searchKey = '';
+
+        function getBooks() {
+            var data = {
+                limit: limit,
+                offset: offset,
+            };
+
+            $.ajax({
+                type: "GET",
+                url: "actions/get_books.php",
+                data: data,
+                dataType: "JSON",
+                success: function (response) {
+                    if(response.status == 1){
+                        $.each(response.data, function (i, v) { 
+                             // create new book item
+                             var newBook = `
+                                <a class="book-box" onclick="showDetails('`+v.title+`','`+v.desc+`','`+v.cate+`','`+v.author+`','`+v.pub+`','`+v.price+`','`+v.cover+`');">
+                                    <div class="book-cover">
+                                        <img src="../upload/book/`+v.cover+`" alt="cover">
+                                    </div>
+                                    <div class="book-title center">`+v.title+`</div>
+                                </a>
+                            `;
+
+                            // add new book to the book list
+                            $("#book-list").append(newBook);
+                        });
+                    } else {
+                        showBottomRightMessage(response.data);
+                    }
+                },
+                error: function(_, status, msg){
+                    showBottomRightMessage(status+': '+msg);
+                }
+            });
+        }
+
+        function showDetails(title, desc, cate, author, pub, price, cover){
+            // set value to dialog
+            $("#d-title").text(": "+title);
+            $("#d-desc").text(": "+desc);
+            $("#d-cate").text(": "+cate);
+            $("#d-author").text(": "+author);
+            $("#d-pub").text(": "+pub);
+            $("#d-price").text(": $"+price);
+            $("#d-cover").prop("src", "../upload/book/"+cover);
+
+            // open dialog
+            $('#book-details').dialog('open');
+        }
+
         $(document).ready(function(){
             $("#book-details").dialog({
                 autoOpen: false,
@@ -45,73 +98,91 @@
                     "ui-dialog": "highlight",
                 }
             });
+
+            $("#create-book-btn").click(function (e) { 
+                e.preventDefault();
+                
+                // get value from input
+                const title = $("#title").val();
+                const desc = $("#desc").val();
+                const cate = $("#cate").val();
+                const author = $("#author").val();
+                const publisher = $("#pub").val();
+                const price = $("#price").val();
+                const cover = $("#cover").prop("files");
+
+                // clear error
+                $("#titleStatus").text('');
+                $("#authorStatus").text('');
+                $("#pubStatus").text('');
+                $("#priceStatus").text('');
+                $("#imgStatus").text('');
+
+                if(title == ''){
+                    $("#titleStatus").text('Please enter book title');
+                } else if(author == ''){
+                    $("#authorStatus").text('Please enter author name');
+                } else if(publisher == ''){
+                    $("#pubStatus").text('Please enter publisher name');
+                } else if(price == ''){
+                    $("#priceStatus").text('Please enter book borrow price as number');
+                } else if(!cover[0]){
+                    $("#imgStatus").text('Please select a book cover');
+                } else {
+                    // create form data to send to php
+                    var fdata = new FormData();
+                    fdata.append("cover", cover[0]);
+                    fdata.append("title", title);
+                    fdata.append("desc", desc);
+                    fdata.append("cate", cate);
+                    fdata.append("author", author);
+                    fdata.append("pub", publisher);
+                    fdata.append("price", price);
+
+                    $.ajax({
+                        method: "POST",
+                        url: "actions/create_book.php",
+                        data: fdata,
+                        dataType: "JSON",
+                        processData: false,
+                        cache: false,
+                        contentType: false,
+                        success: function (response) {
+                            if(response.status == 1){
+                                // show message
+                                showBottomRightMessage("Created new book! ID: "+ response.data.newId, 1);
+
+                                // create new book item
+                                var newBook = `
+                                    <a class="book-box" onclick="showDetails('`+title+`','`+desc+`','`+cate+`','`+author+`','`+publisher+`','`+price+`','`+response.data.cover+`');">
+                                        <div class="book-cover">
+                                            <img src="../upload/book/`+response.data.cover+`" alt="cover">
+                                        </div>
+                                        <div class="book-title center">`+title+`</div>
+                                    </a>
+                                `;
+
+                                // add new book to the book list
+                                $("#book-list").prepend(newBook);
+
+                                // close create dialog
+                                $('#create-dialog').dialog('close');
+                            } else {
+                                showBottomRightMessage(response.data);
+                            }
+                        },
+                        error: function(_, status, msg){
+                            showBottomRightMessage(status+': '+msg);
+                        }
+                    });
+                }
+            });
         });
     </script>
 </head>
 <body>
     <div class="wrapper padding-20">
-        <div class="row wrap gap25 content-top">
-            <a class="book-box" onclick="$('#book-details').dialog('open');">
-                <div class="book-cover">
-                    <img src="../media/book-cover.jpg" alt="cover">
-                </div>
-                <div class="book-title center">កាដូជីវិត</div>
-            </a>
-            <a class="book-box">
-                <div class="book-cover">
-                    <img src="../media/angel-bookstore.jpg" alt="cover">
-                </div>
-                <div class="book-title center">កាដូជីវិត</div>
-            </a>
-            <a class="book-box">
-                <div class="book-cover">
-                    <img src="../media/book-cover.jpg" alt="cover">
-                </div>
-                <div class="book-title center">កាដូជីវិត</div>
-            </a>
-            <a class="book-box">
-                <div class="book-cover">
-                    <img src="../media/book-cover.jpg" alt="cover">
-                </div>
-                <div class="book-title center">កាដូជីវិត</div>
-            </a>
-            <a class="book-box">
-                <div class="book-cover">
-                    <img src="../media/book-cover.jpg" alt="cover">
-                </div>
-                <div class="book-title center">កាដូជីវិត</div>
-            </a>
-            <a class="book-box">
-                <div class="book-cover">
-                    <img src="../media/book-cover.jpg" alt="cover">
-                </div>
-                <div class="book-title center">កាដូជីវិត</div>
-            </a>
-            <a class="book-box">
-                <div class="book-cover">
-                    <img src="../media/book-cover.jpg" alt="cover">
-                </div>
-                <div class="book-title center">កាដូជីវិត</div>
-            </a>
-            <a class="book-box">
-                <div class="book-cover">
-                    <img src="../media/book-cover.jpg" alt="cover">
-                </div>
-                <div class="book-title center">កាដូជីវិត</div>
-            </a>
-            <a class="book-box">
-                <div class="book-cover">
-                    <img src="../media/book-cover.jpg" alt="cover">
-                </div>
-                <div class="book-title center">កាដូជីវិត</div>
-            </a>
-            <a class="book-box">
-                <div class="book-cover">
-                    <img src="../media/book-cover.jpg" alt="cover">
-                </div>
-                <div class="book-title center">កាដូជីវិត</div>
-            </a>
-        </div><br>
+        <div id="book-list" class="row wrap gap25 content-bottom"></div><br>
         <a href="#" class="row content-center primary-color load-more">
             <i class="fas fa-chevron-down primary-color"></i>&nbsp;&nbsp;Load More
         </a>
@@ -119,39 +190,35 @@
             <i class="fas fa-plus white"></i>
         </a>
     </div>
-    <div id="book-details" title="Book Details">
+    <div class="dialog" id="book-details" title="Book Details">
         <div class="row gap25">
             <div id="book-cover">
-                <img src="../media/book-cover.jpg" alt="Book Cover">
+                <img id="d-cover" src="../media/book-cover.jpg" alt="Book Cover">
             </div>
             <table>
                 <tr>
                     <td width="100px">Title</td>
-                    <td>: កាដូជីវិត</td>
+                    <td id="d-title"></td>
                 </tr>
                 <tr>
-                    <td width="100px">Type</td>
-                    <td>: Love</td>
+                    <td width="100px">Description</td>
+                    <td id="d-desc"></td>
                 </tr>
                 <tr>
-                    <td width="100px">Edition</td>
-                    <td>: Edition</td>
+                    <td width="100px">Category</td>
+                    <td id="d-cate"></td>
                 </tr>
                 <tr>
                     <td width="100px">Author</td>
-                    <td>: Huy Panha</td>
+                    <td id="d-author"></td>
                 </tr>
                 <tr>
                     <td width="100px">Publisher</td>
-                    <td>: Huy Panha</td>
+                    <td id="d-pub"></td>
                 </tr>
                 <tr>
                     <td width="100px">Price</td>
-                    <td>: $10</td>
-                </tr>
-                <tr>
-                    <td width="100px">Status</td>
-                    <td>: Available</td>
+                    <td id="d-price"></td>
                 </tr>
             </table>
         </div> <br>
@@ -165,6 +232,7 @@
                 <div id="book-cover">
                     <img id="book-cover-img" src="../media/book-cover.jpg" alt="Book Cover">
                 </div><br>
+                <div id="imgStatus" class="input-error-status"></div><br>
                 <label class="choose-file-btn w100per back-gray" for="cover"><span class="gray">Choose Book Cover</span></label>
                 <input type="file" accept="image/*" name="cover" id="cover" onchange="document.getElementById('book-cover-img').src = window.URL.createObjectURL(this.files[0])">
             </div>
@@ -173,7 +241,7 @@
                 <input class="w100per" type="text" name="title" id="title"><br>
                 <div id="titleStatus" class="input-error-status"></div>
                 <label for="desc">Description</label>
-                <textarea class="w100per" type="text" name="desc" id="desc"></textarea><br>
+                <textarea class="w100per" type="text" name="desc" id="desc" rows="3"></textarea><br>
                 <label for="cate">Category</label>
                 <!-- <input class="w100per" type="text" name="type" id="type" requeried><br> -->
                 <div class="filter-box w100per">
@@ -200,19 +268,30 @@
                 <div class="h10"> </div>
                 <label for="author">Author</label>
                 <input class="w100per" type="text" name="author" id="author"><br>
-                <div id="lastNameStatus" class="input-error-status"></div>
+                <div id="authorStatus" class="input-error-status"></div>
                 <label for="pub">Publisher</label>
                 <input class="w100per" type="text" name="pub" id="pub"><br>
-                <div id="lastNameStatus" class="input-error-status"></div>
+                <div id="pubStatus" class="input-error-status"></div>
                 <label for="price">Price</label>
                 <input class="w100per" type="number" name="price" id="price"><br>
-                <div id="lastNameStatus" class="input-error-status"></div>
+                <div id="priceStatus" class="input-error-status"></div>
             </div><br>
         </div> <br>
         <div class="row content-right gap10">
             <a class="btn cursor-pointer" onclick="$('#create-dialog').dialog('close');">Close</a>
-            <a class="primary-btn cursor-pointer" onclick="$('#create-dialog').dialog('close');">Create</a>
+            <a class="primary-btn cursor-pointer" id="create-book-btn">Create</a>
         </div>
     </div>
 </body>
 </html>
+
+<?php
+    if(isset($_GET['searchKey'])){
+        echo "<script>
+            searchKey = '".$_GET['searchKey']."';
+            getBooks();
+        </script>";
+    } else {
+        echo "<script>getBooks()</script>";
+    }
+?>
