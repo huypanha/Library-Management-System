@@ -110,6 +110,23 @@
                 }
             });
 
+            $("#update-dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                width: 700,
+                button: [
+                    {
+                        text: "Close",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                ],
+                classes: {
+                    "ui-dialog": "highlight",
+                }
+            });
+
             $("#create-book-btn").click(function (e) { 
                 e.preventDefault();
                 
@@ -190,6 +207,11 @@
                     });
                 }
             });
+
+            $("#d-btn-update").click(function(){
+                $('#book-details').dialog('close');
+                $("#update-dialog").dialog('open');
+            });
         });
     </script>
 </head>
@@ -204,7 +226,7 @@
         </a>
     </div>
     <div class="dialog" id="book-details" title="Book Details">
-        <div class="row gap25">
+        <div class="row gap25 content-top">
             <div id="book-cover">
                 <img id="d-cover" src="../media/book-cover.jpg" alt="Book Cover">
             </div>
@@ -243,8 +265,12 @@
                 </tr>
             </table>
         </div> <br>
-        <div class="row content-right">
-            <a href="#" onclick="$('#book-details').dialog('close');">Close</a>
+        <div class="row space-between gap10">
+            <button class="deleteBtn" onclick="$('#book-details').dialog('close');">Delete</button>
+            <div class="row gap10">
+                <button class="closeBtn" onclick="$('#book-details').dialog('close');">Close</button>
+                <button id="d-btn-update" class="createBtn">Update</button>
+            </div>
         </div>
     </div>
     <div class="dialog" id="create-dialog" title="Create Book">
@@ -264,7 +290,6 @@
                 <label for="desc">Description</label>
                 <textarea class="w100per" type="text" name="desc" id="desc" rows="3"></textarea><br>
                 <label for="cate">Category</label>
-                <!-- <input class="w100per" type="text" name="type" id="type" requeried><br> -->
                 <div class="filter-box w100per">
                     <select name="cate" id="cate">
                         <option value="Anthologies">Anthologies</option>
@@ -300,6 +325,61 @@
         </div> <br>
         <div class="row content-right gap10">
             <a class="btn cursor-pointer" onclick="$('#create-dialog').dialog('close');">Close</a>
+            <a class="primary-btn cursor-pointer" id="create-book-btn">Create</a>
+        </div>
+    </div>
+    <div class="dialog" id="update-dialog" title="Update Book">
+        <div class="row gap25 content-top">
+            <div class="col w200">
+                <div id="book-cover">
+                    <img id="book-cover-img" src="../media/book-cover.jpg" alt="Book Cover">
+                </div><br>
+                <div id="imgStatus" class="input-error-status"></div><br>
+                <label class="choose-file-btn w100per back-gray" for="cover"><span class="gray">Choose Book Cover</span></label>
+                <input type="file" accept="image/*" name="cover" id="cover" onchange="document.getElementById('book-cover-img').src = window.URL.createObjectURL(this.files[0])">
+            </div>
+            <div class="col w100per">
+                <label for="title">Title</label>
+                <input class="w100per" type="text" name="title" id="title"><br>
+                <div id="titleStatus" class="input-error-status"></div>
+                <label for="desc">Description</label>
+                <textarea class="w100per" type="text" name="desc" id="desc" rows="3"></textarea><br>
+                <label for="cate">Category</label>
+                <div class="filter-box w100per">
+                    <select name="cate" id="cate">
+                        <option value="Anthologies">Anthologies</option>
+                        <option value="Art Books">Art Books</option>
+                        <option value="Bussiness">Bussiness</option>
+                        <option value="Children's Books">Children's Books</option>
+                        <option value="Cookbooks">Cookbooks</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Graphic Novels">Graphic Novels</option>
+                        <option value="Mystery">Mystery</option>
+                        <option value="Non-fiction">Non-fiction</option>
+                        <option value="Poetry">Poetry</option>
+                        <option value="Reference Books">Reference Books</option>
+                        <option value="Religious">Religious</option>
+                        <option value="Science">Science</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Textbooks">Textbooks</option>
+                        <option value="Travel">Travel</option>
+                    </select>
+                    <i class="fas fa-caret-down"></i>
+                </div>
+                <div class="h10"> </div>
+                <label for="author">Author</label>
+                <input class="w100per" type="text" name="author" id="author"><br>
+                <div id="authorStatus" class="input-error-status"></div>
+                <label for="pub">Publisher</label>
+                <input class="w100per" type="text" name="pub" id="pub"><br>
+                <div id="pubStatus" class="input-error-status"></div>
+                <label for="price">Price</label>
+                <input class="w100per" type="number" name="price" id="price"><br>
+                <div id="priceStatus" class="input-error-status"></div>
+            </div><br>
+        </div> <br>
+        <div class="row content-right gap10">
+            <a class="btn cursor-pointer" onclick="$('#update-dialog').dialog('close');">Close</a>
             <a class="primary-btn cursor-pointer" id="create-book-btn">Create</a>
         </div>
     </div>

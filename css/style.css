@@ -587,8 +587,17 @@ table tbody tr td a .fa-trash-alt {
     color: white;
 }
 
+.dialog .deleteBtn {
+    background-color: white;
+    color: red;
+}
+
 .dialog .createBtn:hover, .dialog .updateBtn:hover {
     background-color: rgb(72, 148, 255);
+}
+
+.dialog .deleteBtn:hover {
+    background-color: rgb(255, 223, 223);
 }
 
 .dialog .closeBtn, .filter-dialog .closeBtn {
