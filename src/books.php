@@ -29,7 +29,7 @@
                         $.each(response.data, function (i, v) { 
                              // create new book item
                              var newBook = `
-                                <a class="book-box" onclick="showDetails('`+v.title+`','`+v.desc+`','`+v.cate+`','`+v.author+`','`+v.pub+`','`+v.price+`','`+v.cover+`');">
+                                <a class="book-box" onclick="showDetails('`+v.title+`','`+v.desc+`','`+v.cate+`','`+v.author+`','`+v.pub+`','`+v.price+`','`+v.cover+`','`+v.createdDate+`','`+v.updatedDate+`');">
                                     <div class="book-cover">
                                         <img src="../upload/book/`+v.cover+`" alt="cover">
                                     </div>
@@ -50,7 +50,9 @@
             });
         }
 
-        function showDetails(title, desc, cate, author, pub, price, cover){
+        function showDetails(title, desc, cate, author, pub, price, cover, createdDate, updatedDate){
+            const cDate = new Date(createdDate);
+
             // set value to dialog
             $("#d-title").text(": "+title);
             $("#d-desc").text(": "+desc);
@@ -59,6 +61,15 @@
             $("#d-pub").text(": "+pub);
             $("#d-price").text(": $"+price);
             $("#d-cover").prop("src", "../upload/book/"+cover);
+            $("#d-created-date").text(": "+cDate.toLocaleString());
+
+            if(updatedDate != 'null'){
+                const uDate = new Date(updatedDate);
+                $("#d-updated-date").text(": "+uDate.toLocaleString());
+                $("#d-update-date-section").show();
+            } else {
+                $("#d-update-date-section").hide();
+            }
 
             // open dialog
             $('#book-details').dialog('open');
@@ -152,9 +163,11 @@
                                 // show message
                                 showBottomRightMessage("Created new book! ID: "+ response.data.newId, 1);
 
+                                const date = new Date();
+
                                 // create new book item
                                 var newBook = `
-                                    <a class="book-box" onclick="showDetails('`+title+`','`+desc+`','`+cate+`','`+author+`','`+publisher+`','`+price+`','`+response.data.cover+`');">
+                                    <a class="book-box" onclick="showDetails('`+title+`','`+desc+`','`+cate+`','`+author+`','`+publisher+`','`+price+`','`+response.data.cover+`','`+date+`','null');">
                                         <div class="book-cover">
                                             <img src="../upload/book/`+response.data.cover+`" alt="cover">
                                         </div>
@@ -219,6 +232,14 @@
                 <tr>
                     <td width="100px">Price</td>
                     <td id="d-price"></td>
+                </tr>
+                <tr>
+                    <td width="100px">Created Date</td>
+                    <td id="d-created-date"></td>
+                </tr>
+                <tr id="d-update-date-section">
+                    <td width="100px">Last Updated</td>
+                    <td id="d-updated-date"></td>
                 </tr>
             </table>
         </div> <br>
