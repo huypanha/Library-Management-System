@@ -29,7 +29,7 @@
                         $.each(response.data, function (i, v) { 
                              // create new book item
                              var newBook = `
-                                <a class="book-box" onclick="showDetails('`+v.title+`','`+v.desc+`','`+v.cate+`','`+v.author+`','`+v.pub+`','`+v.price+`','`+v.cover+`','`+v.createdDate+`','`+v.updatedDate+`');">
+                                <a class="book-box" onclick="showDetails('`+v.id+`','`+v.title+`','`+v.desc+`','`+v.cate+`','`+v.author+`','`+v.pub+`','`+v.price+`','`+v.cover+`','`+v.createdDate+`','`+v.updatedDate+`');">
                                     <div class="book-cover">
                                         <img src="../upload/book/`+v.cover+`" alt="cover">
                                     </div>
@@ -50,10 +50,11 @@
             });
         }
 
-        function showDetails(title, desc, cate, author, pub, price, cover, createdDate, updatedDate){
+        function showDetails(id, title, desc, cate, author, pub, price, cover, createdDate, updatedDate){
             const cDate = new Date(createdDate);
 
             // set value to dialog
+            $("#id").val(id);
             $("#d-title").text(": "+title);
             $("#d-desc").text(": "+desc);
             $("#d-cate").text(": "+cate);
@@ -184,7 +185,7 @@
 
                                 // create new book item
                                 var newBook = `
-                                    <a class="book-box" onclick="showDetails('`+title+`','`+desc+`','`+cate+`','`+author+`','`+publisher+`','`+price+`','`+response.data.cover+`','`+date+`','null');">
+                                    <a class="book-box" onclick="showDetails('`+response.data.newId+`','`+title+`','`+desc+`','`+cate+`','`+author+`','`+publisher+`','`+price+`','`+response.data.cover+`','`+date+`','null');">
                                         <div class="book-cover">
                                             <img src="../upload/book/`+response.data.cover+`" alt="cover">
                                         </div>
@@ -208,9 +209,106 @@
                 }
             });
 
+            // when user click on update button on details dialog
             $("#d-btn-update").click(function(){
+                // close details dialog
                 $('#book-details').dialog('close');
+
+                // transfer existing value to update dialog
+                $("#u-cover").prop("src", $("#d-cover").prop("src"));
+                $("#utitle").val($("#d-title").text().replace(": ", ""));
+                $("#udesc").val($("#d-desc").text().replace(": ", ""));
+                $("#ucate").val($("#d-cate").text().replace(": ", ""));
+                $("#uauthor").val($("#d-author").text().replace(": ", ""));
+                $("#upub").val($("#d-pub").text().replace(": ", ""));
+                $("#uprice").val($("#d-price").text().replace(": $", ""));
+
+                // open update dialog
                 $("#update-dialog").dialog('open');
+            });
+
+            // when user click on update button on update dialog
+            $("#update-book-btn").click(function(){
+                // get value from input
+                const title = $("#utitle").val();
+                const desc = $("#udesc").val();
+                const cate = $("#ucate").val();
+                const author = $("#uauthor").val();
+                const publisher = $("#upub").val();
+                const price = $("#uprice").val();
+                const cover = $("#ucover").prop("files");
+                const oldCover = $("#d-cover").prop("src");
+
+                // clear error
+                $("#titleStatus").text('');
+                $("#authorStatus").text('');
+                $("#pubStatus").text('');
+                $("#priceStatus").text('');
+                $("#imgStatus").text('');
+
+                if(title == ''){
+                    $("#titleStatus").text('Please enter book title');
+                } else if(author == ''){
+                    $("#authorStatus").text('Please enter author name');
+                } else if(publisher == ''){
+                    $("#pubStatus").text('Please enter publisher name');
+                } else if(price == ''){
+                    $("#priceStatus").text('Please enter book borrow price as number');
+                } else {
+                    // create form data to send to php
+                    var fdata = new FormData();
+                    fdata.append("title", title);
+                    fdata.append("desc", desc);
+                    fdata.append("cate", cate);
+                    fdata.append("author", author);
+                    fdata.append("pub", publisher);
+                    fdata.append("price", price);
+                    fdata.append("id", $("#id").val());
+
+                    // if use chosen img
+                    if(cover !== undefined){
+                        fdata.append("cover", cover[0]);
+                        fdata.append("oldCover", oldCover);
+                        alert("true: "+oldCover);
+                    }
+
+                    $.ajax({
+                        method: "POST",
+                        url: "actions/update_book.php",
+                        data: fdata,
+                        dataType: "JSON",
+                        processData: false,
+                        cache: false,
+                        contentType: false,
+                        success: function (response) {
+                            if(response.status == 1){
+                                // show success message
+                                showBottomRightMessage(response.data, 1);
+
+                                // clear book list
+                                $("#book-list").html("");
+
+                                // get new data
+                                getBooks();
+
+                                // close update dialog
+                                $('#update-dialog').dialog('close');
+                            } else {
+                                showBottomRightMessage(response.data);
+                            }
+                        },
+                        error: function(_, status, msg){
+                            showBottomRightMessage(status+': '+msg);
+                        }
+                    });
+                }
+            });
+
+            // when user click on delete button on details dialog
+            $("#d-btn-delete").click(function(){
+                if(confirm("Are you sure want to delete this book?")){
+                    alert($("#id").val());
+                }
             });
         });
     </script>
@@ -218,7 +316,7 @@
 <body>
     <div class="wrapper padding-20">
         <div id="book-list" class="row wrap gap25 content-bottom"></div><br>
-        <a href="#" class="row content-center primary-color load-more">
+        <a class="row content-center primary-color load-more">
             <i class="fas fa-chevron-down primary-color"></i>&nbsp;&nbsp;Load More
         </a>
         <a href="#" class="overlay-bottom-right" onclick="$('#create-dialog').dialog('open')">
@@ -227,6 +325,7 @@
     </div>
     <div class="dialog" id="book-details" title="Book Details">
         <div class="row gap25 content-top">
+            <input type="hidden" name="id" id="id">
             <div id="book-cover">
                 <img id="d-cover" src="../media/book-cover.jpg" alt="Book Cover">
             </div>
@@ -266,7 +365,7 @@
             </table>
         </div> <br>
         <div class="row space-between gap10">
-            <button class="deleteBtn" onclick="$('#book-details').dialog('close');">Delete</button>
+            <button class="deleteBtn" id="d-btn-delete">Delete</button>
             <div class="row gap10">
                 <button class="closeBtn" onclick="$('#book-details').dialog('close');">Close</button>
                 <button id="d-btn-update" class="createBtn">Update</button>
@@ -332,21 +431,21 @@
         <div class="row gap25 content-top">
             <div class="col w200">
                 <div id="book-cover">
-                    <img id="book-cover-img" src="../media/book-cover.jpg" alt="Book Cover">
+                    <img id="u-cover" src="../media/book-cover.jpg" alt="Book Cover">
                 </div><br>
                 <div id="imgStatus" class="input-error-status"></div><br>
-                <label class="choose-file-btn w100per back-gray" for="cover"><span class="gray">Choose Book Cover</span></label>
-                <input type="file" accept="image/*" name="cover" id="cover" onchange="document.getElementById('book-cover-img').src = window.URL.createObjectURL(this.files[0])">
+                <label class="choose-file-btn w100per back-gray" for="ucover"><span class="gray">Choose Book Cover</span></label>
+                <input type="file" accept="image/*" name="ucover" id="ucover" onchange="document.getElementById('u-cover').src = window.URL.createObjectURL(this.files[0])">
             </div>
             <div class="col w100per">
-                <label for="title">Title</label>
-                <input class="w100per" type="text" name="title" id="title"><br>
+                <label for="utitle">Title</label>
+                <input class="w100per" type="text" name="utitle" id="utitle"><br>
                 <div id="titleStatus" class="input-error-status"></div>
-                <label for="desc">Description</label>
-                <textarea class="w100per" type="text" name="desc" id="desc" rows="3"></textarea><br>
-                <label for="cate">Category</label>
+                <label for="udesc">Description</label>
+                <textarea class="w100per" type="text" name="udesc" id="udesc" rows="3"></textarea><br>
+                <label for="ucate">Category</label>
                 <div class="filter-box w100per">
-                    <select name="cate" id="cate">
+                    <select name="ucate" id="ucate">
                         <option value="Anthologies">Anthologies</option>
                         <option value="Art Books">Art Books</option>
                         <option value="Bussiness">Bussiness</option>
@@ -366,22 +465,26 @@
                     </select>
                     <i class="fas fa-caret-down"></i>
                 </div>
-                <div class="h10"> </div>
-                <label for="author">Author</label>
-                <input class="w100per" type="text" name="author" id="author"><br>
+                <div class="h10"></div>
+                <label for="uauthor">Author</label>
+                <input class="w100per" type="text" name="uauthor" id="uauthor"><br>
                 <div id="authorStatus" class="input-error-status"></div>
-                <label for="pub">Publisher</label>
-                <input class="w100per" type="text" name="pub" id="pub"><br>
+                <label for="upub">Publisher</label>
+                <input class="w100per" type="text" name="upub" id="upub"><br>
                 <div id="pubStatus" class="input-error-status"></div>
-                <label for="price">Price</label>
-                <input class="w100per" type="number" name="price" id="price"><br>
+                <label for="uprice">Price</label>
+                <input class="w100per" type="number" name="uprice" id="uprice"><br>
                 <div id="priceStatus" class="input-error-status"></div>
             </div><br>
         </div> <br>
         <div class="row content-right gap10">
             <a class="btn cursor-pointer" onclick="$('#update-dialog').dialog('close');">Close</a>
-            <a class="primary-btn cursor-pointer" id="create-book-btn">Create</a>
+            <a class="primary-btn cursor-pointer" id="update-book-btn">Update</a>
         </div>
+    </div>
+    <!-- message -->
+    <div class="message-wrapper">
+        <div class="message-bottom-right">Message</div>
     </div>
 </body>
 </html>
