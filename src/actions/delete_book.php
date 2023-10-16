@@ -9,19 +9,20 @@
 
         $user = json_decode($_SESSION['user']);
 
-        $id = $_POST['od']; // book id
+        $id = $_POST['id'];
+        $cover = $_POST['cover'];
 
         try {
             // connect to db
             $db = DB::Connect();
 
             // create query
-            $sql = "UPDATE student SET status=0, updated_by=".$user->userId.", updated_date=NOW() WHERE stu_id=$id";
+            $sql = "UPDATE books SET status=0, updated_by=".$user->userId.", updated_date=NOW() WHERE id=$id";
             $stmt = $db->prepare($sql);
             $stmt->execute();
 
-            // set content type to json to send data back as JSON
-            header('Content-Type: application/json');
+            // delete cover
+            unlink(dirname(__DIR__, 2)."/upload/book/".end(explode('/', $cover)));
 
             // return result
             echo json_encode(array(

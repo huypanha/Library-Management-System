@@ -13,65 +13,42 @@
         $offset = $_GET['offset'];
         $limit = $_GET['limit'];
 
+        $sql = null;
+
         if(isset($_GET['searchKey'])){
             // get offset and limit
             $key = strtolower($_GET['searchKey']);
 
             // create query to search student
-            $sql = "SELECT * FROM books WHERE status=1 AND (first_name LIKE '%$key%' OR last_name LIKE '%$key%' OR stu_id LIKE '$key%') ORDER BY stu_id DESC LIMIT $offset,$limit";
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-
-            // get all records
-            $rows = $stmt->fetchAll();
-            
-            // add all rows to $re
-            foreach($rows as $row){
-                $r = array(
-                    "stuId" => $row['stu_id'],
-                    "firstName" => $row['first_name'],
-                    "lastName" => $row['last_name'],
-                    "gender" => $row['gender'],
-                    "contact" => $row['contact'],
-                    "dob" => $row['dob'],
-                    "addr" => $row['address'],
-                    "isBlackList" => $row['is_black_list'],
-                    "createdBy" => $row['created_by'],
-                    "createdDate" => $row['created_date'],
-                    "updatedBy" => $row['updated_by'],
-                    "updatedDate" => $row['updated_date'],
-                    "status" => $row['status'],
-                );
-                array_push($re, $r);
-            }
+            $sql = "SELECT * FROM books WHERE status=1 AND (title LIKE '%$key%' OR id LIKE '$key%') ORDER BY id DESC LIMIT $offset,$limit";
         } else {
-
             // create query to get student
             $sql = "SELECT * FROM books WHERE status=1 ORDER BY id DESC LIMIT $offset,$limit";
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
+        }
 
-            // get all records
-            $rows = $stmt->fetchAll();
-            
-            // add all rows to $re
-            foreach($rows as $row){
-                $r = array(
-                    "id" => $row['id'],
-                    "title" => $row['title'],
-                    "desc" => $row['description'],
-                    "author" => $row['author'],
-                    "pub" => $row['publisher'],
-                    "price" => $row['price'],
-                    "cover" => $row['cover'],
-                    "cate" => $row['category'],
-                    "createdBy" => $row['created_by'],
-                    "createdDate" => $row['created_date'],
-                    "updatedBy" => $row['updated_by'],
-                    "updatedDate" => $row['updated_date'],
-                );
-                array_push($re, $r);
-            }
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        // get all records
+        $rows = $stmt->fetchAll();
+        
+        // add all rows to $re
+        foreach($rows as $row){
+            $r = array(
+                "id" => $row['id'],
+                "title" => $row['title'],
+                "desc" => $row['description'],
+                "author" => $row['author'],
+                "pub" => $row['publisher'],
+                "price" => $row['price'],
+                "cover" => $row['cover'],
+                "cate" => $row['category'],
+                "createdBy" => $row['created_by'],
+                "createdDate" => $row['created_date'],
+                "updatedBy" => $row['updated_by'],
+                "updatedDate" => $row['updated_date'],
+            );
+            array_push($re, $r);
         }
 
         // count all student to know have more or not

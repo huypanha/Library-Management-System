@@ -6,8 +6,37 @@
     <link rel="stylesheet" href="../css/fontawesomepro.css">
     <link rel="stylesheet" href="../js/fontawesomepro.js">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../js/script.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+            const now = new Date();
+            $("#borrow-dialog").hide();
+
+            $("#borrow-dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                width: 500,
+                button: [
+                    {
+                        text: "Close",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                ],
+                classes: {
+                    "ui-dialog": "highlight",
+                }
+            });
+
+            $("#borrow-btn").click(function(){
+                $("#borrow-dialog").dialog("open");
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="wrapper padding-20">
@@ -145,9 +174,44 @@
                 <i class="fas fa-chevron-down primary-color"></i>&nbsp;&nbsp;Load More
             </a>
         </div>
-        <a href="books.php" class="overlay-bottom-right">
+        <a id="borrow-btn" class="overlay-bottom-right">
             <i class="fas fa-plus white"></i>
         </a>
+    </div>
+    <div class="dialog" id="borrow-dialog" title="Issue Book">
+        <div class="row gap25 content-top">
+            <div class="col w100per">
+                <label for="book">Book</label>
+                <div class="filter-box w100per">
+                    <select name="cate" id="book">
+                        <option value="Anthologies">Anthologies</option>
+                    </select>
+                    <i class="fas fa-caret-down"></i>
+                </div>
+                <div class="h10"></div>
+                <label for="student">Student</label>
+                <div class="filter-box w100per">
+                    <select name="cate" id="student">
+                        <option value="Anthologies">Anthologies</option>
+                    </select>
+                    <i class="fas fa-caret-down"></i>
+                </div>
+                <div class="h10"></div>
+                <label for="qty">Quantity</label>
+                <input class="w100per" type="number" name="qty" id="qty"><br>
+                <div id="qtyStatus" class="input-error-status"></div>
+                <label for="amount">Borrow Amount</label>
+                <input class="w100per" type="number" name="amount" id="amount"><br>
+                <div id="amountStatus" class="input-error-status"></div>
+                <label for="due">Due Date</label>
+                <input class="w100per" type="date" name="due" id="due"><br>
+                <div id="dueStatus" class="input-error-status"></div>
+            </div><br>
+        </div> <br>
+        <div class="row content-right gap10">
+            <a class="btn cursor-pointer" onclick="$('#borrow-dialog').dialog('close');">Close</a>
+            <a class="primary-btn cursor-pointer" id="borrow-book-btn">Borrow</a>
+        </div>
     </div>
 </body>
 </html>

@@ -10,6 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../js/script.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script>
         var offset = 0, limit = 20, searchKey = '';
 
@@ -19,6 +20,10 @@
                 offset: offset,
             };
 
+            if(searchKey != ''){
+                data.searchKey = searchKey;
+            }
+
             $.ajax({
                 type: "GET",
                 url: "actions/get_books.php",
@@ -26,6 +31,7 @@
                 dataType: "JSON",
                 success: function (response) {
                     if(response.status == 1){
+                        var reCount = 0;
                         $.each(response.data, function (i, v) { 
                              // create new book item
                              var newBook = `
@@ -39,7 +45,20 @@
 
                             // add new book to the book list
                             $("#book-list").append(newBook);
+                            reCount = reCount + 1;
                         });
+
+                        if(reCount > 0){
+                            $("#no-result").hide();
+                            if(response.hasMore){
+                                $(".load-more").show();
+                            } else {
+                                $(".load-more").hide();
+                            }
+                        } else {
+                            $(".load-more").hide();
+                            $("#no-result").show();
+                        }
                     } else {
                         showBottomRightMessage(response.data);
                     }
@@ -77,6 +96,9 @@
         }
 
         $(document).ready(function(){
+            $("#book-details").hide();
+            $("#create-dialog").hide();
+
             $("#book-details").dialog({
                 autoOpen: false,
                 modal: true,
@@ -307,8 +329,41 @@
             // when user click on delete button on details dialog
             $("#d-btn-delete").click(function(){
                 if(confirm("Are you sure want to delete this book?")){
-                    alert($("#id").val());
+                    $.ajax({
+                        type: "POST",
+                        url: "actions/delete_book.php",
+                        data: {
+                            "id": $("#id").val(),
+                            "cover": $("#d-cover").prop("src"),
+                        },
+                        dataType: "JSON",
+                        success: function (response) {
+                            if(response.status == 1){
+                                // show success message
+                                showBottomRightMessage(response.data, 1);
+
+                                // clear current book list
+                                $("#book-list").html("");
+
+                                // get new data
+                                getBooks();
+
+                                // close details dialog
+                                $('#book-details').dialog('close');
+                            } else {
+                                showBottomRightMessage(response.data);
+                            }
+                        },
+                        error: function(_, status, msg){
+                            showBottomRightMessage(status+': '+msg);
+                        }
+                    });
                 }
+            });
+
+            $("#d-btn-borrow").click(function (e) { 
+                e.preventDefault();
+                window.location.href = "borrows.php";
             });
         });
     </script>
@@ -316,6 +371,10 @@
 <body>
     <div class="wrapper padding-20">
         <div id="book-list" class="row wrap gap25 content-bottom"></div><br>
+        <div id="no-result" class="center w100per">
+            <dotlottie-player src="https://lottie.host/368474bf-84db-4d4a-bbd2-65219928b446/3jKzzZOp3j.json" background="transparent" speed="1" style="width: 300px; height: 300px; margin-left: 38%;" loop autoplay></dotlottie-player>
+            <p class="gray" >No Result</p>
+        </div>
         <a class="row content-center primary-color load-more">
             <i class="fas fa-chevron-down primary-color"></i>&nbsp;&nbsp;Load More
         </a>
@@ -368,6 +427,7 @@
             <button class="deleteBtn" id="d-btn-delete">Delete</button>
             <div class="row gap10">
                 <button class="closeBtn" onclick="$('#book-details').dialog('close');">Close</button>
+                <button id="d-btn-borrow" class="createBtn">Borrow</button>
                 <button id="d-btn-update" class="createBtn">Update</button>
             </div>
         </div>

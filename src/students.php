@@ -145,6 +145,8 @@
             $(".endDate").hide();
             $("#ro-result").hide();
             $("#load-more").hide();
+            $("#create-dialog").hide();
+            $("#update-dialog").hide();
 
             // create create student dialog
             $("#create-dialog").dialog({
