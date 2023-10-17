@@ -14,6 +14,8 @@
         $(document).ready(function () {
             const now = new Date();
             $("#borrow-dialog").hide();
+            var bookIds = [], bookAmounts = [], bookTitles = [], bookCovers = [];
+            var studentIds = [], studentNames = [];
 
             $("#borrow-dialog").dialog({
                 autoOpen: false,
@@ -33,7 +35,159 @@
             });
 
             $("#borrow-btn").click(function(){
+                // claer old book list
+                $("#bookDataList").html("");
+                // get all books
+                $.ajax({
+                    type: "GET",
+                    url: "actions/get_books.php",
+                    data: {
+                        offset: 0,
+                        limit: 0,
+                    },
+                    dataType: "JSON",
+                    success: function (response) {
+                        if(response.status == 1){
+                            $.each(response.data, function(i,v){
+                                $("#bookDataList").append("<option value='"+v.title+"'></option>");
+                                bookIds.push(v.id);
+                                bookAmounts.push(v.price);
+                                bookTitles.push(v.title);
+                                bookCovers.push(v.cover);
+                            });
+                        } else {
+                            showBottomRightMessage('Could not get book : '+response.data);
+                        }
+                    },
+                    error: function(_, status, msg){
+                        showBottomRightMessage('Could not get book '+status+': '+msg);
+                    },
+                });
+
+                // claer old student list
+                $("#studentDataList").html("");
+                // get all students
+                $.ajax({
+                    type: "GET",
+                    url: "actions/get_students.php",
+                    data: {
+                        offset: 0,
+                        limit: 0,
+                    },
+                    dataType: "JSON",
+                    success: function (response) {
+                        if(response.status == 1){
+                            $.each(response.data, function(i,v){
+                                $("#studentDataList").append("<option value='"+v.firstName+" "+v.lastName+"'></option>");
+                                studentIds.push(v.id);
+                                studentNames.push(v.firstName+" "+v.lastName);
+                            });
+                        } else {
+                            showBottomRightMessage('Could not get book : '+response.data);
+                        }
+                    },
+                    error: function(_, status, msg){
+                        showBottomRightMessage('Could not get book '+status+': '+msg);
+                    },
+                });
+
+                // set default qty to 1
+                $("#qty").val("1");
+
+                // set due date to next 1 day
+                $("#due").val(now.getFullYear()+"-"+(now.getMonth()+1+"-"+(now.getDate()+1)));
+
+                // open borrow dialog
                 $("#borrow-dialog").dialog("open");
+            });
+
+            $("#book").focusout(function(){
+                // set borrow amount to book price
+                $("#amount").val(bookAmounts[bookTitles.indexOf($("#book").val())]);
+            });
+
+            $("#borrow-book-btn").click(function(){
+                // validate data
+                if(!bookTitles.includes($("#book").val())){
+                    $("#bookStatus").text("Please select a book");
+                    $("#studentStatus").text("");
+                    $("#qtyStatus").text("");
+                    $("#amountStatus").text("");
+                    $("#famountStatus").text("");
+                } else if(!studentNames.includes($("#student").val())){
+                    $("#studentStatus").text("Please select a student");
+                    $("#bookStatus").text("");
+                    $("#qtyStatus").text("");
+                    $("#amountStatus").text("");
+                    $("#famountStatus").text("");
+                } else if($("#qty").val() == ""){
+                    $("#qtyStatus").text("Please enter qty");
+                    $("#studentStatus").text("");
+                    $("#bookStatus").text("");
+                    $("#amountStatus").text("");
+                    $("#famountStatus").text("");
+                } else if($("#amount").val() == ""){
+                    $("#amountStatus").text("Please enter amount");
+                    $("#studentStatus").text("");
+                    $("#bookStatus").text("");
+                    $("#qtyStatus").text("");
+                    $("#famountStatus").text("");
+                } else if($("#famount").val() == ""){
+                    $("#famountStatus").text("Please enter fine amount");
+                    $("#studentStatus").text("");
+                    $("#bookStatus").text("");
+                    $("#qtyStatus").text("");
+                    $("#amountStatus").text("");
+                } else {
+                    const due = new Date($("#due").val());
+                    alert(studentIds[studentNames.indexOf($("#student").val())]);
+                    $.ajax({
+                        type: "POST",
+                        url: "actions/create_borrow.php",
+                        data: {
+                            bookId: bookIds[bookTitles.indexOf($("#book").val())],
+                            stuId: studentIds[studentNames.indexOf($("#student").val())],
+                            qty: $("#qty").val(),
+                            amount: $("#amount").val(),
+                            famount: $("#famount").val(),
+                            dueDate: due.getFullYear()+"/"+(due.getMonth()+1)+"/"+due.getDate(),
+                        },
+                        dataType: "JSON",
+                        success: function (response) {
+                            // show success message
+                            showBottomRightMessage("Created new borrow #"+response.data.newId, 1);
+
+                            // create new borrow list row
+                            const row = `<tr>
+                                <td>`+response.data.newId+`</td>
+                                <td>
+                                    <div class="row gap10">
+                                        <img class="h100 radius-all10" src="../media/`+bookCovers[bookTitles.indexOf($("#book").val())]+`" alt="Book Cover">
+                                        <div class="dash-summary-book-title gray">`+$("#book").val()+`</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="red">Borrowing</div>
+                                </td>
+                                <td>`+$("#student").val()+`</td>
+                                <td>`+response.data.issuer+`</td>
+                                <td>$`+$("#amount").val()+`</td>
+                                <td>`+now.getFullYear()+"/"+(now.getMonth()+1)+"/"+now.getDate()+`</td>
+                                <td>`+due.getFullYear()+"/"+(due.getMonth()+1)+"/"+due.getDate()+`</td>
+                                <td>
+                                    <a href="#"><i class="fas fa-pencil-alt"></i></a>
+                                    <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                </td>
+                            </tr>`;
+                            
+                            // add new row to the top of the list
+                            $("#borrow-list").prepend(row);
+                        },
+                        error: function(_, status, msg){
+                            showBottomRightMessage('Could not get book '+status+': '+msg);
+                        },
+                    });
+                }
             });
         });
     </script>
@@ -61,113 +215,7 @@
                         <th>Due Date</th>
                         <th>Actions</th>
                     </tr>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>
-                                <div class="row gap10">
-                                    <img class="h100 radius-all10" src="../media/book-cover.jpg" alt="Book Cover">
-                                    <div class="dash-summary-book-title gray">កាដូជីវិត</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="red">Borrowing</div>
-                            </td>
-                            <td>Huy Samrech</td>
-                            <td>Huy Panha</td>
-                            <td>$100</td>
-                            <td>03/10/2023</td>
-                            <td>10/10/2023</td>
-                            <td>
-                                <a href="#"><i class="fas fa-pencil-alt"></i></a>
-                                <a href="#"><i class="fas fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>
-                                <div class="row gap10">
-                                    <img class="h100 radius-all10" src="../media/book-cover.jpg" alt="Book Cover">
-                                    <div class="dash-summary-book-title gray">កាដូជីវិត 2</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="green">Returned</div>
-                            </td>
-                            <td>Huy Samrech</td>
-                            <td>Huy Panha</td>
-                            <td>$100</td>
-                            <td>03/10/2023</td>
-                            <td>10/10/2023</td>
-                            <td>
-                                <a href="#"><i class="fas fa-pencil-alt"></i></a>
-                                <a href="#"><i class="fas fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>
-                                <div class="row gap10">
-                                    <img class="h100 radius-all10" src="../media/book-cover.jpg" alt="Book Cover">
-                                    <div class="dash-summary-book-title gray">កាដូជីវិត 2</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="green">Returned</div>
-                            </td>
-                            <td>Huy Samrech</td>
-                            <td>Huy Panha</td>
-                            <td>$100</td>
-                            <td>03/10/2023</td>
-                            <td>10/10/2023</td>
-                            <td>
-                                <a href="#"><i class="fas fa-pencil-alt"></i></a>
-                                <a href="#"><i class="fas fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>
-                                <div class="row gap10">
-                                    <img class="h100 radius-all10" src="../media/book-cover.jpg" alt="Book Cover">
-                                    <div class="dash-summary-book-title gray">កាដូជីវិត 2</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="green">Returned</div>
-                            </td>
-                            <td>Huy Samrech</td>
-                            <td>Huy Panha</td>
-                            <td>$100</td>
-                            <td>03/10/2023</td>
-                            <td>10/10/2023</td>
-                            <td>
-                                <a href="#"><i class="fas fa-pencil-alt"></i></a>
-                                <a href="#"><i class="fas fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>
-                                <div class="row gap10">
-                                    <img class="h100 radius-all10" src="../media/book-cover.jpg" alt="Book Cover">
-                                    <div class="dash-summary-book-title gray">កាដូជីវិត 2</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="green">Returned</div>
-                            </td>
-                            <td>Huy Samrech</td>
-                            <td>Huy Panha</td>
-                            <td>$100</td>
-                            <td>03/10/2023</td>
-                            <td>10/10/2023</td>
-                            <td>
-                                <a href="#"><i class="fas fa-pencil-alt"></i></a>
-                                <a href="#"><i class="fas fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                    </tbody>
+                    <tbody id="borrow-list"></tbody>
                 </table>
             </div><br>
             <a href="#" class="row content-center primary-color load-more">
@@ -181,28 +229,30 @@
     <div class="dialog" id="borrow-dialog" title="Issue Book">
         <div class="row gap25 content-top">
             <div class="col w100per">
-                <label for="book">Book</label>
-                <div class="filter-box w100per">
-                    <select name="cate" id="book">
-                        <option value="Anthologies">Anthologies</option>
-                    </select>
-                    <i class="fas fa-caret-down"></i>
-                </div>
+                <label for="book">Book</label><br>
+                <input id="book" class="w100per" autocomplete="on" list="bookDataList">
+                <div id="bookStatus" class="input-error-status"></div>
+                <datalist id="bookDataList"></datalist>
                 <div class="h10"></div>
-                <label for="student">Student</label>
-                <div class="filter-box w100per">
-                    <select name="cate" id="student">
-                        <option value="Anthologies">Anthologies</option>
-                    </select>
-                    <i class="fas fa-caret-down"></i>
-                </div>
+
+                <label for="student">Student</label><br>
+                <input id="student" class="w100per" autocomplete="on" list="studentDataList">
+                <div id="studentStatus" class="input-error-status"></div>
+                <datalist id="studentDataList"></datalist>
                 <div class="h10"></div>
+
                 <label for="qty">Quantity</label>
                 <input class="w100per" type="number" name="qty" id="qty"><br>
                 <div id="qtyStatus" class="input-error-status"></div>
-                <label for="amount">Borrow Amount</label>
+
+                <label for="amount">Borrow Amount ($)</label>
                 <input class="w100per" type="number" name="amount" id="amount"><br>
                 <div id="amountStatus" class="input-error-status"></div>
+
+                <label for="amount">Fine Amount ($)</label>
+                <input class="w100per" type="number" name="famount" id="famount"><br>
+                <div id="famountStatus" class="input-error-status"></div>
+
                 <label for="due">Due Date</label>
                 <input class="w100per" type="date" name="due" id="due"><br>
                 <div id="dueStatus" class="input-error-status"></div>

@@ -20,10 +20,15 @@
             $key = strtolower($_GET['searchKey']);
 
             // create query to search student
-            $sql = "SELECT * FROM books WHERE status=1 AND (title LIKE '%$key%' OR id LIKE '$key%') ORDER BY id DESC LIMIT $offset,$limit";
+            $sql = "SELECT * FROM books WHERE status=1 AND (title LIKE '%$key%' OR id LIKE '$key%') ORDER BY id DESC";
         } else {
             // create query to get student
-            $sql = "SELECT * FROM books WHERE status=1 ORDER BY id DESC LIMIT $offset,$limit";
+            $sql = "SELECT * FROM books WHERE status=1 ORDER BY id DESC";
+        }
+
+        // if limit = 0: unlimit
+        if($limit != 0){
+            $sql .= " LIMIT $offset,$limit";
         }
 
         $stmt = $db->prepare($sql);
