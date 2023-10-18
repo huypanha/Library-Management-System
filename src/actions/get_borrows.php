@@ -20,10 +20,18 @@
             $key = strtolower($_GET['searchKey']);
 
             // create query to search student
-            $sql = "SELECT * FROM books WHERE status=1 AND (title LIKE '%$key%' OR id LIKE '$key%') ORDER BY id DESC";
+            $sql = "SELECT br.*, b.title, b.cover, CONCAT(s.first_name,' ',s.last_name) borrower, u.username created_by
+                    FROM borrow br LEFT JOIN books b ON br.book_id = b.id 
+                        LEFT JOIN student s ON br.stu_id=s.stu_id 
+                        LEFT JOIN user u ON br.created_by=u.user_id 
+                    WHERE br.status=1 AND (br.id LIKE '%$key%' OR title LIKE '%$key%') ORDER BY br.created_date DESC";
         } else {
             // create query to get student
-            $sql = "SELECT * FROM books WHERE status=1 ORDER BY id DESC";
+            $sql = "SELECT br.*, b.title, b.cover, CONCAT(s.first_name,' ',s.last_name) borrower, u.username created_by
+                    FROM borrow br LEFT JOIN books b ON br.book_id = b.id 
+                        LEFT JOIN student s ON br.stu_id=s.stu_id 
+                        LEFT JOIN user u ON br.created_by=u.user_id 
+                    WHERE br.status=1 ORDER BY br.created_date DESC";
         }
 
         // if limit = 0: unlimit
@@ -41,23 +49,24 @@
         foreach($rows as $row){
             $r = array(
                 "id" => $row['id'],
-                "title" => $row['title'],
-                "desc" => $row['description'],
-                "author" => $row['author'],
-                "pub" => $row['publisher'],
-                "price" => $row['price'],
-                "cover" => $row['cover'],
-                "cate" => $row['category'],
-                "createdBy" => $row['created_by'],
+                "amount" => $row['amount'],
+                "aty" => $row['qty'],
+                "fineAmount" => $row['fine_amount'],
+                "due" => $row['due_date'],
                 "createdDate" => $row['created_date'],
                 "updatedBy" => $row['updated_by'],
                 "updatedDate" => $row['updated_date'],
+                "status" => $row['returned'],
+                "bookTitle" => $row['title'],
+                "bookCover" => $row['cover'],
+                "createdBy" => $row['created_by'],
+                "borrower" => $row['borrower'],
             );
             array_push($re, $r);
         }
 
-        // count all books to know have more or not
-        $countSql = "SELECT COUNT(*) FROM books WHERE status=1";
+        // count all borrows to know have more or not
+        $countSql = "SELECT COUNT(*) FROM borrow WHERE status=1";
         $countStmt = $db->prepare($countSql);
         $countStmt->execute();
         $count = $countStmt->fetchColumn();

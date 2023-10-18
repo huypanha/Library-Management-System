@@ -10,10 +10,82 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../js/script.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script>
+        var offset = 0, limit = 20, searchKey = '';
+
+        function getBorrow(){
+            var data = {
+                limit: limit,
+                offset: offset,
+            };
+
+            $.ajax({
+                type: "GET",
+                url: "actions/get_borrows.php",
+                data: data,
+                dataType: "JSON",
+                success: function (response) {
+                    if(response.status == 1){
+                        // count result records
+                        var reCount = 0;
+                        
+                        $.each(response.data, function(i, v){
+                            const bDate = new Date(v.createdDate), dueDate = new Date(v.due);
+                            // create new borrow list row
+                            const row = `<tr>
+                                <td>`+v.id+`</td>
+                                <td>
+                                    <div class="row gap10">
+                                        <img class="h100 radius-all10" src="../upload/book/`+v.bookCover+`" alt="Book Cover">
+                                        <div class="dash-summary-book-title gray">`+v.bookTitle+`</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="`+(v.status == 0 ? "red" : "green")+`">`+(v.status == 0 ? "Borrowing" : "Rreturned")+`</div>
+                                </td>
+                                <td>`+v.borrower+`</td>
+                                <td>`+v.createdBy+`</td>
+                                <td>$`+v.amount+`</td>
+                                <td>`+bDate.getFullYear()+"/"+(bDate.getMonth()+1)+"/"+bDate.getDate()+`</td>
+                                <td>`+dueDate.getFullYear()+"/"+(dueDate.getMonth()+1)+"/"+dueDate.getDate()+`</td>
+                                <td>
+                                    <a href="#"><i class="fas fa-pencil-alt"></i></a>
+                                    <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                </td>
+                            </tr>`;
+                            
+                            // add new row to the top of the list
+                            $("#borrow-list").append(row);
+                            reCount = reCount + 1;
+                        });
+
+                        // show no result if reCount = 0
+                        if(reCount > 0){
+                            if(response.hasMore == true){
+                                $(".load-more").show();
+                            } else {
+                                $(".load-more").hide();
+                            }
+                            $("#no-result").hide();
+                        } else {
+                            $("no-result").show();
+                            $(".load-more").hide();
+                        }
+                    } else {
+                        showBottomRightMessage(response.data);
+                    }
+                },
+                error: function(_, status, msg){
+                    showBottomRightMessage('Could not get borrow '+status+': '+msg);
+                },
+            });
+        }
+
         $(document).ready(function () {
             const now = new Date();
             $("#borrow-dialog").hide();
+            $("#no-result").hide();
             var bookIds = [], bookAmounts = [], bookTitles = [], bookCovers = [];
             var studentIds = [], studentNames = [];
 
@@ -79,7 +151,7 @@
                         if(response.status == 1){
                             $.each(response.data, function(i,v){
                                 $("#studentDataList").append("<option value='"+v.firstName+" "+v.lastName+"'></option>");
-                                studentIds.push(v.id);
+                                studentIds.push(v.stuId);
                                 studentNames.push(v.firstName+" "+v.lastName);
                             });
                         } else {
@@ -140,7 +212,6 @@
                     $("#amountStatus").text("");
                 } else {
                     const due = new Date($("#due").val());
-                    alert(studentIds[studentNames.indexOf($("#student").val())]);
                     $.ajax({
                         type: "POST",
                         url: "actions/create_borrow.php",
@@ -150,7 +221,7 @@
                             qty: $("#qty").val(),
                             amount: $("#amount").val(),
                             famount: $("#famount").val(),
-                            dueDate: due.getFullYear()+"/"+(due.getMonth()+1)+"/"+due.getDate(),
+                            dueDate: due.getFullYear()+"/"+(due.getMonth()+1)+"/"+due.getDate()+' 23:59:59',
                         },
                         dataType: "JSON",
                         success: function (response) {
@@ -162,7 +233,7 @@
                                 <td>`+response.data.newId+`</td>
                                 <td>
                                     <div class="row gap10">
-                                        <img class="h100 radius-all10" src="../media/`+bookCovers[bookTitles.indexOf($("#book").val())]+`" alt="Book Cover">
+                                        <img class="h100 radius-all10" src="../upload/book/`+bookCovers[bookTitles.indexOf($("#book").val())]+`" alt="Book Cover">
                                         <div class="dash-summary-book-title gray">`+$("#book").val()+`</div>
                                     </div>
                                 </td>
@@ -182,6 +253,9 @@
                             
                             // add new row to the top of the list
                             $("#borrow-list").prepend(row);
+
+                            // close borrow dialog
+                            $("#borrow-dialog").dialog('close');
                         },
                         error: function(_, status, msg){
                             showBottomRightMessage('Could not get book '+status+': '+msg);
@@ -218,9 +292,13 @@
                     <tbody id="borrow-list"></tbody>
                 </table>
             </div><br>
-            <a href="#" class="row content-center primary-color load-more">
+            <a class="row content-center primary-color load-more cursor-pointer">
                 <i class="fas fa-chevron-down primary-color"></i>&nbsp;&nbsp;Load More
             </a>
+            <div id="no-result" class="center w100per">
+                <dotlottie-player src="https://lottie.host/368474bf-84db-4d4a-bbd2-65219928b446/3jKzzZOp3j.json" background="transparent" speed="1" style="width: 300px; height: 300px; margin-left: 38%;" loop autoplay></dotlottie-player>
+                <p class="gray" >No Result</p>
+            </div>
         </div>
         <a id="borrow-btn" class="overlay-bottom-right">
             <i class="fas fa-plus white"></i>
@@ -263,5 +341,20 @@
             <a class="primary-btn cursor-pointer" id="borrow-book-btn">Borrow</a>
         </div>
     </div>
+    <!-- message -->
+    <div class="message-wrapper">
+        <div class="message-bottom-right">Message</div>
+    </div>
 </body>
 </html>
+
+<?php
+    if(isset($_GET['searchKey'])){
+        echo "<script>
+            searchKey = '".$_GET['searchKey']."';
+            getBorrow();
+        </script>";
+    } else {
+        echo "<script>getBorrow()</script>";
+    }
+?>
