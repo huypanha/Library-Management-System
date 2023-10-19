@@ -4,21 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/fontawesomepro.css">
-    <link rel="stylesheet" href="../js/fontawesomepro.js">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="../js/fontawesomepro.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../js/script.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script>
-        var offset = 0, limit = 20, searchKey = '';
+        var offset = 0, limit = 20, searchKey = '', bTitle = '';
+        var bookIds = [], bookAmounts = [], bookTitles = [], bookCovers = [];
+        var studentIds = [], studentNames = [];
 
         function getBorrow(){
             var data = {
                 limit: limit,
                 offset: offset,
             };
+
+            // filter borrow date
+            if($('#filter-date-opt').val() == 'custom' && $('#startDate').val() < $("#endDate").val()){
+                // convert to date format
+                const sDate = new Date($('#startDate').val());
+                const eDate = new Date($('#endDate').val());
+
+                // convert to date format for PHP
+                data.startDate = sDate.getFullYear()+'/'+(sDate.getMonth()+1)+'/'+sDate.getDate();
+                data.endDate = eDate.getFullYear()+'/'+(eDate.getMonth()+1)+'/'+eDate.getDate();
+            }
+
+            // filter due date
+            if($('#filter-ddate-opt').val() == 'custom' && $('#startDDate').val() < $("#endDDate").val()){
+                // convert to date format
+                const sDate = new Date($('#startDDate').val());
+                const eDate = new Date($('#endDDate').val());
+
+                // convert to date format for PHP
+                data.startDDate = sDate.getFullYear()+'/'+(sDate.getMonth()+1)+'/'+sDate.getDate();
+                data.endDDate = eDate.getFullYear()+'/'+(eDate.getMonth()+1)+'/'+eDate.getDate();
+            }
+
+            // filter by status
+            if($("#filter-status").val() != "all"){
+                data.status = $("#filter-status").val() == "b" ? 0 : 1;
+            }
+
+            // if searching
+            if(searchKey != ''){
+                data.searchKey = searchKey;
+            }
 
             $.ajax({
                 type: "GET",
@@ -47,11 +81,11 @@
                                 <td>`+v.borrower+`</td>
                                 <td>`+v.createdBy+`</td>
                                 <td>$`+v.amount+`</td>
-                                <td>`+bDate.getFullYear()+"/"+(bDate.getMonth()+1)+"/"+bDate.getDate()+`</td>
-                                <td>`+dueDate.getFullYear()+"/"+(dueDate.getMonth()+1)+"/"+dueDate.getDate()+`</td>
+                                <td>`+bDate.getDate()+"/"+(bDate.getMonth()+1)+"/"+bDate.getFullYear()+`</td>
+                                <td>`+dueDate.getDate()+"/"+(dueDate.getMonth()+1)+"/"+dueDate.getFullYear()+`</td>
                                 <td>
-                                    <a href="#"><i class="fas fa-pencil-alt"></i></a>
-                                    <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                    <a class="cursor-pointer" onclick="edit('`+v.id+`', '`+v.bookTitle+`', '`+v.borrower+`', '`+v.qty+`', '`+v.amount+`', '`+v.fineAmount+`', '`+dueDate+`','`+v.status+`')"><i class="fas fa-pencil-alt"></i></a>
+                                    <a class="cursor-pointer" onclick="deleteBorrow('`+v.id+`')"><i class="fas fa-trash-alt"></i></a>
                                 </td>
                             </tr>`;
                             
@@ -69,7 +103,7 @@
                             }
                             $("#no-result").hide();
                         } else {
-                            $("no-result").show();
+                            $("#no-result").show();
                             $(".load-more").hide();
                         }
                     } else {
@@ -82,12 +116,227 @@
             });
         }
 
+        function getAllBooks(listId) {
+            // claer old book list
+            $("#bookDataList").html("");
+
+            $.ajax({
+                type: "GET",
+                url: "actions/get_books.php",
+                data: {
+                    offset: 0,
+                    limit: 0,
+                },
+                dataType: "JSON",
+                success: function (response) {
+                    if(response.status == 1){
+                        $.each(response.data, function(i,v){
+                            $(listId).append("<option value='"+v.title+"'></option>");
+                            bookIds.push(v.id);
+                            bookAmounts.push(v.price);
+                            bookTitles.push(v.title);
+                            bookCovers.push(v.cover);
+                        });
+                    } else {
+                        showBottomRightMessage('Could not get book : '+response.data);
+                    }
+                },
+                error: function(_, status, msg){
+                    showBottomRightMessage('Could not get book '+status+': '+msg);
+                },
+            });
+        }
+
+        function getAllStudents(listId){
+            // claer old student list
+            $("#studentDataList").html("");
+
+            $.ajax({
+                type: "GET",
+                url: "actions/get_students.php",
+                data: {
+                    offset: 0,
+                    limit: 0,
+                },
+                dataType: "JSON",
+                success: function (response) {
+                    if(response.status == 1){
+                        $.each(response.data, function(i,v){
+                            $(listId).append("<option value='"+v.firstName+" "+v.lastName+"'></option>");
+                            studentIds.push(v.stuId);
+                            studentNames.push(v.firstName+" "+v.lastName);
+                        });
+                    } else {
+                        showBottomRightMessage('Could not get book : '+response.data);
+                    }
+                },
+                error: function(_, status, msg){
+                    showBottomRightMessage('Could not get book '+status+': '+msg);
+                },
+            });
+        }
+
+        function edit(id, book, student, qty, amount, fineAmount, due, isReturned) {
+            // get all books
+            getAllBooks("#ubookDataList");
+
+            // get all students
+            getAllStudents("#ustudentDataList");
+            
+            // convert date
+            const d = new Date(due);
+            var day = ("0" + d.getDate()).slice(-2);
+            var month = ("0" + (d.getMonth() + 1)).slice(-2);
+
+            // show existing data on update input
+            $("#id").val(id);
+            $("#ubook").val(book);
+            $("#ustudent").val(student);
+            $("#uqty").val(qty);
+            $("#uamount").val(amount);
+            $("#ufamount").val(fineAmount);
+            $("#udue").val(d.getFullYear()+"-"+month+"-"+day);
+            $("#isReturned").prop("checked", isReturned == '0' ? false : true);
+
+            $("#update-dialog").dialog('open');
+        }
+
+        function validateData(){
+            if(!bookTitles.includes($("#book").val())){
+                $("#bookStatus").text("Please select a book");
+                $("#studentStatus").text("");
+                $("#qtyStatus").text("");
+                $("#amountStatus").text("");
+                $("#famountStatus").text("");
+                return false;
+            } else if(!studentNames.includes($("#student").val())){
+                $("#studentStatus").text("Please select a student");
+                $("#bookStatus").text("");
+                $("#qtyStatus").text("");
+                $("#amountStatus").text("");
+                $("#famountStatus").text("");
+                return false;
+            } else if($("#qty").val() == ""){
+                $("#qtyStatus").text("Please enter qty");
+                $("#studentStatus").text("");
+                $("#bookStatus").text("");
+                $("#amountStatus").text("");
+                $("#famountStatus").text("");
+                return false;
+            } else if($("#amount").val() == ""){
+                $("#amountStatus").text("Please enter amount");
+                $("#studentStatus").text("");
+                $("#bookStatus").text("");
+                $("#qtyStatus").text("");
+                $("#famountStatus").text("");
+                return false;
+            } else if($("#famount").val() == ""){
+                $("#famountStatus").text("Please enter fine amount");
+                $("#studentStatus").text("");
+                $("#bookStatus").text("");
+                $("#qtyStatus").text("");
+                $("#amountStatus").text("");
+                return false;
+            } else {
+                // clear all errors
+                $("#bookStatus").text("");
+                $("#studentStatus").text("");
+                $("#qtyStatus").text("");
+                $("#amountStatus").text("");
+                $("#famountStatus").text("");
+                return true;
+            }
+        }
+
+        function validateUpdateData(){
+            if(!bookTitles.includes($("#ubook").val())){
+                $("#ubookStatus").text("Please select a book");
+                $("#ustudentStatus").text("");
+                $("#uqtyStatus").text("");
+                $("#uamountStatus").text("");
+                $("#ufamountStatus").text("");
+                return false;
+            } else if(!studentNames.includes($("#ustudent").val())){
+                $("#ustudentStatus").text("Please select a student");
+                $("#ubookStatus").text("");
+                $("#uqtyStatus").text("");
+                $("#uamountStatus").text("");
+                $("#ufamountStatus").text("");
+                return false;
+            } else if($("#uqty").val() == ""){
+                $("#uqtyStatus").text("Please enter qty");
+                $("#ustudentStatus").text("");
+                $("#ubookStatus").text("");
+                $("#uamountStatus").text("");
+                $("#ufamountStatus").text("");
+                return false;
+            } else if($("#uamount").val() == ""){
+                $("#uamountStatus").text("Please enter amount");
+                $("#ustudentStatus").text("");
+                $("#ubookStatus").text("");
+                $("#uqtyStatus").text("");
+                $("#ufamountStatus").text("");
+                return false;
+            } else if($("#ufamount").val() == ""){
+                $("#ufamountStatus").text("Please enter fine amount");
+                $("#ustudentStatus").text("");
+                $("#ubookStatus").text("");
+                $("#uqtyStatus").text("");
+                $("#uamountStatus").text("");
+                return false;
+            } else {
+                // clear all errors
+                $("#ubookStatus").text("");
+                $("#ustudentStatus").text("");
+                $("#uqtyStatus").text("");
+                $("#uamountStatus").text("");
+                $("#ufamountStatus").text("");
+                return true;
+            }
+        }
+
+        function deleteBorrow(id) {
+            if(confirm("Are you sure you want to delete this borrow (#"+id+")?")){
+                $.ajax({
+                    type: "POST",
+                    url: "actions/delete_borrow.php",
+                    data: {
+                        id: id,
+                    },
+                    dataType: "JSON",
+                    success: function (response) {
+                        if(response.status == 1){
+                            // show success message
+                            showBottomRightMessage(response.data);
+
+                            // clear old list
+                            $("#borrow-list").html("");
+
+                            // get new list
+                            getBorrow();
+                        } else {
+                            // show error message
+                            showBottomRightMessage('Could not delete this borrow : '+response.data);
+                        }
+                    },
+                    error: function(_, status, msg){
+                        showBottomRightMessage('Could not delete borrow '+status+': '+msg);
+                    },
+                });
+            }
+        }
+
         $(document).ready(function () {
             const now = new Date();
             $("#borrow-dialog").hide();
-            $("#no-result").hide();
-            var bookIds = [], bookAmounts = [], bookTitles = [], bookCovers = [];
-            var studentIds = [], studentNames = [];
+            $("#update-dialog").hide();
+            $(".startDate").hide();
+            $(".endDate").hide();
+            $(".startDDate").hide();
+            $(".endDDate").hide();
+            $(".load-more").hide();
+
+            alert(bTitle);
 
             $("#borrow-dialog").dialog({
                 autoOpen: false,
@@ -106,62 +355,29 @@
                 }
             });
 
-            $("#borrow-btn").click(function(){
-                // claer old book list
-                $("#bookDataList").html("");
-                // get all books
-                $.ajax({
-                    type: "GET",
-                    url: "actions/get_books.php",
-                    data: {
-                        offset: 0,
-                        limit: 0,
-                    },
-                    dataType: "JSON",
-                    success: function (response) {
-                        if(response.status == 1){
-                            $.each(response.data, function(i,v){
-                                $("#bookDataList").append("<option value='"+v.title+"'></option>");
-                                bookIds.push(v.id);
-                                bookAmounts.push(v.price);
-                                bookTitles.push(v.title);
-                                bookCovers.push(v.cover);
-                            });
-                        } else {
-                            showBottomRightMessage('Could not get book : '+response.data);
+            $("#update-dialog").dialog({
+                autoOpen: false,
+                modal: true,
+                width: 500,
+                button: [
+                    {
+                        text: "Close",
+                        click: function() {
+                            $( this ).dialog( "close" );
                         }
-                    },
-                    error: function(_, status, msg){
-                        showBottomRightMessage('Could not get book '+status+': '+msg);
-                    },
-                });
+                    }
+                ],
+                classes: {
+                    "ui-dialog": "highlight",
+                }
+            });
 
-                // claer old student list
-                $("#studentDataList").html("");
+            $("#borrow-btn").click(function(){
+                // get all books
+                getAllBooks("#bookDataList");
+
                 // get all students
-                $.ajax({
-                    type: "GET",
-                    url: "actions/get_students.php",
-                    data: {
-                        offset: 0,
-                        limit: 0,
-                    },
-                    dataType: "JSON",
-                    success: function (response) {
-                        if(response.status == 1){
-                            $.each(response.data, function(i,v){
-                                $("#studentDataList").append("<option value='"+v.firstName+" "+v.lastName+"'></option>");
-                                studentIds.push(v.stuId);
-                                studentNames.push(v.firstName+" "+v.lastName);
-                            });
-                        } else {
-                            showBottomRightMessage('Could not get book : '+response.data);
-                        }
-                    },
-                    error: function(_, status, msg){
-                        showBottomRightMessage('Could not get book '+status+': '+msg);
-                    },
-                });
+                getAllStudents("#studentDataList");
 
                 // set default qty to 1
                 $("#qty").val("1");
@@ -180,37 +396,7 @@
 
             $("#borrow-book-btn").click(function(){
                 // validate data
-                if(!bookTitles.includes($("#book").val())){
-                    $("#bookStatus").text("Please select a book");
-                    $("#studentStatus").text("");
-                    $("#qtyStatus").text("");
-                    $("#amountStatus").text("");
-                    $("#famountStatus").text("");
-                } else if(!studentNames.includes($("#student").val())){
-                    $("#studentStatus").text("Please select a student");
-                    $("#bookStatus").text("");
-                    $("#qtyStatus").text("");
-                    $("#amountStatus").text("");
-                    $("#famountStatus").text("");
-                } else if($("#qty").val() == ""){
-                    $("#qtyStatus").text("Please enter qty");
-                    $("#studentStatus").text("");
-                    $("#bookStatus").text("");
-                    $("#amountStatus").text("");
-                    $("#famountStatus").text("");
-                } else if($("#amount").val() == ""){
-                    $("#amountStatus").text("Please enter amount");
-                    $("#studentStatus").text("");
-                    $("#bookStatus").text("");
-                    $("#qtyStatus").text("");
-                    $("#famountStatus").text("");
-                } else if($("#famount").val() == ""){
-                    $("#famountStatus").text("Please enter fine amount");
-                    $("#studentStatus").text("");
-                    $("#bookStatus").text("");
-                    $("#qtyStatus").text("");
-                    $("#amountStatus").text("");
-                } else {
+                if(validateData()) {
                     const due = new Date($("#due").val());
                     $.ajax({
                         type: "POST",
@@ -243,11 +429,11 @@
                                 <td>`+$("#student").val()+`</td>
                                 <td>`+response.data.issuer+`</td>
                                 <td>$`+$("#amount").val()+`</td>
-                                <td>`+now.getFullYear()+"/"+(now.getMonth()+1)+"/"+now.getDate()+`</td>
-                                <td>`+due.getFullYear()+"/"+(due.getMonth()+1)+"/"+due.getDate()+`</td>
+                                <td>`+now.getDate()+"/"+(now.getMonth()+1)+"/"+now.getFullYear()+`</td>
+                                <td>`+due.getDate()+"/"+(due.getMonth()+1)+"/"+due.getFullYear()+`</td>
                                 <td>
-                                    <a href="#"><i class="fas fa-pencil-alt"></i></a>
-                                    <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                    <a class="cursor-pointer" onclick="edit('`+response.data.newId+`', '`+bookCovers[bookTitles.indexOf($("#book").val())]+`', '`+$("#student").val()+`', '`+$("#qty").val()+`', '`+$("#amount").val()+`', '`+$("#famount").val()+`', '`+due+`', '0')"><i class="fas fa-pencil-alt"></i></a>
+                                    <a class="cursor-pointer" onclick="deleteBorrow('`+response.data.newId+`')"><i class="fas fa-trash-alt"></i></a>
                                 </td>
                             </tr>`;
                             
@@ -263,6 +449,148 @@
                     });
                 }
             });
+
+            $("#update-btn").click(function(){
+                if(validateUpdateData()){
+                    const due = new Date($("#udue").val());
+                    $.ajax({
+                        type: "POST",
+                        url: "actions/update_borrow.php",
+                        data: {
+                            id: $("#id").val(),
+                            bookId: bookIds[bookTitles.indexOf($("#ubook").val())],
+                            stuId: studentIds[studentNames.indexOf($("#ustudent").val())],
+                            qty: $("#uqty").val(),
+                            amount: $("#uamount").val(),
+                            famount: $("#ufamount").val(),
+                            dueDate: due.getFullYear()+"/"+(due.getMonth()+1)+"/"+due.getDate()+' 23:59:59',
+                            isReturned: $("#isReturned").prop('checked') ? 1 : 0,
+                        },
+                        dataType: "JSON",
+                        success: function (response) {
+                            if(response.status == 1){
+                                // show success message
+                                showBottomRightMessage(response.data, 1);
+
+                                // clear old list
+                                $("#borrow-list").html("");
+
+                                // get borrows
+                                getBorrow();
+
+                                // close update dialog
+                                $("#update-dialog").dialog('close');
+                            } else {
+                                // show error message
+                                showBottomRightMessage(response.data);
+                            }
+                        },
+                        error: function(_, status, msg){
+                            showBottomRightMessage('Could not update '+status+': '+msg);
+                        },
+                    });
+                }
+            });
+
+            $("#filter-date-opt").change(function(){
+                if($(this).val() == 'custom'){
+                    // show start & end date
+                    $(".startDate").show();
+                    $(".endDate").show();
+
+                    if($("#startDate").val() < $("#endDate").val()){
+                        // clear old list
+                        $("#borrow-list").html("");
+
+                        // get borrows
+                        getBorrow();
+                    }
+                } else {
+                    // hide start & end date
+                    $(".startDate").hide();
+                    $(".endDate").hide();
+
+                    // clear old list
+                    $("#borrow-list").html("");
+
+                    // get borrows
+                    getBorrow();
+                }
+            });
+
+            $("#startDate").change(function(){
+                if($(this).val() < $("#endDate").val()){
+                    // clear old list
+                    $("#borrow-list").html("");
+
+                    // get borrows
+                    getBorrow();
+                }
+            });
+
+            $("#endDate").change(function(){
+                if($("#startDate").val() < $(this).val()){
+                    // clear old list
+                    $("#borrow-list").html("");
+
+                    // get borrows
+                    getBorrow();
+                }
+            });
+
+            $("#filter-ddate-opt").change(function(){
+                if($(this).val() == 'custom'){
+                    // show start & end date
+                    $(".startDDate").show();
+                    $(".endDDate").show();
+
+                    if($("#startDDate").val() < $("#endDDate").val()){
+                        // clear old list
+                        $("#borrow-list").html("");
+
+                        // get borrows
+                        getBorrow();
+                    }
+                } else {
+                    // hide start & end date
+                    $(".startDDate").hide();
+                    $(".endDDate").hide();
+
+                    // clear old list
+                    $("#borrow-list").html("");
+
+                    // get borrows
+                    getBorrow();
+                }
+            });
+
+            $("#startDDate").change(function(){
+                if($(this).val() < $("#endDDate").val()){
+                    // clear old list
+                    $("#borrow-list").html("");
+
+                    // get borrows
+                    getBorrow();
+                }
+            });
+
+            $("#endDDate").change(function(){
+                if($("#startDDate").val() < $(this).val()){
+                    // clear old list
+                    $("#borrow-list").html("");
+
+                    // get borrows
+                    getBorrow();
+                }
+            });
+
+            $("#filter-status").change(function(){
+                // clear old list
+                $("#borrow-list").html("");
+
+                // get borrows
+                getBorrow();
+            });
         });
     </script>
 </head>
@@ -270,11 +598,60 @@
     <div class="wrapper padding-20">
         <div class="wrapper padding-20 back-white radius-all20 shadow-gray">
             <div class="row space-between">
+                <div class="row gap10 content-top">
+                    <div class="col w100">
+                        <label for="filter-date-opt">Borrow Date</label><br>
+                        <div class="filter-box">
+                            <select class="w100per" name="filter-date-opt" id="filter-date-opt">
+                                <option value="all">All</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                            <i class="fas fa-caret-down"></i>
+                        </div>
+                    </div>
+                    <div class="col w100 startDate">
+                        <label for="startDate">Start Date</label><br>
+                        <input class="filter-date" type="date" name="startDate" id="startDate">
+                    </div>
+                    <div class="col w100 endDate">
+                        <label for="endDate">End Date</label><br>
+                        <input class="filter-date" type="date" name="endDate" id="endDate">
+                    </div>
+                    <div class="col w100">
+                        <label for="filter-ddate-opt">Due Date</label><br>
+                        <div class="filter-box">
+                            <select class="w100per" name="filter-ddate-opt" id="filter-ddate-opt">
+                                <option value="all">All</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                            <i class="fas fa-caret-down"></i>
+                        </div>
+                    </div>
+                    <div class="col w100 startDDate">
+                        <label for="startDDate">Start Date</label><br>
+                        <input class="filter-date" type="date" name="startDDate" id="startDDate">
+                    </div>
+                    <div class="col w100 endDDate">
+                        <label for="endDDate">End Date</label><br>
+                        <input class="filter-date" type="date" name="endDDate" id="endDDate">
+                    </div>
+                    <div class="col w130">
+                        <label for="filter-status">Status</label><br>
+                        <div class="filter-box">
+                            <select class="w100per" name="filter-status" id="filter-status">
+                                <option value="all">All</option>
+                                <option value="b">Borrowing</option>
+                                <option value="r">Returned</option>
+                            </select>
+                            <i class="fas fa-caret-down"></i>
+                        </div>
+                    </div>
+                </div>
                 <div class="stu-list-title"></div>
-                <div class="list-options row gap10">
+                <!-- <div class="list-options row gap10">
                     <a href="#"><i class="fas fa-file-export"></i>&nbsp;&nbsp;Export</a>
                     <a href="#"><i class="fas fa-filter"></i>&nbsp;&nbsp;Filter</a>
-                </div>
+                </div> -->
             </div>
             <div class="row scroll-x mt10">
                 <table>
@@ -327,7 +704,7 @@
                 <input class="w100per" type="number" name="amount" id="amount"><br>
                 <div id="amountStatus" class="input-error-status"></div>
 
-                <label for="amount">Fine Amount ($)</label>
+                <label for="afmount">Fine Amount ($)</label>
                 <input class="w100per" type="number" name="famount" id="famount"><br>
                 <div id="famountStatus" class="input-error-status"></div>
 
@@ -341,6 +718,47 @@
             <a class="primary-btn cursor-pointer" id="borrow-book-btn">Borrow</a>
         </div>
     </div>
+    <div class="dialog" id="update-dialog" title="Issue Book">
+        <div class="row gap25 content-top">
+            <div class="col w100per">
+                <input type="hidden" name="id" id="id">
+                <label for="ubook">Book</label><br>
+                <input id="ubook" class="w100per" autocomplete="on" list="ubookDataList">
+                <div id="ubookStatus" class="input-error-status"></div>
+                <datalist id="ubookDataList"></datalist>
+                <div class="h10"></div>
+
+                <label for="ustudent">Student</label><br>
+                <input id="ustudent" class="w100per" autocomplete="on" list="ustudentDataList">
+                <div id="ustudentStatus" class="input-error-status"></div>
+                <datalist id="ustudentDataList"></datalist>
+                <div class="h10"></div>
+
+                <label for="uqty">Quantity</label>
+                <input class="w100per" type="number" name="uqty" id="uqty"><br>
+                <div id="uqtyStatus" class="input-error-status"></div>
+
+                <label for="uamount">Borrow Amount ($)</label>
+                <input class="w100per" type="number" name="uamount" id="uamount"><br>
+                <div id="uamountStatus" class="input-error-status"></div>
+
+                <label for="ufamount">Fine Amount ($)</label>
+                <input class="w100per" type="number" name="ufamount" id="ufamount"><br>
+                <div id="ufamountStatus" class="input-error-status"></div>
+
+                <label for="udue">Due Date</label>
+                <input class="w100per" type="date" name="udue" id="udue"><br>
+                <div id="udueStatus" class="input-error-status"></div>
+
+                <input type="checkbox" name="isReturned" id="isReturned">&nbsp;&nbsp;
+                <label for="isReturned">Returned</label>
+            </div><br>
+        </div> <br>
+        <div class="row content-right gap10">
+            <a class="btn cursor-pointer" onclick="$('#update-dialog').dialog('close');">Close</a>
+            <a class="primary-btn cursor-pointer" id="update-btn">Update</a>
+        </div>
+    </div>
     <!-- message -->
     <div class="message-wrapper">
         <div class="message-bottom-right">Message</div>
@@ -352,6 +770,11 @@
     if(isset($_GET['searchKey'])){
         echo "<script>
             searchKey = '".$_GET['searchKey']."';
+            getBorrow();
+        </script>";
+    } else if(isset($_GET['action']) && isset($_GET['bTitle'])){
+        echo "<script>
+            bTitle = '".$_GET['bTitle']."';
             getBorrow();
         </script>";
     } else {

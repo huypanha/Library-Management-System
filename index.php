@@ -42,6 +42,12 @@
                         } else {
                             $("#current-page-content").html("<iframe id='current-page' src='src/books.php?searchKey="+$("#search").val()+"' frameborder='0'></iframe>");
                         }
+                    } else if($("#current-page").attr("src").match("^src/borrows.php")){
+                        if($("#search").val() == ""){
+                            $("#current-page-content").html("<iframe id='current-page' src='src/borrows.php' frameborder='0'></iframe>");
+                        } else {
+                            $("#current-page-content").html("<iframe id='current-page' src='src/borrows.php?searchKey="+$("#search").val()+"' frameborder='0'></iframe>");
+                        }
                     }
                 }
             });
