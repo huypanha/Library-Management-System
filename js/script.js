@@ -49,7 +49,7 @@ $(document).ready(function(){
             newPageTitle = "Borrows";
         } else if($(this).index() == 4){
             newChild = "<i class='fad fa-users size-25 white'></i>";
-            newPage = "<iframe id='current-page' src='src/students.php' frameborder='0'></iframe>";
+            newPage = "<iframe id='current-page' src='src/users.php' frameborder='0'></iframe>";
             newPageTitle = "Users";
         } else if($(this).index() == 5){
             newChild = "<i class='fad fa-cog size-25 white' style='--fa-primary-opacity: 0.4; --fa-secondary-opacity: 1;'></i>";

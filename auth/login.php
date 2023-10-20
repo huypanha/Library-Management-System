@@ -31,9 +31,10 @@
                         'userId'=>$re['user_id'],
                         'userName'=>$re['username'],
                         'email'=>$re['email'],
-                        'contact'=>$re['contact'],
+                        'phone'=>$re['phone'],
                         'address'=>$re['address'],
                         'profileImg'=>$re['profile_img'],
+                        'gender'=>$re['gender'],
                     );
 
                     $_SESSION['user'] = json_encode($user);

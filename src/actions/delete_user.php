@@ -10,19 +10,19 @@
         $user = json_decode($_SESSION['user']);
 
         $id = $_POST['id'];
-        $cover = $_POST['cover'];
+        $profile = $_POST['profile'];
 
         try {
             // connect to db
             $db = DB::Connect();
 
             // create query
-            $sql = "UPDATE books SET status=0, updated_by=".$user->userId.", updated_date=NOW() WHERE id=$id";
+            $sql = "UPDATE user SET status=0, updated_by=".$user->userId.", updated_date=NOW() WHERE id=$id";
             $stmt = $db->prepare($sql);
             $stmt->execute();
 
-            // delete cover
-            // unlink(dirname(__DIR__, 2)."/upload/book/".end(explode('/', $cover)));
+            // delete profile
+            // unlink(dirname(__DIR__, 2)."/upload/user/".end(explode('/', $profile)));
 
             // return result
             echo json_encode(array(

@@ -336,8 +336,6 @@
             $(".endDDate").hide();
             $(".load-more").hide();
 
-            alert(bTitle);
-
             $("#borrow-dialog").dialog({
                 autoOpen: false,
                 modal: true,
@@ -371,6 +369,27 @@
                     "ui-dialog": "highlight",
                 }
             });
+
+            // if opening this page for borrow from book page
+            if(bTitle != ""){
+                // get all books
+                getAllBooks("#bookDataList");
+
+                // get all students
+                getAllStudents("#studentDataList");
+                
+                // set seletected book to the book from book page
+                $("#book").val(bTitle);
+
+                // set default qty to 1
+                $("#qty").val("1");
+
+                // set due date to next 1 day
+                $("#due").val(now.getFullYear()+"-"+(now.getMonth()+1+"-"+(now.getDate()+1)));
+
+                // open borrow dialog
+                $("#borrow-dialog").dialog("open");
+            }
 
             $("#borrow-btn").click(function(){
                 // get all books
@@ -432,7 +451,7 @@
                                 <td>`+now.getDate()+"/"+(now.getMonth()+1)+"/"+now.getFullYear()+`</td>
                                 <td>`+due.getDate()+"/"+(due.getMonth()+1)+"/"+due.getFullYear()+`</td>
                                 <td>
-                                    <a class="cursor-pointer" onclick="edit('`+response.data.newId+`', '`+bookCovers[bookTitles.indexOf($("#book").val())]+`', '`+$("#student").val()+`', '`+$("#qty").val()+`', '`+$("#amount").val()+`', '`+$("#famount").val()+`', '`+due+`', '0')"><i class="fas fa-pencil-alt"></i></a>
+                                    <a class="cursor-pointer" onclick="edit('`+response.data.newId+`', '`+$("#book").val()+`', '`+$("#student").val()+`', '`+$("#qty").val()+`', '`+$("#amount").val()+`', '`+$("#famount").val()+`', '`+due+`', '0')"><i class="fas fa-pencil-alt"></i></a>
                                     <a class="cursor-pointer" onclick="deleteBorrow('`+response.data.newId+`')"><i class="fas fa-trash-alt"></i></a>
                                 </td>
                             </tr>`;

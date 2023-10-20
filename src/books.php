@@ -362,8 +362,7 @@
 
             $("#d-btn-borrow").click(function (e) { 
                 e.preventDefault();
-                alert($("#d-title").text().replace(": ", ""));
-                window.location.href = "borrows.php?action=borrows&bTitle="+$("#d-title").val();
+                window.location.href = "borrows.php?action=borrows&bTitle="+$("#d-title").text().replace(": ", "");
             });
         });
     </script>
