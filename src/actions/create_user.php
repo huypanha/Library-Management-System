@@ -24,12 +24,12 @@
 
             // upload profile image
             date_default_timezone_set("Asia/Phnom_Penh");
-            $profile = date('YmdHis').end(explode(".",$profileImg['name']));
+            $profile = date('YmdHis').".".end(explode(".",$profileImg['name']));
 
             if(move_uploaded_file($profileImg['tmp_name'],"../../upload/user/".$profile)){
                 // create query
                 $sql = "INSERT INTO user(username, pass, gender, phone, email, role_id, address, profile_img, created_by) 
-                    VALUES('$username', '$pass', $gender, '$phnoe', '$email', $roleId, '$addr', '$profile', ".$user->userId.")";
+                    VALUES('$username', '$pass', $gender, '$phone', '$email', $roleId, '$addr', '$profile', ".$user->userId.")";
                 $stmt = $db->prepare($sql);
                 $stmt->execute();
 

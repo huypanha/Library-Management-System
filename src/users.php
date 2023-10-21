@@ -13,6 +13,7 @@
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script>
         var offset = 0, limit = 20, searchKey = '';
+        var roleIds = [], roleTitles = [];
 
         // get users list function
         function getUsersList(){
@@ -69,7 +70,7 @@
                                 <td>`+v.roleTitle+`</td>
                                 <td>`+cDate.getDate()+`/`+(cDate.getMonth()+1)+`/`+cDate.getFullYear()+`</td>
                                 <td>
-                                    <a class='cursor-pointer' onclick=""><i class='fas fa-pencil-alt'></i></a>
+                                    <a class='cursor-pointer' onclick="openUpdateDialog('`+v.id+`','`+v.username+`','`+v.gender+`','`+v.phone+`','`+v.email+`','`+v.roleTitle+`','`+v.addr+`','`+v.profile+`');"><i class='fas fa-pencil-alt'></i></a>
                                     <a class='cursor-pointer' onclick="deleteUser(`+ data.data +`)"><i class='fas fa-trash-alt'></i></a>
                                 </td>
                             </tr>`;
@@ -113,6 +114,8 @@
                     if(re.status == 1){
                         $.each(re.data, function(i, v){
                             $(listId).append("<option value='"+v.title+"'></option>");
+                            roleIds.push(v.id);
+                            roleTitles.push(v.title);
                         });
                     } else {
                         showBottomRightMessage(re.data);
@@ -135,21 +138,19 @@
             $("#create-dialog").dialog('open');
         }
 
-        function openUpdateDialog(stuId, firstName, lastName, gender, dob, contact, addr, isBlackList){
-            // convert date
-            var d = new Date(dob);
-            var day = ("0" + d.getDate()).slice(-2);
-            var month = ("0" + (d.getMonth() + 1)).slice(-2);
-
+        function openUpdateDialog(id, username, gender, phone, email, roleTitle, addr, profile){
             // send existing value to input
-            $("#uStuId").val(stuId);
-            $("#ufirstName").val(firstName);
-            $("#ulastName").val(lastName);
-            $("#udob").val(d.getFullYear()+"-"+month+"-"+day);
-            $("#ucontact").val(contact);
-            $("#uaddr").val(addr);
+            $("#id").val(id);
+            $("#uusername").val(username);
+            $("#uphone").val(phone);
+            $("#uemail").val(email);
             $("#ugender").val(gender);
-            $("#uBlackList").prop('checked', isBlackList == '0' ? false : true);
+            $("#urole").val(roleTitle);
+            $("#uaddr").val(addr);
+            $("#uprofile-pre").prop('scr', '../uploads/user/'+profile);
+
+            // get all role list
+            getAllUserRoles("#uroleDataList");
 
             // show update dialog
             $("#update-dialog").dialog('open');
@@ -207,8 +208,7 @@
             $("#update-dialog").dialog({
                 autoOpen: false,
                 modal: true,
-                height: 450,
-                width: 500,
+                width: 700,
                 button: [{
                     text: "Close",
                     click: function() {
@@ -223,49 +223,64 @@
             // send data to db when user click create user button on create user dialog
             $(".createBtn").click(function(){
                 // get data from input
-                const firstName = $("#firstName").val();
-                const lastName = $("#lastName").val();
-                const contact = $("#contact").val();
-                const addr = $("#addr").val();
-                const gender = $("#gender").find(":selected").val();
-                const dob = new Date($("#dob").val());
+                var username = $("#username").val();
+                var pass = $("#pass").val();
+                var phone = $("#phone").val();
+                var email = $("#email").val();
+                var gender = $("#gender").find(":selected").val();
+                var role = $("#role").val();
+                var addr = $("#addr").val();
+                var profile = $("#profile").prop('files');
 
                 // clear status
-                $("#firstNameStatus").text("");
-                $("#lastNameStatus").text("");
-                $("#contactStatus").text("");
+                $("#profileStatus").text("");
+                $("#usernameStatus").text("");
+                $("#passStatus").text("");
+                $("#phoneStatus").text("");
+                $("#emailStatus").text("");
+                $("#roleStatus").text("");
                 $("#addrStatus").text("");
-                $("#dobStatus").text("");
 
                 // validate data
-                if(firstName == ""){
-                    $("#firstNameStatus").text("Please enter user first name");
-                } else if(lastName == ""){
-                    $("#lastNameStatus").text("Please enter user last name");
-                } else if(dob == "Invalid Date"){
-                    $("#dobStatus").text("Please enter user date of birth");
-                } else if(contact == ""){
-                    $("#contactStatus").text("Please enter user contact");
+                if(username == ""){
+                    $("#usernameStatus").text("Please enter username");
+                } else if(pass == "" || pass.length < 6){
+                    $("#passStatus").text("Please enter password at least 6 characters");
+                } else if(phone == ""){
+                    $("#phoneStatus").text("Please enter phone number");
+                } else if(email == ""){
+                    $("#emailStatus").text("Please enter email address");
                 } else if(addr == ""){
                     $("#addrStatus").text("Please enter user address");
+                } else if(role == ""){
+                    $("#roleStatus").text("Please select a role");
+                } else if(!profile[0]){
+                    $("#profileStatus").text("Please choose a profile");
                 } else {
+                    // create a form data to send image to php
+                    var formData = new FormData();
+                    formData.append('img', profile[0]);
+                    formData.append('username', username);
+                    formData.append('pass', pass);
+                    formData.append('email', email);
+                    formData.append('phone', phone);
+                    formData.append('gender', gender);
+                    formData.append('roleId', roleIds[roleTitles.indexOf(role)]);
+                    formData.append('addr', addr);
+
                     // sending data to db
                     $.ajax({
                         method: "POST",
                         url: "actions/create_user.php",
-                        data: {
-                            fn: firstName,
-                            ln: lastName,
-                            c: contact,
-                            addr: addr,
-                            g: gender,
-                            dob: dob.getFullYear()+'/'+(dob.getMonth()+1)+'/'+dob.getDate(),
-                        },
-                        dataType: "json",
+                        data: formData,
+                        dataType: "JSON",
+                        processData: false,
+                        cache: false,
+                        contentType: false,
                         success: function(data) {
                             // get message text by status
                             if(data.status == 1){
-                                showBottomRightMessage("Created new user! ID: "+ data.data, 1);
+                                showBottomRightMessage("Created new user! ID: "+ data.data.newId, 1);
 
                                 // close create user dialog
                                 $("#create-dialog").dialog("close");
@@ -273,22 +288,27 @@
                                 const now = new Date();
                                 // add new user to the list
                                 var row = `<tr>
-                                    <td>`+ data.data +`</td>
-                                    <td>`+ firstName + ' ' + lastName +`</td>
-                                    <td>`+ (gender == 0 ? 'Male' : 'Female') +`</td>
-                                    <td>`+ dob.getDate() + '/' + (dob.getMonth()+1) + '/' + dob.getFullYear() +`</td>
-                                    <td>`+ contact +`</td>
-                                    <td>`+ addr +`</td>
-                                    <td>False</td>
-                                    <td>`+ now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear() +`</td>
+                                    <td>`+data.data.newId+`</td>
                                     <td>
-                                        <a class='cursor-pointer' onclick="openUpdateDialog('`+ data.data +`','`+ 
-                                    firstName + `','` + lastName +`','`+ gender +`','`+ dob +`','`+ contact +`','`+ 
-                                    addr +`', '0');"><i class='fas fa-pencil-alt'></i></a>
-                                        <a class='cursor-pointer' onclick="deleteUser(`+ data.data +`)"><i class='fas fa-trash-alt'></i></a>
+                                        <div class="row gap10 gray">
+                                            <div class="profile">
+                                                <img  src="../upload/user/`+data.data.profileImg+`" alt="profile">
+                                            </div>
+                                            `+username+`
+                                        </div>
+                                    </td>
+                                    <td>`+(gender == 0 ? "Male" : "Female")+`</td>
+                                    <td>`+phone+`</td>
+                                    <td>`+email+`</td>
+                                    <td>`+addr+`</td>
+                                    <td>`+role+`</td>
+                                    <td>`+now.getDate()+`/`+(now.getMonth()+1)+`/`+now.getFullYear()+`</td>
+                                    <td>
+                                        <a class='cursor-pointer' onclick=""><i class='fas fa-pencil-alt'></i></a>
+                                        <a class='cursor-pointer' onclick="deleteUser(`+ data.data.newId +`)"><i class='fas fa-trash-alt'></i></a>
                                     </td>
                                 </tr>`;
-                                $("#stu-list").prepend(row);
+                                $("#user-list").prepend(row);
                             } else {
                                 showBottomRightMessage(data.data, 0);
                             }
@@ -346,14 +366,14 @@
             // when user click update button on update user dialog
             $(".updateBtn").click(function(){
                 // get data from input
-                const stuId = $("#uStuId").val();
-                const firstName = $("#ufirstName").val();
-                const lastName = $("#ulastName").val();
-                const contact = $("#ucontact").val();
-                const addr = $("#uaddr").val();
-                const gender = $("#ugender").find(":selected").val();
-                const dob = new Date($("#udob").val());
-                const isBlackList = $("#uBlackList").is(":checked") ? 1 : 0;
+                var stuId = $("#uStuId").val();
+                var firstName = $("#ufirstName").val();
+                var lastName = $("#ulastName").val();
+                var contact = $("#ucontact").val();
+                var addr = $("#uaddr").val();
+                var gender = $("#ugender").find(":selected").val();
+                var dob = new Date($("#udob").val());
+                var isBlackList = $("#uBlackList").is(":checked") ? 1 : 0;
 
                 // clear status
                 $("#ufirstNameStatus").text("");
@@ -479,6 +499,15 @@
     </div>
     <!-- create dialog -->
     <div class="dialog" id="create-dialog" title="New User">
+        <div class="row content-center">
+            <label for="profile" class="center">
+                <div class="profile-100 cursor-pointer">
+                    <img id="profile-pre" src="../upload/user/SNOW_20230709_103003_332.jpg" alt="profile">
+                </div>
+                <div id="profileStatus" class="input-error-status"></div>
+            </label>
+            <input accept="image/*" type="file" name="profile" id="profile" onchange="$('#profile-pre').prop('src',window.URL.createObjectURL(this.files[0]));">
+        </div>
         <div class="row gap25">
             <div class="col w100per">
                 <label for="username">Username</label><br>
@@ -511,12 +540,12 @@
         <div class="row gap25">
             <div class="col w100per">
                 <label for="email">Email</label><br>
-                <input class="w100per" type="text" name="email" id="email" placeholder="panha@gmail.com">
+                <input class="w100per" type="email" name="email" id="email" placeholder="panha@gmail.com">
                 <div id="emailStatus" class="input-error-status"></div>
             </div>
             <div class="col w100per">
                 <label for="role">Role</label><br>
-                <input id="role" class="w100per" autocomplete="on" list="roleDataList">
+                <input id="role" class="w100per" autocomplete="on" list="roleDataList" placeholder="Admin">
                 <div id="roleStatus" class="input-error-status"></div>
                 <datalist id="roleDataList"></datalist>
             </div>
@@ -534,13 +563,22 @@
         </div>
     </div>
     <!-- update dialog -->
-    <div class="dialog" id="update-dialog" title="Update User">
+    <div class="dialog" id="update-dialog" title="New User">
+        <input type="hidden" name="id" id="id">
+        <div class="row content-center">
+            <label for="uprofile" class="center">
+                <div class="profile-100 cursor-pointer">
+                    <img id="uprofile-pre" src="../upload/user/SNOW_20230709_103003_332.jpg" alt="profile">
+                </div>
+                <div id="uprofileStatus" class="input-error-status"></div>
+            </label>
+            <input accept="image/*" type="file" name="uprofile" id="uprofile" onchange="$('#uprofile-pre').prop('src',window.URL.createObjectURL(this.files[0]));">
+        </div>
         <div class="row gap25">
-            <input type="hidden" name="stuId" id="uStuId">
             <div class="col w100per">
-                <label for="ufirstName">First Name</label><br>
-                <input class="w100per" type="text" name="ufirstName" id="ufirstName" placeholder="First Name">
-                <div id="ufirstNameStatus" class="input-error-status"></div>
+                <label for="uusername">Username</label><br>
+                <input class="w100per" type="text" name="uusername" id="uusername" placeholder="User Name">
+                <div id="uusernameStatus" class="input-error-status"></div>
             </div>
             <div class="col w100per">
                 <label for="ugender">Gender</label><br>
@@ -555,30 +593,35 @@
         </div>
         <div class="row gap25">
             <div class="col w100per">
-                <label for="ulastName">Last Name</label><br>
-                <input class="w100per" type="text" name="ulastName" id="ulastName" placeholder="Last Name">
-                <div id="ulastNameStatus" class="input-error-status"></div>
+                <label for="upass">Password</label><br>
+                <input class="w100per" type="password" name="upass" id="upass" placeholder="Password">
+                <div id="upassStatus" class="input-error-status"></div>
             </div>
             <div class="col w100per">
-                <label for="udob">Date of Birth</label><br>
-                <input class="w100per" type="date" name="udob" id="udob">
+                <label for="uphone">Phone</label><br>
+                <input class="w100per" type="text" name="uphone" id="uphone" placeholder="012345678">
+                <div id="uphoneStatus" class="input-error-status"></div>
             </div>
         </div>
         <div class="row gap25">
             <div class="col w100per">
-                <label for="ucontact">Contact</label><br>
-                <input class="w100per" type="text" name="ucontact" id="ucontact" placeholder="Contact">
-                <div id="ucontactStatus" class="input-error-status"></div>
+                <label for="uemail">Email</label><br>
+                <input class="w100per" type="email" name="uemail" id="uemail" placeholder="panha@gmail.com">
+                <div id="uemailStatus" class="input-error-status"></div>
             </div>
+            <div class="col w100per">
+                <label for="urole">Role</label><br>
+                <input id="urole" class="w100per" autocomplete="on" list="uroleDataList" placeholder="Admin">
+                <div id="uroleStatus" class="input-error-status"></div>
+                <datalist id="uroleDataList"></datalist>
+            </div>
+        </div>
+        <div class="row gap25">
             <div class="col w100per">
                 <label for="uaddr">Address</label><br>
                 <input class="w100per" type="address" name="uaddr" id="uaddr" placeholder="Address">
                 <div id="uaddrStatus" class="input-error-status"></div>
             </div>
-        </div><br>
-        <div class="row">
-            <input type="checkbox" name="uBlackList" id="uBlackList">&nbsp;&nbsp;&nbsp;
-            <label for="uBlackList">Black List</label>
         </div><br>
         <div class="row content-right">
             <button class="closeBtn" onclick="$('#update-dialog').dialog('close');">Close</button>&nbsp;&nbsp;&nbsp;
