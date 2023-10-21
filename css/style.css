@@ -727,6 +727,7 @@ input[type="file"] {
     border-radius: 10px;
     opacity: 0;
     z-index: 100;
+    pointer-events: all;
 }
 
 .success-message {

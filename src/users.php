@@ -15,6 +15,9 @@
         var offset = 0, limit = 20, searchKey = '';
         var roleIds = [], roleTitles = [];
 
+        // used for delete old img when update user profile
+        var oldProfileImg = "";
+
         // get users list function
         function getUsersList(){
             const startDate = new Date($("#startDate").val());
@@ -71,7 +74,7 @@
                                 <td>`+cDate.getDate()+`/`+(cDate.getMonth()+1)+`/`+cDate.getFullYear()+`</td>
                                 <td>
                                     <a class='cursor-pointer' onclick="openUpdateDialog('`+v.id+`','`+v.username+`','`+v.gender+`','`+v.phone+`','`+v.email+`','`+v.roleTitle+`','`+v.addr+`','`+v.profile+`');"><i class='fas fa-pencil-alt'></i></a>
-                                    <a class='cursor-pointer' onclick="deleteUser(`+ data.data +`)"><i class='fas fa-trash-alt'></i></a>
+                                    <a class='cursor-pointer' onclick="deleteUser('`+ v.id +`','`+ v.profile +`')"><i class='fas fa-trash-alt'></i></a>
                                 </td>
                             </tr>`;
                             $("#user-list").append(row);
@@ -147,7 +150,9 @@
             $("#ugender").val(gender);
             $("#urole").val(roleTitle);
             $("#uaddr").val(addr);
-            $("#uprofile-pre").prop('scr', '../uploads/user/'+profile);
+            $("#uprofile-pre").prop('src', '../upload/user/'+profile);
+
+            oldProfileImg = profile;
 
             // get all role list
             getAllUserRoles("#uroleDataList");
@@ -156,13 +161,14 @@
             $("#update-dialog").dialog('open');
         }
 
-        function deleteUser(stuId){
-            if(confirm("Are you sure want to delete user #"+stuId+" ?")){
+        function deleteUser(id, profile){
+            if(confirm("Are you sure want to delete user #"+id+" ?")){
                 $.ajax({
                     method: "POST",
                     url: "actions/delete_user.php",
                     data: {
                         "stuId": stuId,
+                        "profile": profile,
                     },
                     dataType: "JSON",
                     success: function(data){
@@ -171,8 +177,10 @@
                             showBottomRightMessage(data.data, 1);
 
                             // reload list
-                            $("#stu-list").html("");
+                            $("#user-list").html("");
                             getUsersList();
+                        } else {
+                            showBottomRightMessage(data.data);
                         }
                     },
                     error: function(_, status, msg){
@@ -305,7 +313,7 @@
                                     <td>`+now.getDate()+`/`+(now.getMonth()+1)+`/`+now.getFullYear()+`</td>
                                     <td>
                                         <a class='cursor-pointer' onclick=""><i class='fas fa-pencil-alt'></i></a>
-                                        <a class='cursor-pointer' onclick="deleteUser(`+ data.data.newId +`)"><i class='fas fa-trash-alt'></i></a>
+                                        <a class='cursor-pointer' onclick="deleteUser('`+ data.data.newId +`','`+ data.data.profileImg +`')"><i class='fas fa-trash-alt'></i></a>
                                     </td>
                                 </tr>`;
                                 $("#user-list").prepend(row);
@@ -366,49 +374,71 @@
             // when user click update button on update user dialog
             $(".updateBtn").click(function(){
                 // get data from input
-                var stuId = $("#uStuId").val();
-                var firstName = $("#ufirstName").val();
-                var lastName = $("#ulastName").val();
-                var contact = $("#ucontact").val();
-                var addr = $("#uaddr").val();
+                var id = $("#id").val();
+                var username = $("#uusername").val();
+                var pass = $("#upass").val();
+                var phone = $("#uphone").val();
+                var email = $("#uemail").val();
                 var gender = $("#ugender").find(":selected").val();
-                var dob = new Date($("#udob").val());
-                var isBlackList = $("#uBlackList").is(":checked") ? 1 : 0;
+                var role = $("#urole").val();
+                var addr = $("#uaddr").val();
+                var profile = $("#uprofile").prop('files');
 
                 // clear status
-                $("#ufirstNameStatus").text("");
-                $("#ulastNameStatus").text("");
-                $("#ucontactStatus").text("");
+                $("#uprofileStatus").text("");
+                $("#uusernameStatus").text("");
+                $("#upassStatus").text("");
+                $("#uphoneStatus").text("");
+                $("#uemailStatus").text("");
+                $("#uroleStatus").text("");
                 $("#uaddrStatus").text("");
-                $("#udobStatus").text("");
 
                 // validate data
-                if(firstName == ""){
-                    $("#ufirstNameStatus").text("Please enter user first name");
-                } else if(lastName == ""){
-                    $("#ulastNameStatus").text("Please enter user last name");
-                } else if(dob == "Invalid Date"){
-                    $("#udobStatus").text("Please enter user date of birth");
-                } else if(contact == ""){
-                    $("#ucontactStatus").text("Please enter user contact");
+                if(username == ""){
+                    $("#uusernameStatus").text("Please enter username");
+                } else if(pass != "" && pass.length < 6){
+                    $("#upassStatus").text("Please enter password at least 6 characters");
+                } else if(phone == ""){
+                    $("#uphoneStatus").text("Please enter phone number");
+                } else if(email == ""){
+                    $("#uemailStatus").text("Please enter email address");
                 } else if(addr == ""){
                     $("#uaddrStatus").text("Please enter user address");
+                } else if(role == ""){
+                    $("#uroleStatus").text("Please select a role");
                 } else {
-                    // sending data to db
+                    var formData = new FormData();
+                    formData.append("id", id);
+                    formData.append("username", username);
+                    formData.append('email', email);
+                    formData.append('phone', phone);
+                    formData.append('gender', gender);
+                    formData.append('roleId', roleIds[roleTitles.indexOf(role)]);
+                    formData.append('addr', addr);
+
+                    // if chosen new img
+                    if(profile[0]){
+                        formData.append('img', profile[0]);
+                        formData.append('oldProfileImg', oldProfileImg);
+                    }
+
+                    // if enter new password
+                    if(pass != ""){
+                        formData.append('pass', pass);
+                    }
+
+                    for (var key of formData.entries()) {
+                        console.log(key[0] + ', ' + key[1]);
+                    }
+
                     $.ajax({
                         method: "POST",
                         url: "actions/update_user.php",
-                        data: {
-                            stuId: stuId,
-                            fn: firstName,
-                            ln: lastName,
-                            c: contact,
-                            addr: addr,
-                            g: gender,
-                            dob: dob.getFullYear()+'/'+(dob.getMonth()+1)+'/'+dob.getDate(),
-                            isBlackList: isBlackList,
-                        },
-                        dataType: "json",
+                        data: formData,
+                        dataType: "JSON",
+                        processData: false,
+                        cache: false,
+                        contentType: false,
                         success: function(data) {
                             // get message text by status
                             if(data.status == 1){
@@ -418,14 +448,16 @@
                                 $("#update-dialog").dialog("close");
 
                                 // reload list
-                                $("#stu-list").html("");
+                                $("#user-list").html("");
+
+                                // refresh list
                                 getUsersList();
                             } else {
-                                showBottomRightMessage(data.data, 0);
+                                showBottomRightMessage(data.data);
                             }
                         },
                         error: function(_, status, msg){
-                            showBottomRightMessage(status+': '+msg, 2);
+                            showBottomRightMessage(status+': '+msg);
                         }
                     });
                 }
