@@ -23,9 +23,6 @@
             var data = {
                 offset: offset,
                 limit: limit,
-                startDate: '',
-                endDate: '',
-                isBlackList: '',
             };
             
             if($("#filter-date-opt").find(":selected").val() == "custom"){
@@ -51,47 +48,91 @@
                 dataType: "JSON",
                 data: data,
                 success: function(re){
-                    // var reCount = 0;
-                    // $.each(re.data, function(i, v){
-                    //     const dob = new Date(v.dob);
-                    //     var row = `<tr>
-                    //         <td>`+ v.stuId +`</td>
-                    //         <td>`+ v.firstName + ` ` + v.lastName +`</td>
-                    //         <td>`+ (v.gender == 0 ? 'Male' : 'Female') +`</td>
-                    //         <td>`+ dob.getDate() + '/' + (dob.getMonth()+1) + '/' + dob.getFullYear() +`</td>
-                    //         <td>`+ v.contact +`</td>
-                    //         <td>`+ v.addr +`</td>
-                    //         <td `+ (v.isBlackList == 0 ? "" : 'class="red"') +`>`+ (v.isBlackList == 0 ? "False" : "True") +`</td>
-                    //         <td>`+ v.createdDate +`</td>
-                    //         <td>
-                    //             <a class='cursor-pointer' onclick="openUpdateDialog('`+ v.stuId +`','`+ 
-                    //             v.firstName + `','` + v.lastName +`','`+ v.gender +`','`+ dob +`','`+ v.contact +`','`+ 
-                    //             v.addr +`','`+ v.isBlackList +`');"><i class='fas fa-pencil-alt'></i></a>
-                    //             <a class='cursor-pointer' onclick="deleteUser(`+ v.stuId +`)"><i class='fas fa-trash-alt'></i></a>
-                    //         </td>
-                    //     </tr>`;
-                    //     $("#stu-list").append(row);
-                    //     reCount = reCount + 1;
-                    // });
+                    if(re.status == 1){
+                        var reCount = 0;
+                        $.each(re.data, function(i, v){
+                            const cDate = new Date(v.createdDate);
+                            var row = `<tr>
+                                <td>`+v.id+`</td>
+                                <td>
+                                    <div class="row gap10 gray">
+                                        <div class="profile">
+                                            <img  src="../upload/user/`+v.profile+`" alt="profile">
+                                        </div>
+                                        `+v.username+`
+                                    </div>
+                                </td>
+                                <td>`+(v.gender == 0 ? "Male" : "Female")+`</td>
+                                <td>`+v.phone+`</td>
+                                <td>`+v.email+`</td>
+                                <td>`+v.addr+`</td>
+                                <td>`+v.roleTitle+`</td>
+                                <td>`+cDate.getDate()+`/`+(cDate.getMonth()+1)+`/`+cDate.getFullYear()+`</td>
+                                <td>
+                                    <a class='cursor-pointer' onclick=""><i class='fas fa-pencil-alt'></i></a>
+                                    <a class='cursor-pointer' onclick="deleteUser(`+ data.data +`)"><i class='fas fa-trash-alt'></i></a>
+                                </td>
+                            </tr>`;
+                            $("#user-list").append(row);
+                            reCount = reCount + 1;
+                        });
 
-                    // if(reCount > 0){
-                    //     $("#no-result").hide();
-                    //     $("#data-table").show();
-                    //     // hide load more button when no more data
-                    //     if(!re.hasMore){
-                    //         $("#load-more").hide();
-                    //     } else {
-                    //         $("#load-more").show();
-                    //     }
-                    // } else {
-                    //     $("#data-table").hide();
-                    //     $("#no-result").show();
-                    // }
+                        if(reCount > 0){
+                            $("#no-result").hide();
+                            $("#data-table").show();
+                            // hide load more button when no more data
+                            if(!re.hasMore){
+                                $("#load-more").hide();
+                            } else {
+                                $("#load-more").show();
+                            }
+                        } else {
+                            $("#data-table").hide();
+                            $("#no-result").show();
+                        }
+                    } else {
+                        showBottomRightMessage(re.data);
+                    }
                 },
                 error: function(_, status, msg){
                     showBottomRightMessage(status+': '+msg);
                 }
             });
+        }
+
+        function getAllUserRoles(listId){
+            // clear old list
+            $(listId).html("");
+
+            $.ajax({
+                method: "GET",
+                url: "actions/get_user_roles.php",
+                dataType: "JSON",
+                data: {},
+                success: function(re){
+                    if(re.status == 1){
+                        $.each(re.data, function(i, v){
+                            $(listId).append("<option value='"+v.title+"'></option>");
+                        });
+                    } else {
+                        showBottomRightMessage(re.data);
+                    }
+                },
+                error: function(_, status, msg){
+                    showBottomRightMessage(status+': '+msg);
+                }
+            });
+        }
+
+        function openCreateDialog() {
+            // get all roles
+            getAllUserRoles("#roleDataList");
+
+            // set default user roles
+            $("#role").val("Librarian");
+
+            // open create dialog
+            $("#create-dialog").dialog('open');
         }
 
         function openUpdateDialog(stuId, firstName, lastName, gender, dob, contact, addr, isBlackList){
@@ -143,8 +184,6 @@
         $(document).ready(async function(){
             $(".startDate").hide();
             $(".endDate").hide();
-            $("#ro-result").hide();
-            $("#load-more").hide();
             $("#create-dialog").hide();
             $("#update-dialog").hide();
 
@@ -152,8 +191,7 @@
             $("#create-dialog").dialog({
                 autoOpen: false,
                 modal: true,
-                height: 400,
-                width: 500,
+                width: 700,
                 button: [{
                     text: "Close",
                     click: function() {
@@ -410,7 +448,7 @@
                 </div>
             </div>
             <div class="row gap10">
-                <a class="add-new-btn" onclick="$('#create-dialog').dialog('open');"><i class="fad fa-user-plus white"></i>&nbsp;&nbsp;Add New</a>
+                <a class="add-new-btn" onclick="openCreateDialog();"><i class="fad fa-user-plus white"></i>&nbsp;&nbsp;Add New</a>
             </div>
         </div><br>
         <div class="wrapper padding-20 back-white radius-all20 shadow-gray">
@@ -443,9 +481,9 @@
     <div class="dialog" id="create-dialog" title="New User">
         <div class="row gap25">
             <div class="col w100per">
-                <label for="firstName">First Name</label><br>
-                <input class="w100per" type="text" name="firstName" id="firstName" placeholder="First Name">
-                <div id="firstNameStatus" class="input-error-status"></div>
+                <label for="username">Username</label><br>
+                <input class="w100per" type="text" name="username" id="username" placeholder="User Name">
+                <div id="usernameStatus" class="input-error-status"></div>
             </div>
             <div class="col w100per">
                 <label for="gender">Gender</label><br>
@@ -460,22 +498,30 @@
         </div>
         <div class="row gap25">
             <div class="col w100per">
-                <label for="lastName">Last Name</label><br>
-                <input class="w100per" type="text" name="lastName" id="lastName" placeholder="Last Name">
-                <div id="lastNameStatus" class="input-error-status"></div>
+                <label for="pass">Password</label><br>
+                <input class="w100per" type="password" name="pass" id="pass" placeholder="Password">
+                <div id="passStatus" class="input-error-status"></div>
             </div>
             <div class="col w100per">
-                <label for="dob">Date of Birth</label><br>
-                <input class="w100per" type="date" name="dob" id="dob">
-                <div id="dobStatus" class="input-error-status"></div>
+                <label for="phone">Phone</label><br>
+                <input class="w100per" type="text" name="phone" id="phone" placeholder="012345678">
+                <div id="phoneStatus" class="input-error-status"></div>
             </div>
         </div>
         <div class="row gap25">
             <div class="col w100per">
-                <label for="contact">Contact</label><br>
-                <input class="w100per" type="text" name="contact" id="contact" placeholder="Contact">
-                <div id="contactStatus" class="input-error-status"></div>
+                <label for="email">Email</label><br>
+                <input class="w100per" type="text" name="email" id="email" placeholder="panha@gmail.com">
+                <div id="emailStatus" class="input-error-status"></div>
             </div>
+            <div class="col w100per">
+                <label for="role">Role</label><br>
+                <input id="role" class="w100per" autocomplete="on" list="roleDataList">
+                <div id="roleStatus" class="input-error-status"></div>
+                <datalist id="roleDataList"></datalist>
+            </div>
+        </div>
+        <div class="row gap25">
             <div class="col w100per">
                 <label for="addr">Address</label><br>
                 <input class="w100per" type="address" name="addr" id="addr" placeholder="Address">
@@ -553,6 +599,6 @@
             getUsersList();
         </script>";
     } else {
-        echo "<script>getUsersList()</script>";
+        echo "<script>getUsersList();</script>";
     }
 ?>

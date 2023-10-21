@@ -28,23 +28,23 @@
                 WHERE u.status = 1 AND (u.user_id LIKE '$key%' OR u.username LIKE '%$key%') ";
         } else {
             // create query to get student
-            $sql = `SELECT u.*, r.title, u2.username, u3.username
+            $sql = "SELECT u.*, r.title, u2.username cName, u3.username uName
                 FROM user u LEFT JOIN role r 
                 ON u.role_id = r.role_id 
                 LEFT JOIN user u2 ON u.created_by = u2.user_id
                 LEFT JOIN user u3 ON u.updated_by = u3.user_id
-                WHERE u.status = 1 `;
+                WHERE u.status = 1 ";
         }
             
         if(isset($_GET['startDate'])){
-            $sql .= "AND br.created_date >= '".$_GET['startDate']."' AND br.created_date <= '". $_GET['endDate']." 23:59:59' ";
+            $sql .= "AND u.created_date >= '".$_GET['startDate']."' AND u.created_date <= '". $_GET['endDate']." 23:59:59' ";
         }
 
-        $sql .= "ORDER BY br.created_date DESC ";
+        $sql .= "ORDER BY u.created_date DESC ";
 
         // if limit = 0: unlimit
         if($limit != 0){
-            $sql .= " LIMIT $offset,$limit";
+            $sql .= "LIMIT $offset,$limit";
         }
 
         $stmt = $db->prepare($sql);
@@ -60,16 +60,16 @@
                 "username" => $row['username'],
                 "gender" => $row['gender'],
                 "phone" => $row['phone'],
-                "email" => $row['qty'],
+                "email" => $row['email'],
                 "roleId" => $row['role_id'],
                 "roleTitle" => $row['title'],
                 "addr" => $row['address'],
                 "profile" => $row['profile_img'],
                 "createdById" => $row['created_by'],
-                "createdBy" => $row['u2.username'],
+                "createdBy" => $row['cName'],
                 "createdDate" => $row['created_date'],
                 "updatedById" => $row['updated_by'],
-                "updatedBy" => $row['u3.username'],
+                "updatedBy" => $row['uName'],
                 "updatedDate" => $row['updated_date'],
             );
             array_push($re, $r);

@@ -21,11 +21,11 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="js/script.js" type="text/javascript"></script>
+    <script src="js/fontawesomepro.js" type="text/javascript"></script>
     <meta property="og:title" content="Library Management System">
     <meta property="og:type" content="Library" />
     <meta property="og:image" content="media/logo.jpeg">
     <link rel="stylesheet" href="css/fontawesomepro.css">
-    <link rel="stylesheet" href="js/fontawesomepro.js">
     <script>
         $(document).ready(function(){
             $("#search").keypress(function(e){
