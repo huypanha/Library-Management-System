@@ -15,7 +15,9 @@
 
             if($stmt->rowCount() > 0){
                 $re = $stmt->fetch();
-                if(password_verify($pass, $re['pass'])){
+                if($re['status'] == '0'){
+                    $error = "This account was deleted or suspended";
+                } else if(password_verify($pass, $re['pass'])){
                     $getRoleSql = "SELECT * FROM role WHERE role_id=".$re['role_id']." LIMIT 1";
                     $roleStmt = $db->prepare($getRoleSql);
                     $roleStmt->execute();

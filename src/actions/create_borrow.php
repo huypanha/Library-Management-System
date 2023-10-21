@@ -25,6 +25,10 @@
             $stmt = $db->prepare($sql);
             $stmt->execute();
 
+            $ubookSql = "UPDATE books SET borrow_count=borrow_count+1 WHERE id=$bId";
+            $ubookStmt = $db->prepare($ubookSql);
+            $ubookStmt->execute();
+
             // get last inserted id
             $newId = $db->lastInsertId();
 

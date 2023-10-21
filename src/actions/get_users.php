@@ -20,7 +20,7 @@
             $key = strtolower($_GET['searchKey']);
 
             // create query to search student
-            $sql = "SELECT u.*, r.title, u2.username, u3.username
+            $sql = "SELECT u.*, r.title, u2.username cName, u3.username uName
                 FROM user u LEFT JOIN role r 
                 ON u.role_id = r.role_id 
                 LEFT JOIN user u2 ON u.created_by = u2.user_id
@@ -38,6 +38,10 @@
             
         if(isset($_GET['startDate'])){
             $sql .= "AND u.created_date >= '".$_GET['startDate']."' AND u.created_date <= '". $_GET['endDate']." 23:59:59' ";
+        }
+
+        if(isset($_GET['filterRole'])){
+            $sql.= "AND u.role_id = ".$_GET['filterRole']." ";
         }
 
         $sql .= "ORDER BY u.created_date DESC ";

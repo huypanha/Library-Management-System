@@ -334,7 +334,6 @@
             $(".endDate").hide();
             $(".startDDate").hide();
             $(".endDDate").hide();
-            $(".load-more").hide();
 
             $("#borrow-dialog").dialog({
                 autoOpen: false,
@@ -610,6 +609,14 @@
                 // get borrows
                 getBorrow();
             });
+
+            // when user click load more
+            $(".load-more").click(function() {
+                offset += limit;
+                
+                // get more user
+                getBorrow();
+            });
         });
     </script>
 </head>
@@ -704,27 +711,27 @@
         <div class="row gap25 content-top">
             <div class="col w100per">
                 <label for="book">Book</label><br>
-                <input id="book" class="w100per" autocomplete="on" list="bookDataList">
+                <input id="book" class="w100per" autocomplete="on" list="bookDataList" placeholder="Select a book">
                 <div id="bookStatus" class="input-error-status"></div>
                 <datalist id="bookDataList"></datalist>
                 <div class="h10"></div>
 
                 <label for="student">Student</label><br>
-                <input id="student" class="w100per" autocomplete="on" list="studentDataList">
+                <input id="student" class="w100per" autocomplete="on" list="studentDataList" placeholder="Select a student">
                 <div id="studentStatus" class="input-error-status"></div>
                 <datalist id="studentDataList"></datalist>
                 <div class="h10"></div>
 
                 <label for="qty">Quantity</label>
-                <input class="w100per" type="number" name="qty" id="qty"><br>
+                <input class="w100per" type="number" name="qty" id="qty" placeholder="Quantity"><br>
                 <div id="qtyStatus" class="input-error-status"></div>
 
                 <label for="amount">Borrow Amount ($)</label>
-                <input class="w100per" type="number" name="amount" id="amount"><br>
+                <input class="w100per" type="number" name="amount" id="amount" placeholder="Amount"><br>
                 <div id="amountStatus" class="input-error-status"></div>
 
                 <label for="afmount">Fine Amount ($)</label>
-                <input class="w100per" type="number" name="famount" id="famount"><br>
+                <input class="w100per" type="number" name="famount" id="famount" placeholder="Fine Amount"><br>
                 <div id="famountStatus" class="input-error-status"></div>
 
                 <label for="due">Due Date</label>
@@ -742,27 +749,27 @@
             <div class="col w100per">
                 <input type="hidden" name="id" id="id">
                 <label for="ubook">Book</label><br>
-                <input id="ubook" class="w100per" autocomplete="on" list="ubookDataList">
+                <input id="ubook" class="w100per" autocomplete="on" list="ubookDataList" placeholder="Select a book">
                 <div id="ubookStatus" class="input-error-status"></div>
                 <datalist id="ubookDataList"></datalist>
                 <div class="h10"></div>
 
                 <label for="ustudent">Student</label><br>
-                <input id="ustudent" class="w100per" autocomplete="on" list="ustudentDataList">
+                <input id="ustudent" class="w100per" autocomplete="on" list="ustudentDataList" placeholder="Select a student">
                 <div id="ustudentStatus" class="input-error-status"></div>
                 <datalist id="ustudentDataList"></datalist>
                 <div class="h10"></div>
 
                 <label for="uqty">Quantity</label>
-                <input class="w100per" type="number" name="uqty" id="uqty"><br>
+                <input class="w100per" type="number" name="uqty" id="uqty" placeholder="Quantity"><br>
                 <div id="uqtyStatus" class="input-error-status"></div>
 
                 <label for="uamount">Borrow Amount ($)</label>
-                <input class="w100per" type="number" name="uamount" id="uamount"><br>
+                <input class="w100per" type="number" name="uamount" id="uamount" placeholder="Borrow Amount"><br>
                 <div id="uamountStatus" class="input-error-status"></div>
 
                 <label for="ufamount">Fine Amount ($)</label>
-                <input class="w100per" type="number" name="ufamount" id="ufamount"><br>
+                <input class="w100per" type="number" name="ufamount" id="ufamount" placeholder="Fine Amount"><br>
                 <div id="ufamountStatus" class="input-error-status"></div>
 
                 <label for="udue">Due Date</label>

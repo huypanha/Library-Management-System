@@ -17,7 +17,7 @@
             $db = DB::Connect();
 
             // create query
-            $sql = "UPDATE user SET status=0, updated_by=".$user->userId.", updated_date=NOW() WHERE id=$id";
+            $sql = "UPDATE user SET status=0, updated_by=".$user->userId.", updated_date=NOW() WHERE user_id=$id";
             $stmt = $db->prepare($sql);
             $stmt->execute();
 

@@ -48,6 +48,12 @@
                         } else {
                             $("#current-page-content").html("<iframe id='current-page' src='src/borrows.php?searchKey="+$("#search").val()+"' frameborder='0'></iframe>");
                         }
+                    } else if($("#current-page").attr("src").match("^src/users.php")){
+                        if($("#search").val() == ""){
+                            $("#current-page-content").html("<iframe id='current-page' src='src/users.php' frameborder='0'></iframe>");
+                        } else {
+                            $("#current-page-content").html("<iframe id='current-page' src='src/users.php?searchKey="+$("#search").val()+"' frameborder='0'></iframe>");
+                        }
                     }
                 }
             });

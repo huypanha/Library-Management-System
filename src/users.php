@@ -13,7 +13,12 @@
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script>
         var offset = 0, limit = 20, searchKey = '';
+
+        // for create and update
         var roleIds = [], roleTitles = [];
+
+        // for filter
+        var filterRoleIds = [], filterRoleTitles = [];
 
         // used for delete old img when update user profile
         var oldProfileImg = "";
@@ -22,7 +27,7 @@
         function getUsersList(){
             const startDate = new Date($("#startDate").val());
             const endDate = new Date($("#endDate").val());
-            const isBlackList = $("#filter-balck-list").find(":selected").val();
+            const filterRole = $("#filter-role").find(":selected").val();
 
             var data = {
                 offset: offset,
@@ -30,16 +35,14 @@
             };
             
             if($("#filter-date-opt").find(":selected").val() == "custom"){
-                if(startDate != "Invalid Date"){
+                if(startDate != "Invalid Date" && endDate != "Invalid Date"){
                     data.startDate = startDate.getFullYear()+'/'+(startDate.getMonth()+1)+'/'+startDate.getDate();
                     data.endDate = endDate.getFullYear()+'/'+(endDate.getMonth()+1)+'/'+endDate.getDate();
                 }
             }
 
-            if(isBlackList == "bl"){
-                data.isBlackList = 1;
-            } else if(isBlackList == "nbl"){
-                data.isBlackList = 0;
+            if(filterRole != "all"){
+                data.filterRole = filterRoleIds[filterRoleTitles.indexOf(filterRole)];
             }
 
             if(searchKey != ''){
@@ -92,6 +95,7 @@
                             }
                         } else {
                             $("#data-table").hide();
+                            $("#load-more").hide();
                             $("#no-result").show();
                         }
                     } else {
@@ -104,9 +108,51 @@
             });
         }
 
+        function getFilterRoles(){
+            // clear old list
+            $("#filter-role").html("");
+
+
+            // reset existing data
+            roleIds = [];
+            roleTitles = [];
+
+            $.ajax({
+                method: "GET",
+                url: "actions/get_user_roles.php",
+                dataType: "JSON",
+                data: {},
+                success: function(re){
+                    // add all options
+                    $("#filter-role").append("<option value='all'>All</option>");
+                    
+                    // add other options from role table
+                    if(re.status == 1){
+                        $.each(re.data, function(i, v){
+                            $("#filter-role").append("<option value='"+v.title+"'>"+v.title+"</option>");
+                            filterRoleIds.push(v.id);
+                            filterRoleTitles.push(v.title);
+                        });
+                    } else {
+                        showBottomRightMessage(re.data);
+                    }
+                },
+                error: function(_, status, msg){
+                    showBottomRightMessage(status+': '+msg);
+                }
+            });
+        }
+
+        // call when open this page for the first time
+        getFilterRoles();
+
         function getAllUserRoles(listId){
             // clear old list
             $(listId).html("");
+
+            // reset existing data
+            roleIds = [];
+            roleTitles = [];
 
             $.ajax({
                 method: "GET",
@@ -167,7 +213,7 @@
                     method: "POST",
                     url: "actions/delete_user.php",
                     data: {
-                        "stuId": stuId,
+                        "id": id,
                         "profile": profile,
                     },
                     dataType: "JSON",
@@ -345,14 +391,14 @@
                     $(".startDate").hide();
                     $(".endDate").hide();
                 }
-                $("#stu-list").html("");
+                $("#user-list").html("");
                 getUsersList();
             });
 
             // when user change filter start date
             $("#startDate").change(function(){
                 if($(this).val() < $("#endDate").val()){
-                    $("#stu-list").html("");
+                    $("#user-list").html("");
                     getUsersList();
                 }
             });
@@ -360,14 +406,14 @@
             // when user change filter end date
             $("#endDate").change(function(){
                 if($(this).val() > $("#startDate").val()){
-                    $("#stu-list").html("");
+                    $("#user-list").html("");
                     getUsersList();
                 }
             });
 
             // when user change filter black list
-            $("#filter-balck-list").change(function(){
-                $("#stu-list").html("");
+            $("#filter-role").change(function(){
+                $("#user-list").html("");
                 getUsersList();
             });
 
@@ -470,7 +516,7 @@
         <div class="row space-between">
             <div class="row gap10 content-top">
                 <div class="col w100">
-                    <label for="filter-date-opt">Date</label><br>
+                    <label for="filter-date-opt">Join Date</label><br>
                     <div class="filter-box">
                         <select class="w100per" name="filter-date-opt" id="filter-date-opt">
                             <option value="all">All</option>
@@ -488,12 +534,9 @@
                     <input class="filter-date" type="date" name="endDate" id="endDate">
                 </div>
                 <div class="col w130">
-                    <label for="filter-balck-list">Black List</label><br>
+                    <label for="filter-role">Role</label><br>
                     <div class="filter-box">
-                        <select class="w100per" name="filter-balck-list" id="filter-balck-list">
-                            <option value="all">All</option>
-                            <option value="bl">Black list</option>
-                            <option value="nbl">Not black list</option>
+                        <select class="w100per" name="filter-role" id="filter-role">
                         </select>
                         <i class="fas fa-caret-down"></i>
                     </div>
@@ -534,7 +577,7 @@
         <div class="row content-center">
             <label for="profile" class="center">
                 <div class="profile-100 cursor-pointer">
-                    <img id="profile-pre" src="../upload/user/SNOW_20230709_103003_332.jpg" alt="profile">
+                    <img id="profile-pre" src="../media/user_profile.png" alt="profile">
                 </div>
                 <div id="profileStatus" class="input-error-status"></div>
             </label>
@@ -600,7 +643,7 @@
         <div class="row content-center">
             <label for="uprofile" class="center">
                 <div class="profile-100 cursor-pointer">
-                    <img id="uprofile-pre" src="../upload/user/SNOW_20230709_103003_332.jpg" alt="profile">
+                    <img id="uprofile-pre" src="../media/user_profile.png" alt="profile">
                 </div>
                 <div id="uprofileStatus" class="input-error-status"></div>
             </label>

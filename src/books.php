@@ -364,6 +364,14 @@
                 e.preventDefault();
                 window.location.href = "borrows.php?action=borrows&bTitle="+$("#d-title").text().replace(": ", "");
             });
+
+            // when user click load more
+            $(".load-more").click(function() {
+                offset += limit;
+                
+                // get more user
+                getBooks();
+            });
         });
     </script>
 </head>
@@ -435,7 +443,7 @@
         <div class="row gap25 content-top">
             <div class="col w200">
                 <div id="book-cover">
-                    <img id="book-cover-img" src="../media/book-cover.jpg" alt="Book Cover">
+                    <img id="book-cover-img" src="../media/add_img.png" alt="Book Cover">
                 </div><br>
                 <div id="imgStatus" class="input-error-status"></div><br>
                 <label class="choose-file-btn w100per back-gray" for="cover"><span class="gray">Choose Book Cover</span></label>
@@ -443,10 +451,10 @@
             </div>
             <div class="col w100per">
                 <label for="title">Title</label>
-                <input class="w100per" type="text" name="title" id="title"><br>
+                <input class="w100per" type="text" name="title" id="title" placeholder="Title"><br>
                 <div id="titleStatus" class="input-error-status"></div>
                 <label for="desc">Description</label>
-                <textarea class="w100per" type="text" name="desc" id="desc" rows="3"></textarea><br>
+                <textarea class="w100per" type="text" name="desc" id="desc" rows="3" placeholder="Description"></textarea><br>
                 <label for="cate">Category</label>
                 <div class="filter-box w100per">
                     <select name="cate" id="cate">
@@ -471,13 +479,13 @@
                 </div>
                 <div class="h10"> </div>
                 <label for="author">Author</label>
-                <input class="w100per" type="text" name="author" id="author"><br>
+                <input class="w100per" type="text" name="author" id="author" placeholder="Author"><br>
                 <div id="authorStatus" class="input-error-status"></div>
                 <label for="pub">Publisher</label>
-                <input class="w100per" type="text" name="pub" id="pub"><br>
+                <input class="w100per" type="text" name="pub" id="pub" placeholder="Publisher"><br>
                 <div id="pubStatus" class="input-error-status"></div>
-                <label for="price">Price</label>
-                <input class="w100per" type="number" name="price" id="price"><br>
+                <label for="price">Price ($)</label>
+                <input class="w100per" type="number" name="price" id="price" placeholder="Price"><br>
                 <div id="priceStatus" class="input-error-status"></div>
             </div><br>
         </div> <br>
@@ -490,7 +498,7 @@
         <div class="row gap25 content-top">
             <div class="col w200">
                 <div id="book-cover">
-                    <img id="u-cover" src="../media/book-cover.jpg" alt="Book Cover">
+                    <img id="u-cover" src="../media/add_img.png" alt="Book Cover">
                 </div><br>
                 <div id="imgStatus" class="input-error-status"></div><br>
                 <label class="choose-file-btn w100per back-gray" for="ucover"><span class="gray">Choose Book Cover</span></label>
@@ -498,10 +506,10 @@
             </div>
             <div class="col w100per">
                 <label for="utitle">Title</label>
-                <input class="w100per" type="text" name="utitle" id="utitle"><br>
+                <input class="w100per" type="text" name="utitle" id="utitle" placeholder="Title"><br>
                 <div id="titleStatus" class="input-error-status"></div>
                 <label for="udesc">Description</label>
-                <textarea class="w100per" type="text" name="udesc" id="udesc" rows="3"></textarea><br>
+                <textarea class="w100per" type="text" name="udesc" id="udesc" rows="3" placeholder="Desctiption"></textarea><br>
                 <label for="ucate">Category</label>
                 <div class="filter-box w100per">
                     <select name="ucate" id="ucate">
@@ -526,13 +534,13 @@
                 </div>
                 <div class="h10"></div>
                 <label for="uauthor">Author</label>
-                <input class="w100per" type="text" name="uauthor" id="uauthor"><br>
+                <input class="w100per" type="text" name="uauthor" id="uauthor" placeholder="Author"><br>
                 <div id="authorStatus" class="input-error-status"></div>
                 <label for="upub">Publisher</label>
-                <input class="w100per" type="text" name="upub" id="upub"><br>
+                <input class="w100per" type="text" name="upub" id="upub" placeholder="Publisher"><br>
                 <div id="pubStatus" class="input-error-status"></div>
-                <label for="uprice">Price</label>
-                <input class="w100per" type="number" name="uprice" id="uprice"><br>
+                <label for="uprice">Price ($)</label>
+                <input class="w100per" type="number" name="uprice" id="uprice" placeholder="Price"><br>
                 <div id="priceStatus" class="input-error-status"></div>
             </div><br>
         </div> <br>

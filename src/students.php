@@ -86,6 +86,7 @@
                     } else {
                         $("#data-table").hide();
                         $("#no-result").show();
+                        $("#load-more").hide();
                     }
                 },
                 error: function(_, status, msg){
@@ -143,8 +144,6 @@
         $(document).ready(async function(){
             $(".startDate").hide();
             $(".endDate").hide();
-            $("#ro-result").hide();
-            $("#load-more").hide();
             $("#create-dialog").hide();
             $("#update-dialog").hide();
 
