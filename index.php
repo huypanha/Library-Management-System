@@ -71,7 +71,6 @@
                 <li class="menu-item" title="Borrows"><i class="far fa-book-reader size-25 gray"></i></li>
                 <li class="menu-item" title="Users"><i class="far fa-users size-25 gray"></i></li>
                 <li class="menu-item" title="Settings"><i class="far fa-cog size-25 gray"></i></li>
-                <li class="menu-item" title="Feedback"><i class="far fa-comment-alt-edit size-25 gray"></i></li>
                 <a class="logout" title="Logout" href="auth/logout.php" onclick="return confirm('Are you sure want to logout?');"><i class="far fa-sign-out-alt size-25 red"></i></a>
             </ul>
         </div>

@@ -10,10 +10,13 @@
     <script src="../js/script.js" type="text/javascript"></script>
 </head>
 <body>
-    <div class="wrapper padding-20">
-        <div class="wrapper padding-20 back-white radius-all20 shadow-gray">
-            <div class="content-center">Feedback</div>
-        </div>
+    <div class="wrapper padding-20 back-white radius-all20 shadow-gray w100per h95vh scroll-y">
+        <h2>Report & Feedback</h2><br>
+        <div class="h100"></div>
+    </div>
+    <!-- message -->
+    <div class="message-wrapper">
+        <div class="message-bottom-right">Message</div>
     </div>
 </body>
 </html>
