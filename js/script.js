@@ -23,8 +23,6 @@ $(document).ready(function(){
             newChild = "<i class='far fa-users size-25 gray'></i>";
         } else if(oldSelectedMenuIndex == 5){
             newChild = "<i class='far fa-cog size-25 gray'></i>";
-        } else if(oldSelectedMenuIndex == 6){
-            newChild = "<i class='far fa-comment-alt-edit size-25 gray'></i>";
         }
 
         // change old active menu image
@@ -55,10 +53,6 @@ $(document).ready(function(){
             newChild = "<i class='fad fa-cog size-25 white' style='--fa-primary-opacity: 0.4; --fa-secondary-opacity: 1;'></i>";
             newPage = "<iframe id='current-page' src='src/settings.php' frameborder='0'></iframe>";
             newPageTitle = "Settings";
-        } else if($(this).index() == 6){
-            newChild = "<i class='fad fa-comment-alt-edit size-25 white' style='--fa-primary-opacity: 0.4; --fa-secondary-opacity: 1;'></i>";
-            newPage = "<iframe id='current-page' src='src/feedback.php' frameborder='0'></iframe>";
-            newPageTitle = "Feedback";
         }
 
         // change new active menu image

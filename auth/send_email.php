@@ -5,27 +5,28 @@ use PHPMailer\PHPMailer\Exception;
 require_once '../vendor/autoload.php';
  
 class Email {
-    private $mail;
+    // private $mail;
 
-    public function __construct(){
-        $this->$mail = new PHPMailer(true);
-    }
+    // public function __construct(){
+    //     $this->$mail = new PHPMailer(true);
+    // }
 
     function sendEmail($recipient, $subject, $body){
         try {
-            $this->$mail->isSMTP();
-            $this->$mail->Host = 'smtp.gmail.com';
-            $this->$mail->SMTPAuth = true;
-            $this->$mail->Host = 'smtp.gmail.com';
-            $this->$mail->Username = 'loanms629@gmail.com';
-            $this->$mail->Password = 'dogh zqzl mhoh bwcl' ;
-            $this->$mail->Port = 465;
-            $this->$mail->SMTPSecure = "ssl";
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Username = 'loanms629@gmail.com';
+            $mail->Password = 'dogh zqzl mhoh bwcl' ;
+            $mail->Port = 465;
+            $mail->SMTPSecure = "ssl";
         
             //Recipients
-            $this->$mail->setFrom('loanms629@gmail.com', 'Library Management System');
-            // $this->$mail->addAddress('pisethomchan4242@gmail.com');
-            $this->$mail->addAddress($recipient);
+            $mail->setFrom('loanms629@gmail.com', 'Library Management System');
+            // $mail->addAddress('pisethomchan4242@gmail.com');
+            $mail->addAddress($recipient);
             // $mail->addReplyTo('info@example.com', 'Information');
             // $mail->addCC('cc@example.com');
             // $mail->addBCC('bcc@example.com');
@@ -35,14 +36,14 @@ class Email {
             // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');
         
             //Content
-            $this->$mail->isHTML(true);
-            $this->$mail->Subject = $subject;
-            $this->$mail->Body    = $body;
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body    = $body;
         
-            $this->$mail->send();
-            $this->$mail->smtpClose();
+            $mail->send();
+            $mail->smtpClose();
         } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$this->$mail->ErrorInfo}";
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
     }
 }

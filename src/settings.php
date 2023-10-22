@@ -43,18 +43,18 @@
 <body>
     <div class="wrapper padding-20">
         <div class="row gap25">
-            <div id="setting-items" class="wrapper padding-20 back-white radius-all20 shadow-gray w350 h95vh cursor-pointer">
-                <div id="setting-items-profile" class="setting-item row gap10 setting-item-active">
+            <div id="setting-items" class="wrapper padding-20 back-white radius-all20 shadow-gray w350 h95vh">
+                <div id="setting-items-profile" class="setting-item row gap10 setting-item-active cursor-pointer">
                     <i class="fad fa-user-circle size-25"></i>
                     Profile
                 </div>
-                <div id="setting-items-feedback" class="setting-item row gap10">
+                <div id="setting-items-feedback" class="setting-item row gap10 cursor-pointer">
                     <i class="far fa-comment-edit size-25 gray"></i>
                     Report & Feedback
                 </div>
             </div>
             <div class="w100per h95vh">
-                <iframe id="menu-page" src="profile.php" frameborder="0" width="100%" height="100%"></iframe>
+                <iframe id="menu-page" src="profile.php" frameborder="0" width="100%" height="105%"></iframe>
             </div>
         </div>
     </div>

@@ -816,6 +816,11 @@ input:disabled {
     border: 2px solid white;
 }
 
+.choose-img-pre-box {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
 /* /////////////////////////////////  Align  ///////////////////////////////// */
 
 .center {
@@ -1027,12 +1032,20 @@ input:disabled {
     height: 10px;
 }
 
+.h20 {
+    height: 20px;
+}
+
 .h100 {
     height: 100px;
 }
 
 .h95vh {
     height: 95vh;
+}
+
+.h100vh {
+    height: 100vh;
 }
 
 .size-15 {
