@@ -591,7 +591,7 @@
             </div>
             <div class="col w100per">
                 <label for="gender">Gender</label><br>
-                <div class="filter-box w100per">
+                <div class="filter-box w100per input-back-gray">
                     <select class="w100per" name="gender" id="gender">
                         <option value="0">Male</option>
                         <option value="1">Female</option>
@@ -620,7 +620,7 @@
             </div>
             <div class="col w100per">
                 <label for="role">Role</label><br>
-                <input id="role" class="w100per" autocomplete="on" list="roleDataList" placeholder="Admin">
+                <input id="role" class="w100per select-input" autocomplete="on" list="roleDataList" placeholder="Admin">
                 <div id="roleStatus" class="input-error-status"></div>
                 <datalist id="roleDataList"></datalist>
             </div>
@@ -657,7 +657,7 @@
             </div>
             <div class="col w100per">
                 <label for="ugender">Gender</label><br>
-                <div class="filter-box w100per">
+                <div class="filter-box w100per input-back-gray">
                     <select class="w100per" name="ugender" id="ugender">
                         <option value="0">Male</option>
                         <option value="1">Female</option>
@@ -686,7 +686,7 @@
             </div>
             <div class="col w100per">
                 <label for="urole">Role</label><br>
-                <input id="urole" class="w100per" autocomplete="on" list="uroleDataList" placeholder="Admin">
+                <input id="urole" class="w100per select-input" autocomplete="on" list="uroleDataList" placeholder="Admin">
                 <div id="uroleStatus" class="input-error-status"></div>
                 <datalist id="uroleDataList"></datalist>
             </div>

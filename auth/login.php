@@ -9,7 +9,9 @@
         
         try {
             $db = DB::Connect();
-            $sql = "SELECT * FROM user WHERE email='". strtolower($email)."' LIMIT 1";
+            $sql = "SELECT u.*, r.title roleTitle, u2.username cName, u3.username uName FROM user u LEFT JOIN role r 
+                    ON u.role_id = r.role_id LEFT JOIN user u2 ON u.created_by = u2.user_id LEFT JOIN user u3 
+                    ON u.updated_by = u3.user_id WHERE u.email='". strtolower($email)."' LIMIT 1";
             $stmt = $db->prepare($sql);
             $stmt->execute();
 
@@ -18,15 +20,9 @@
                 if($re['status'] == '0'){
                     $error = "This account was deleted or suspended";
                 } else if(password_verify($pass, $re['pass'])){
-                    $getRoleSql = "SELECT * FROM role WHERE role_id=".$re['role_id']." LIMIT 1";
-                    $roleStmt = $db->prepare($getRoleSql);
-                    $roleStmt->execute();
-                    $userRole = $roleStmt->fetch();
-
                     $role = array(
-                        'roleId'=>$userRole['role_id'],
-                        'title'=>$userRole['title'],
-                        'status'=>$userRole['status'],
+                        'roleId'=>$re['role_id'],
+                        'title'=>$re['roleTitle'],
                     );
 
                     $user = array(
@@ -37,6 +33,10 @@
                         'address'=>$re['address'],
                         'profileImg'=>$re['profile_img'],
                         'gender'=>$re['gender'],
+                        'createdBy'=>$re['cName'],
+                        'createdDate'=>$re['created_date'],
+                        'updatedBy'=>$re['uName'],
+                        'updatedDate'=>$re['updated_date'],
                     );
 
                     $_SESSION['user'] = json_encode($user);

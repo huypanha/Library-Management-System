@@ -456,7 +456,7 @@
             </div>
             <div class="col w100per">
                 <label for="gender">Gender</label><br>
-                <div class="filter-box w100per">
+                <div class="filter-box w100per input-back-gray">
                     <select class="w100per" name="gender" id="gender">
                         <option value="0">Male</option>
                         <option value="1">Female</option>
@@ -505,7 +505,7 @@
             </div>
             <div class="col w100per">
                 <label for="ugender">Gender</label><br>
-                <div class="filter-box w100per">
+                <div class="filter-box w100per input-back-gray">
                     <select class="w100per" name="ugender" id="ugender">
                         <option value="0">Male</option>
                         <option value="1">Female</option>

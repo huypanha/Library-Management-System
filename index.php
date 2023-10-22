@@ -79,13 +79,13 @@
             <div class="top-nav">
                 <h2 id="page-title">Dashboard</h2>
                 <div class="search-input">
-                    <input type="text" name="search" id="search" placeholder="Search...">
+                    <input type="search" name="search" id="search" placeholder="Search...">
                 </div>
-                <div class="row">
-                    <a href="#">
+                <div class="row gap10">
+                    <!-- <a href="#">
                         <i class="fas fa-bell size-25"></i>
                         <div class="badge">1</div>
-                    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
                     <div class="col right">
                         <h4 id="current-username"><?php echo $user->userName; ?></h4>
                         <p id="current-role-title"><?php echo $role->title; ?></p>

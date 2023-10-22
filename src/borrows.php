@@ -711,13 +711,13 @@
         <div class="row gap25 content-top">
             <div class="col w100per">
                 <label for="book">Book</label><br>
-                <input id="book" class="w100per" autocomplete="on" list="bookDataList" placeholder="Select a book">
+                <input id="book" class="w100per input-back-gray" autocomplete="on" list="bookDataList" placeholder="Select a book">
                 <div id="bookStatus" class="input-error-status"></div>
                 <datalist id="bookDataList"></datalist>
                 <div class="h10"></div>
 
                 <label for="student">Student</label><br>
-                <input id="student" class="w100per" autocomplete="on" list="studentDataList" placeholder="Select a student">
+                <input id="student" class="w100per input-back-gray" autocomplete="on" list="studentDataList" placeholder="Select a student">
                 <div id="studentStatus" class="input-error-status"></div>
                 <datalist id="studentDataList"></datalist>
                 <div class="h10"></div>
@@ -749,13 +749,13 @@
             <div class="col w100per">
                 <input type="hidden" name="id" id="id">
                 <label for="ubook">Book</label><br>
-                <input id="ubook" class="w100per" autocomplete="on" list="ubookDataList" placeholder="Select a book">
+                <input id="ubook" class="w100per input-back-gray" autocomplete="on" list="ubookDataList" placeholder="Select a book">
                 <div id="ubookStatus" class="input-error-status"></div>
                 <datalist id="ubookDataList"></datalist>
                 <div class="h10"></div>
 
                 <label for="ustudent">Student</label><br>
-                <input id="ustudent" class="w100per" autocomplete="on" list="ustudentDataList" placeholder="Select a student">
+                <input id="ustudent" class="w100per input-back-gray" autocomplete="on" list="ustudentDataList" placeholder="Select a student">
                 <div id="ustudentStatus" class="input-error-status"></div>
                 <datalist id="ustudentDataList"></datalist>
                 <div class="h10"></div>

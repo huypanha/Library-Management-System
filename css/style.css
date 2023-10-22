@@ -796,16 +796,24 @@ input[type="file"] {
     color: white;
 }
 
-input {
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="address"], input[type="date"], textarea, .select-input {
     background-color: rgb(244, 244, 244);
     border-radius: 10px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 10px 15px;
+    font-size: 15px;
 }
 
 input:disabled {
     cursor:not-allowed;
     color: gray;
+}
+
+.choose-img-icon {
+    padding: 5px 10px;
+    border-radius: 50%;
+    background-color: rgb(244, 244, 244);
+    border: 2px solid white;
 }
 
 /* /////////////////////////////////  Align  ///////////////////////////////// */
@@ -828,6 +836,10 @@ input:disabled {
 
 .content-bottom {
     align-items: end;
+}
+
+.input-back-gray {
+    background-color: rgb(244, 244, 244);
 }
 
 .right {
@@ -969,6 +981,28 @@ input:disabled {
     gap: 50px
 }
 
+/* /////////////////////////////////  Position  ///////////////////////////////// */
+
+.pos-relative {
+    position: relative;
+}
+
+.pos-absolute {
+    position: absolute;
+}
+
+.pos-right {
+    right: 50%;
+}
+
+.pos-bottom {
+    bottom: 50%;
+}
+
+.pos-choose-camera-90 {
+    transform: translate(90px, 90px);
+}
+
 /* /////////////////////////////////  Shadow  ///////////////////////////////// */
 
 .shadow-gray {
@@ -980,6 +1014,11 @@ input:disabled {
 .scroll-x {
     overflow-x: scroll;
     overflow-y: auto;
+}
+
+.scroll-y {
+    overflow-x: auto;
+    overflow-y: scroll;
 }
 
 /* /////////////////////////////////  Size  ///////////////////////////////// */
@@ -1038,6 +1077,10 @@ input:disabled {
 
 .w130 {
     width: 130px;
+}
+
+.w150 {
+    width: 150px;
 }
 
 .w200 {
