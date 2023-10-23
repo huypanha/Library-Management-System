@@ -120,7 +120,7 @@ a {
     display: block;
 }
 
-.left-nav .nav-menu .menu-item {
+.left-nav .nav-menu .menu-item, .left-nav .nav-menu .lib-menu-item {
     width: 100%;
     text-align: center;
     list-style-type: none;
@@ -139,11 +139,11 @@ a {
     scale: 1.2;
 }
 
-.left-nav .nav-menu .menu-item i, .left-nav .nav-menu .menu-item img, .left-nav .nav-menu .logout {
+.left-nav .nav-menu .menu-item i, .left-nav .nav-menu .menu-item img, .left-nav .nav-menu .logout, .left-nav .nav-menu .lib-menu-item i, .left-nav .nav-menu .lib-menu-item img {
     transition: 300ms;
 }
 
-.left-nav .nav-menu .menu-item:hover i {
+.left-nav .nav-menu .menu-item:hover i, .left-nav .nav-menu .lib-menu-item:hover i {
     color: var(--primary-color);
     scale: 1.2;
 }
@@ -153,11 +153,11 @@ a {
     color: white;
 }
 
-.left-nav .nav-menu .menu-item img {
+.left-nav .nav-menu .menu-item img, .left-nav .nav-menu .lib-menu-item img {
     width: 60%;
 }
 
-.left-nav .nav-menu .menu-item:hover img {
+.left-nav .nav-menu .menu-item:hover img, .left-nav .nav-menu .lib-menu-item:hover img {
     scale: 1.2;
 }
 
@@ -586,7 +586,7 @@ table tbody tr td a .fa-trash-alt {
     padding: 0;
 }
 
-.dialog input, .dialog button, #filter-dialog input, .dialog textarea {
+.dialog input, .dialog button, #filter-dialog input {
     background-color: white;
     border-radius: 10px;
     border: 1px solid rgba(0, 0, 0, 0.1);

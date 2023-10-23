@@ -35,7 +35,7 @@
                         $.each(response.data, function (i, v) { 
                              // create new book item
                              var newBook = `
-                                <a class="book-box" onclick="showDetails('`+v.id+`','`+v.title+`','`+v.desc+`','`+v.cate+`','`+v.author+`','`+v.pub+`','`+v.price+`','`+v.cover+`','`+v.createdDate+`','`+v.updatedDate+`');">
+                                <a class="book-box" onclick="showDetails('`+v.id+`','`+v.title+`','`+v.desc+`','`+v.cate+`','`+v.author+`','`+v.pub+`','`+v.price+`','`+v.cover+`','`+v.createdDate+`','`+v.updatedDate+`', '`+v.roleTitle+`');">
                                     <div class="book-cover">
                                         <img src="../upload/book/`+v.cover+`" alt="cover">
                                     </div>
@@ -69,7 +69,7 @@
             });
         }
 
-        function showDetails(id, title, desc, cate, author, pub, price, cover, createdDate, updatedDate){
+        function showDetails(id, title, desc, cate, author, pub, price, cover, createdDate, updatedDate, roleTitle){
             const cDate = new Date(createdDate);
 
             // set value to dialog
@@ -82,6 +82,13 @@
             $("#d-price").text(": $"+price);
             $("#d-cover").prop("src", "../upload/book/"+cover);
             $("#d-created-date").text(": "+cDate.toLocaleString());
+
+            // hide delete btn if not admin
+            if(roleTitle != "Admin"){
+                $("#update-actions").removeClass("space-between");
+                $("#update-actions").addClass("content-right");
+                $("#d-btn-delete").hide();
+            }
 
             if(updatedDate != 'null'){
                 const uDate = new Date(updatedDate);
@@ -207,7 +214,7 @@
 
                                 // create new book item
                                 var newBook = `
-                                    <a class="book-box" onclick="showDetails('`+response.data.newId+`','`+title+`','`+desc+`','`+cate+`','`+author+`','`+publisher+`','`+price+`','`+response.data.cover+`','`+date+`','null');">
+                                    <a class="book-box" onclick="showDetails('`+response.data.newId+`','`+title+`','`+desc+`','`+cate+`','`+author+`','`+publisher+`','`+price+`','`+response.data.cover+`','`+date+`','null', '`+response.roleTitle+`');">
                                         <div class="book-cover">
                                             <img src="../upload/book/`+response.data.cover+`" alt="cover">
                                         </div>
@@ -430,7 +437,7 @@
                 </tr>
             </table>
         </div> <br>
-        <div class="row space-between gap10">
+        <div id="update-actions" class="row space-between gap10">
             <button class="deleteBtn" id="d-btn-delete">Delete</button>
             <div class="row gap10">
                 <button class="closeBtn" onclick="$('#book-details').dialog('close');">Close</button>
@@ -456,7 +463,7 @@
                 <label for="desc">Description</label>
                 <textarea class="w100per" type="text" name="desc" id="desc" rows="3" placeholder="Description"></textarea><br>
                 <label for="cate">Category</label>
-                <div class="filter-box w100per">
+                <div class="filter-box w100per back-gray">
                     <select name="cate" id="cate">
                         <option value="Anthologies">Anthologies</option>
                         <option value="Art Books">Art Books</option>
@@ -511,7 +518,7 @@
                 <label for="udesc">Description</label>
                 <textarea class="w100per" type="text" name="udesc" id="udesc" rows="3" placeholder="Desctiption"></textarea><br>
                 <label for="ucate">Category</label>
-                <div class="filter-box w100per">
+                <div class="filter-box w100per back-gray">
                     <select name="ucate" id="ucate">
                         <option value="Anthologies">Anthologies</option>
                         <option value="Art Books">Art Books</option>

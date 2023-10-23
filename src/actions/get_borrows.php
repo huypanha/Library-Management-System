@@ -86,10 +86,15 @@
         $count = $countStmt->fetchColumn();
         $hasMore = $count > ($offset+$limit);
 
+        // get role
+        session_start();
+        $role = json_decode($_SESSION['role']);
+
         echo json_encode(array(
             "status"=>1,
             "hasMore"=>$hasMore,
             "data"=>$re,
+            "roleTitle"=>$role->title,
         ));
     } catch(PDOException $ex){
         echo json_encode(array(

@@ -67,7 +67,7 @@
                                 <a class='cursor-pointer' onclick="openUpdateDialog('`+ v.stuId +`','`+ 
                                 v.firstName + `','` + v.lastName +`','`+ v.gender +`','`+ dob +`','`+ v.contact +`','`+ 
                                 v.addr +`','`+ v.isBlackList +`');"><i class='fas fa-pencil-alt'></i></a>
-                                <a class='cursor-pointer' onclick="deleteStudent(`+ v.stuId +`)"><i class='fas fa-trash-alt'></i></a>
+                                `+(re.roleTitle == "Admin" ? `<a class='cursor-pointer' onclick="deleteStudent(`+ v.stuId +`)"><i class='fas fa-trash-alt'></i></a>` : ``)+`
                             </td>
                         </tr>`;
                         $("#stu-list").append(row);
@@ -246,7 +246,7 @@
                                         <a class='cursor-pointer' onclick="openUpdateDialog('`+ data.data +`','`+ 
                                     firstName + `','` + lastName +`','`+ gender +`','`+ dob +`','`+ contact +`','`+ 
                                     addr +`', '0');"><i class='fas fa-pencil-alt'></i></a>
-                                        <a class='cursor-pointer' onclick="deleteStudent(`+ data.data +`)"><i class='fas fa-trash-alt'></i></a>
+                                        `+(data.roleTitle == "Admin" ? `<a class='cursor-pointer' onclick="deleteStudent(`+ data.data +`)"><i class='fas fa-trash-alt'></i></a>` : ``)+`
                                     </td>
                                 </tr>`;
                                 $("#stu-list").prepend(row);

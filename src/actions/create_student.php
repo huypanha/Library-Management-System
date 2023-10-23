@@ -32,10 +32,14 @@
             // get last inserted id
             $newId = $db->lastInsertId();
 
+            // get role
+            $role = json_decode($_SESSION['role']);
+
             // return result
             echo json_encode(array(
                 "status"=>1,
                 "data"=> $newId,
+                "roleTitle"=>$role->title,
             ));
         } catch(PDOException $ex){
             // return error

@@ -38,6 +38,9 @@
                 // get last inserted id
                 $newId = $db->lastInsertId();
 
+                // get role
+                $role = json_decode($_SESSION['role']);
+
                 // return result
                 echo json_encode(array(
                     "status"=>1,
@@ -45,6 +48,7 @@
                         "newId"=>$newId,
                         "cover"=>$fileName,
                     ),
+                    "roleTitle"=>$role->title,
                 ));
             } else {
                 echo json_encode(array(

@@ -620,7 +620,7 @@
             </div>
             <div class="col w100per">
                 <label for="role">Role</label><br>
-                <input id="role" class="w100per select-input" autocomplete="on" list="roleDataList" placeholder="Admin">
+                <input type="text" id="role" class="w100per select-input" autocomplete="on" list="roleDataList" placeholder="Admin">
                 <div id="roleStatus" class="input-error-status"></div>
                 <datalist id="roleDataList"></datalist>
             </div>
@@ -686,7 +686,7 @@
             </div>
             <div class="col w100per">
                 <label for="urole">Role</label><br>
-                <input id="urole" class="w100per select-input" autocomplete="on" list="uroleDataList" placeholder="Admin">
+                <input type="text" id="urole" class="w100per select-input back-gray" autocomplete="on" list="uroleDataList" placeholder="Admin">
                 <div id="uroleStatus" class="input-error-status"></div>
                 <datalist id="uroleDataList"></datalist>
             </div>

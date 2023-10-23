@@ -85,7 +85,7 @@
                                 <td>`+dueDate.getDate()+"/"+(dueDate.getMonth()+1)+"/"+dueDate.getFullYear()+`</td>
                                 <td>
                                     <a class="cursor-pointer" onclick="edit('`+v.id+`', '`+v.bookTitle+`', '`+v.borrower+`', '`+v.qty+`', '`+v.amount+`', '`+v.fineAmount+`', '`+dueDate+`','`+v.status+`')"><i class="fas fa-pencil-alt"></i></a>
-                                    <a class="cursor-pointer" onclick="deleteBorrow('`+v.id+`')"><i class="fas fa-trash-alt"></i></a>
+                                    `+(v.roleTitle == "Admin" ? `<a class="cursor-pointer" onclick="deleteBorrow('`+v.id+`')"><i class="fas fa-trash-alt"></i></a>` : ``)+`
                                 </td>
                             </tr>`;
                             
@@ -451,7 +451,7 @@
                                 <td>`+due.getDate()+"/"+(due.getMonth()+1)+"/"+due.getFullYear()+`</td>
                                 <td>
                                     <a class="cursor-pointer" onclick="edit('`+response.data.newId+`', '`+$("#book").val()+`', '`+$("#student").val()+`', '`+$("#qty").val()+`', '`+$("#amount").val()+`', '`+$("#famount").val()+`', '`+due+`', '0')"><i class="fas fa-pencil-alt"></i></a>
-                                    <a class="cursor-pointer" onclick="deleteBorrow('`+response.data.newId+`')"><i class="fas fa-trash-alt"></i></a>
+                                    `+(response.roleTitle == "Admin" ? `<a class="cursor-pointer" onclick="deleteBorrow('`+response.data.newId+`')"><i class="fas fa-trash-alt"></i></a>` : '')+`
                                 </td>
                             </tr>`;
                             
@@ -711,13 +711,13 @@
         <div class="row gap25 content-top">
             <div class="col w100per">
                 <label for="book">Book</label><br>
-                <input id="book" class="w100per input-back-gray" autocomplete="on" list="bookDataList" placeholder="Select a book">
+                <input type="text" id="book" class="w100per input-back-gray" autocomplete="on" list="bookDataList" placeholder="Select a book">
                 <div id="bookStatus" class="input-error-status"></div>
                 <datalist id="bookDataList"></datalist>
                 <div class="h10"></div>
 
                 <label for="student">Student</label><br>
-                <input id="student" class="w100per input-back-gray" autocomplete="on" list="studentDataList" placeholder="Select a student">
+                <input type="text" id="student" class="w100per input-back-gray" autocomplete="on" list="studentDataList" placeholder="Select a student">
                 <div id="studentStatus" class="input-error-status"></div>
                 <datalist id="studentDataList"></datalist>
                 <div class="h10"></div>
@@ -749,13 +749,13 @@
             <div class="col w100per">
                 <input type="hidden" name="id" id="id">
                 <label for="ubook">Book</label><br>
-                <input id="ubook" class="w100per input-back-gray" autocomplete="on" list="ubookDataList" placeholder="Select a book">
+                <input type="text" id="ubook" class="w100per input-back-gray" autocomplete="on" list="ubookDataList" placeholder="Select a book">
                 <div id="ubookStatus" class="input-error-status"></div>
                 <datalist id="ubookDataList"></datalist>
                 <div class="h10"></div>
 
                 <label for="ustudent">Student</label><br>
-                <input id="ustudent" class="w100per input-back-gray" autocomplete="on" list="ustudentDataList" placeholder="Select a student">
+                <input type="text" id="ustudent" class="w100per input-back-gray" autocomplete="on" list="ustudentDataList" placeholder="Select a student">
                 <div id="ustudentStatus" class="input-error-status"></div>
                 <datalist id="ustudentDataList"></datalist>
                 <div class="h10"></div>
