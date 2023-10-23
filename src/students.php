@@ -390,7 +390,7 @@
                 </div>
                 <div class="col w100 startDate">
                     <label for="startDate">Start Date</label><br>
-                    <input class="filter-date" type="date" name="startDate" id="startDate">
+                    <input class="filter-date back-white" type="date" name="startDate" id="startDate">
                 </div>
                 <div class="col w100 endDate">
                     <label for="endDate">End Date</label><br>

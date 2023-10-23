@@ -85,7 +85,7 @@
                                 <td>`+dueDate.getDate()+"/"+(dueDate.getMonth()+1)+"/"+dueDate.getFullYear()+`</td>
                                 <td>
                                     <a class="cursor-pointer" onclick="edit('`+v.id+`', '`+v.bookTitle+`', '`+v.borrower+`', '`+v.qty+`', '`+v.amount+`', '`+v.fineAmount+`', '`+dueDate+`','`+v.status+`')"><i class="fas fa-pencil-alt"></i></a>
-                                    `+(v.roleTitle == "Admin" ? `<a class="cursor-pointer" onclick="deleteBorrow('`+v.id+`')"><i class="fas fa-trash-alt"></i></a>` : ``)+`
+                                    `+(response.roleTitle == "Admin" ? `<a class="cursor-pointer" onclick="deleteBorrow('`+v.id+`')"><i class="fas fa-trash-alt"></i></a>` : ``)+`
                                 </td>
                             </tr>`;
                             

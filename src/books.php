@@ -35,7 +35,7 @@
                         $.each(response.data, function (i, v) { 
                              // create new book item
                              var newBook = `
-                                <a class="book-box" onclick="showDetails('`+v.id+`','`+v.title+`','`+v.desc+`','`+v.cate+`','`+v.author+`','`+v.pub+`','`+v.price+`','`+v.cover+`','`+v.createdDate+`','`+v.updatedDate+`', '`+v.roleTitle+`');">
+                                <a class="book-box" onclick="showDetails('`+v.id+`','`+v.title+`','`+v.desc+`','`+v.cate+`','`+v.author+`','`+v.pub+`','`+v.price+`','`+v.cover+`','`+v.createdDate+`','`+v.updatedDate+`', '`+response.roleTitle+`');">
                                     <div class="book-cover">
                                         <img src="../upload/book/`+v.cover+`" alt="cover">
                                     </div>

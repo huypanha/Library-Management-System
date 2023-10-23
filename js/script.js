@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    // on click dashboard menu
+    // on click admin dashboard menu
     $(".menu-item").click(function(){
         const oldSelectedMenuIndex = $(".nav-menu-active").index();
         const navMenuCount = $(".nav-menu").children().length;
@@ -66,6 +66,69 @@ $(document).ready(function(){
 
         // chagne new active menu
         $(".menu-item").eq($(this).index()).addClass("nav-menu-active");
+    });
+
+    // on click dashboard menu
+    $(".lib-menu-item").click(function(){
+        const oldSelectedMenuIndex = $(".nav-menu-active").index();
+        const navMenuCount = $(".nav-menu").children().length;
+        var newChild = "", newPage = "", newPageTitle = "";
+
+        // remove active menu
+        for(var i = 0; i < navMenuCount; i++){
+            $(".lib-menu-item").eq(i).removeClass("nav-menu-active");
+        }
+
+        // get image for old active menu
+        if(oldSelectedMenuIndex == 0){
+            newChild = "<img src='media/dashboard_outline.jpg' alt='menu icon'>";
+        } else if(oldSelectedMenuIndex == 1){
+            newChild = "<i class='far fa-user-graduate size-25 gray'></i>";
+        } else if(oldSelectedMenuIndex == 2){
+            newChild = "<i class='far fa-books size-25 gray'></i>";
+        } else if(oldSelectedMenuIndex == 3){
+            newChild = "<i class='far fa-book-reader size-25 gray'></i>";
+        } else if(oldSelectedMenuIndex == 4){
+            newChild = "<i class='far fa-cog size-25 gray'></i>";
+        }
+
+        // change old active menu image
+        $(".lib-menu-item").eq(oldSelectedMenuIndex).html(newChild);
+
+        // get image to change for new active menu
+        if($(this).index() == 0){
+            newChild = "<img src='media/dashboard_filled.png' alt='menu icon'>";
+            newPage = "<iframe id='current-page' src='src/dashboard.php' frameborder='0'></iframe>";
+            newPageTitle = "Dashboard";
+        } else if($(this).index() == 1){
+            newChild = "<i class='fad fa-user-graduate size-25 white'></i>";
+            newPage = "<iframe id='current-page' src='src/students.php' frameborder='0'></iframe>";
+            newPageTitle = "Students";
+        } else if($(this).index() == 2){
+            newChild = "<i class='fad fa-books size-25 white'></i>";
+            newPage = "<iframe id='current-page' src='src/books.php' frameborder='0'></iframe>";
+            newPageTitle = "Books";
+        } else if($(this).index() == 3){
+            newChild = "<i class='fad fa-book-reader size-25 white'></i>";
+            newPage = "<iframe id='current-page' src='src/borrows.php' frameborder='0'></iframe>";
+            newPageTitle = "Borrows";
+        } else if($(this).index() == 4){
+            newChild = "<i class='fad fa-cog size-25 white' style='--fa-primary-opacity: 0.4; --fa-secondary-opacity: 1;'></i>";
+            newPage = "<iframe id='current-page' src='src/settings.php' frameborder='0'></iframe>";
+            newPageTitle = "Settings";
+        }
+
+        // change new active menu image
+        $(".lib-menu-item").eq($(this).index()).html(newChild);
+
+        // change new page
+        $("#current-page-content").html(newPage);
+
+        // change new page title
+        $("#page-title").html(newPageTitle);
+
+        // chagne new active menu
+        $(".lib-menu-item").eq($(this).index()).addClass("nav-menu-active");
     });
 
     // on click tabbar

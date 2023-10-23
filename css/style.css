@@ -796,7 +796,7 @@ input[type="file"] {
     color: white;
 }
 
-input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="address"], input[type="date"], textarea, .select-input {
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="address"], .dialog input[type="date"], textarea, .select-input {
     background-color: rgb(244, 244, 244);
     border-radius: 10px;
     border: 1px solid rgba(0, 0, 0, 0.1);
