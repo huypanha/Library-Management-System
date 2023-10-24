@@ -58,6 +58,9 @@
 
         // count all books to know have more or not
         $countSql = "SELECT COUNT(*) FROM books WHERE status=1";
+        if(isset($_GET['searchKey'])){
+            $countSql .= " AND (title LIKE '%$key%' OR id LIKE '$key%') ORDER BY id DESC";
+        }
         $countStmt = $db->prepare($countSql);
         $countStmt->execute();
         $count = $countStmt->fetchColumn();

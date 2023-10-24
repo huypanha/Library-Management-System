@@ -12,6 +12,7 @@
         // get offset and limit
         $offset = $_GET['offset'];
         $limit = $_GET['limit'];
+        $countSql = "SELECT COUNT(*) FROM student WHERE status=1";
 
         if(isset($_GET['searchKey'])){
             // get offset and limit
@@ -19,6 +20,7 @@
 
             // create query to search student
             $sql = "SELECT * FROM student WHERE status=1 AND (first_name LIKE '%$key%' OR last_name LIKE '%$key%' OR stu_id LIKE '$key%') ORDER BY stu_id DESC";
+            $countSql .= " AND (first_name LIKE '%$key%' OR last_name LIKE '%$key%' OR stu_id LIKE '$key%')";
         } else {
             $startDate = $_GET['startDate'];
             $endDate = $_GET['endDate'];
@@ -71,7 +73,6 @@
         }
 
         // count all student to know have more or not
-        $countSql = "SELECT COUNT(*) FROM student WHERE status=1";
         $countStmt = $db->prepare($countSql);
         $countStmt->execute();
         $count = $countStmt->fetchColumn();

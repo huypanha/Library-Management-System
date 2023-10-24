@@ -80,7 +80,15 @@
         }
 
         // count all borrows to know have more or not
-        $countSql = "SELECT COUNT(*) FROM borrow WHERE status=1";
+        $countSql = "SELECT COUNT(*) FROM borrow br LEFT JOIN books b ON br.book_id = b.id 
+                        LEFT JOIN student s ON br.stu_id=s.stu_id 
+                        LEFT JOIN user u ON br.created_by=u.user_id 
+                    WHERE br.status=1";
+
+        if(isset($_GET['searchKey'])){
+            $countSql .= " AND (br.id LIKE '$key%' OR title LIKE '%$key%')";
+        }
+
         $countStmt = $db->prepare($countSql);
         $countStmt->execute();
         $count = $countStmt->fetchColumn();

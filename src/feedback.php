@@ -96,19 +96,19 @@
                             <img id="img-1" class="w100per" src="../media/Plus.png" alt="img">
                         </div>
                     </label>
-                    <input type="file" name="img1" id="img1" onchange="document.getElementById('img-1').src = window.URL.createObjectURL(this.files[0]);">
+                    <input accept="image/*" type="file" name="img1" id="img1" onchange="document.getElementById('img-1').src = window.URL.createObjectURL(this.files[0]);">
                     <label class="w100per" for="img2">
                         <div id="choose-img-pre-box-2" class="choose-img-pre-box cursor-pointer">
                             <img id="img-2" class="w100per" src="../media/Plus.png" alt="img">
                         </div>
                     </label>
-                    <input type="file" name="img2" id="img2" onchange="document.getElementById('img-2').src = window.URL.createObjectURL(this.files[0]);">
+                    <input accept="image/*" type="file" name="img2" id="img2" onchange="document.getElementById('img-2').src = window.URL.createObjectURL(this.files[0]);">
                     <label class="w100per" for="img3">
                         <div id="choose-img-pre-box-3" class="choose-img-pre-box cursor-pointer">
                             <img id="img-3" class="w100per" src="../media/Plus.png" alt="img">
                         </div>
                     </label>
-                    <input type="file" name="img3" id="img3" onchange="document.getElementById('img-3').src = window.URL.createObjectURL(this.files[0]);">
+                    <input accept="image/*" type="file" name="img3" id="img3" onchange="document.getElementById('img-3').src = window.URL.createObjectURL(this.files[0]);">
                 </div>
             </div>
             <div class="col w100per">
