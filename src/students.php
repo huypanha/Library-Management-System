@@ -12,7 +12,7 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script>
-        var offset = 0, limit = 20, searchKey = '';
+        var offset = 0, limit = 10, searchKey = '';
 
         // get student list function
         function getStudentsList(){
@@ -250,6 +250,15 @@
                                     </td>
                                 </tr>`;
                                 $("#stu-list").prepend(row);
+
+                                // hide no results
+                                $("#load-more").hide();
+
+                                // clear input
+                                $("#firstName").val("");
+                                $("#lastName").val("");
+                                $("#contact").val("");
+                                $("#addr").val("");
                             } else {
                                 showBottomRightMessage(data.data, 0);
                             }

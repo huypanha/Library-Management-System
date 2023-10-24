@@ -12,7 +12,7 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script>
-        var offset = 0, limit = 20, searchKey = '', bTitle = '';
+        var offset = 0, limit = 10, searchKey = '', bTitle = '';
         var bookIds = [], bookAmounts = [], bookTitles = [], bookCovers = [];
         var studentIds = [], studentNames = [];
 
@@ -153,7 +153,7 @@
 
             $.ajax({
                 type: "GET",
-                url: "actions/get_students.php",
+                url: "actions/get_unblock_students.php",
                 data: {
                     offset: 0,
                     limit: 0,
@@ -457,6 +457,16 @@
                             
                             // add new row to the top of the list
                             $("#borrow-list").prepend(row);
+
+                            // hide no results
+                            $("#no-result").hide();
+
+                            // clear all entered data
+                            $("#book").val("");
+                            $("#student").val("");
+                            $("#qty").val("");
+                            $("#amount").val("");
+                            $("#famount").val("");
 
                             // close borrow dialog
                             $("#borrow-dialog").dialog('close');

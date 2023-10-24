@@ -363,6 +363,19 @@
                                     </td>
                                 </tr>`;
                                 $("#user-list").prepend(row);
+
+                                // hide no results
+                                $("#load-more").hide();
+
+                                // clear input
+                                $("#username").val("");
+                                $("#pass").val("");
+                                $("#phone").val("");
+                                $("#email").val("");
+                                $("#gender").val("Male");
+                                $("#role").val("Librarian");
+                                $("#addr").val("");
+                                $("#profile").val("");
                             } else {
                                 showBottomRightMessage(data.data, 0);
                             }

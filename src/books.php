@@ -12,7 +12,7 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script>
-        var offset = 0, limit = 20, searchKey = '';
+        var offset = 0, limit = 10, searchKey = '';
 
         function getBooks() {
             var data = {
@@ -225,6 +225,19 @@
                                 // add new book to the book list
                                 $("#book-list").prepend(newBook);
 
+                                // hide no results
+                                $("#no-result").hide();
+
+                                // clear inputed data
+                                $("#book-cover-img").prop("src", "../media/add_img.png");
+                                $("#title").val("");
+                                $("#desc").val("");
+                                $("#cate").val("Anthologies");
+                                $("#author").val("");
+                                $("#pub").val("");
+                                $("#price").val("");
+                                $("#cover").val(null);
+
                                 // close create dialog
                                 $('#create-dialog').dialog('close');
                             } else {
@@ -389,7 +402,7 @@
             <dotlottie-player src="https://lottie.host/368474bf-84db-4d4a-bbd2-65219928b446/3jKzzZOp3j.json" background="transparent" speed="1" style="width: 300px; height: 300px; margin-left: 38%;" loop autoplay></dotlottie-player>
             <p class="gray" >No Result</p>
         </div>
-        <a class="row content-center primary-color load-more">
+        <a class="row content-center primary-color load-more cursor-pointer">
             <i class="fas fa-chevron-down primary-color"></i>&nbsp;&nbsp;Load More
         </a>
         <a href="#" class="overlay-bottom-right" onclick="$('#create-dialog').dialog('open')">

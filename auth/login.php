@@ -73,9 +73,9 @@
                 <h1>Welcome Back</h1><br>
                 <p>Provide your information</p><br>
                 <label for="email">Email</label><br>
-                <input type="email" name="email" id="email" value="panhahuy70@gmail.com" required><br><br><br>
+                <input type="email" name="email" id="email" placeholder="Your Email" required><br><br><br>
                 <label for="pass">Password</label><br>
-                <input type="password" name="pass" id="pass" value="111111" required><br><br>
+                <input type="password" name="pass" id="pass" placeholder="Your Password" required><br><br>
                 <div class="align-right">
                     <a href="forgot.php">Forgot Password?</a>
                 </div><br>
